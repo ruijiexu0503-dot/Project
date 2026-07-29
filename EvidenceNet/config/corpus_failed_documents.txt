@@ -1,0 +1,4 @@
+CERNCourier2025JanFeb-digitaledition
+detr
+entropy
+gw150914_properties

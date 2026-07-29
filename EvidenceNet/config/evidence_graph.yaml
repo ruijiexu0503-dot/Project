@@ -1,0 +1,58 @@
+input:
+  aligned_root: ../parsing/output/hybrid_deepseek_layout_split_render/aligned_json
+output:
+  graph_root: output/evidence_graph
+evidence:
+  one_aligned_block_per_node: true
+  split_on_single_newline: false
+  merge_continuations: false
+  keep_incomplete_nodes: true
+structure:
+  create_previous_edges: true
+  detect_continuations: true
+validation:
+  deepseek_order_conflict_threshold: 3
+enrichment:
+  enabled: true
+  provider: transformers
+  model: ../external/models/Qwen2.5-VL-7B-Instruct
+  dtype: bfloat16
+  device_map: auto
+  require_cuda: true
+  max_new_tokens: 2048
+  batch_size: 2
+  generation_tokens: 1000
+  retry_generation_tokens: 1400
+  prompt_version: v1
+embedding:
+  enabled: false
+  model: null
+  input_mode: original_plus_summary
+candidates:
+  structural_window: 3
+  embedding_top_k: 8
+  shared_entity_top_k: 5
+  same_section_top_k: 5
+  maximum_candidates_per_node: 15
+relations:
+  acceptance_threshold: 0.80
+  allow_unsupported_relation_review: true
+  batch_size: 2
+  generation_tokens: 1000
+  retry_generation_tokens: 1400
+adjudication:
+  acceptance_threshold: 0.80
+  batch_size: 2
+  generation_tokens: 1200
+  retry_generation_tokens: 1600
+pilot:
+  maximum_nodes: 25
+  section_count: 2
+  include_unsectioned: true
+  maximum_candidates: null
+article_segmentation:
+  enabled: true
+  document_prefixes:
+    - CERNCourier
+  batch_size: 10
+  generation_tokens: 1400

@@ -1,0 +1,15 @@
+1. For every Dp bbox, if it is in the PP text region
+    (1) If center_inside locates in PP layout bbox
+    (2) overlap_frac and IoU, how much of the Dp bbox is in PP bbox
+    (3)type_compatibility heading -> title/header, text -> text, caption -> caption, etc.
+score = 0.60 * overlap_frac + 0.20 * center_inside + 0.15 * iou + 0.05 * type_score
+
+2. No matched text region, if it is in any visual container
+If yes, create relations between the container and text
+
+3. No match
+Just Keep
+
+Current Pipeline:
+Deepseekocr2 parsing and Layout detetction independently.
+Match parsing and layout detection bbox, .md sequence according to deepseekocr2, bbox according to layout detection

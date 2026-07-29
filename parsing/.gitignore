@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.bak
+
+# virtual environments
+.venv/
+.venv_vlm/
+.venv_layout/
+.venv_docparse/
+venv/
+env/
+.nv/
+
+# environment variables
+.env
+.env.*
+
+# raw input data
+data/
+
+# generated outputs
+output/
+output_Marker/
+output_Marker_processed/
+output_Marker_processed_column/
+output_Marker_processed_column_v2/
+output_page_inputs/
+output_Surya/
+output_M&S/
+logs/
+logs_docparse/
+
+# downloaded / external models or repos
+external/
+models/
+checkpoints/
+
+# Hugging Face / model cache if accidentally placed here
+.cache/
+huggingface/
+transformers_cache/
+
+# Slurm outputs
+*.out
+*.err
+slurm-*.out
+
+# temporary files
+tmp/
+temp/
+*.tmp
+
+# archives / large files
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# notebooks
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Obsidian local config
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+.obsidian/plugins/

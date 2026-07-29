@@ -1,0 +1,59 @@
+# Local Codex/agent state
+.agents/
+.codex/
+.git-history-backup/
+
+# Python caches and environments
+**/__pycache__/
+*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.venv*/
+**/venv/
+**/.nv/
+
+# Secrets and local environment
+.env
+.env.*
+
+# Data, downloaded dependencies, and model weights
+data/
+external/
+**/models/
+**/checkpoints/
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+
+# Generated output and logs
+**/output/
+**/output_*/
+**/logs/
+**/logs_*/
+*.out
+*.err
+slurm-*.out
+
+# Caches, temporary files, and archives
+**/.cache/
+tmp/
+temp/
+*.tmp
+*.bak
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# Editors and OS files
+.vscode/
+.idea/
+.DS_Store
+**/.ipynb_checkpoints/
+**/.obsidian/workspace.json
+**/.obsidian/workspace-mobile.json
+**/.obsidian/cache/
+**/.obsidian/plugins/
