@@ -50,22 +50,37 @@ def relation_hypotheses(a, b):
     return sorted(hypotheses), sorted(reasons)
 
 
-def generate_semantic_candidates(nodes: list[dict[str, Any]], embeddings, config):
+def generate_semantic_candidates(nodes: list[dict[str, Any]], embeddings, config,
+                                 content_units: dict[str, str] | None = None):
     ordered = sorted(nodes, key=lambda n: n["document_order"]); positions = {n["node_id"]: i for i,n in enumerate(ordered)}
     vectors = {r["node_id"]: r["vector"] for r in embeddings}; pairs: dict[tuple[str,str], dict[str,Any]] = {}
+    content_units = content_units or {}
     def add(a, b, reason, similarity=None):
         if a == b: return
-        key = tuple(sorted((a,b))); item = pairs.setdefault(key, {"node_a":key[0], "node_b":key[1], "candidate_reasons":set(),
-            "embedding_similarity": None, "reading_order_distance":abs(positions[a]-positions[b])})
+        key = tuple(sorted((a,b))); unit_a, unit_b = content_units.get(key[0]), content_units.get(key[1])
+        scope = "WITHIN_CONTENT_UNIT" if unit_a and unit_a == unit_b else ("CROSS_CONTENT_UNIT" if unit_a and unit_b else "UNSCOPED")
+        item = pairs.setdefault(key, {"node_a":key[0], "node_b":key[1], "candidate_reasons":set(),
+            "embedding_similarity": None, "reading_order_distance":abs(positions[a]-positions[b]),
+            "content_unit_scope": scope, "content_unit_a": unit_a, "content_unit_b": unit_b})
         item["candidate_reasons"].add(reason)
         if similarity is not None: item["embedding_similarity"] = round(similarity, 6)
     window=config["structural_window"]
     for i,n in enumerate(ordered):
         for other in ordered[max(0,i-window):min(len(ordered),i+window+1)]: add(n["node_id"],other["node_id"],"structural_neighbor")
     top_k=config["embedding_top_k"]
-    for n in ordered:
-        scored=sorted(((cosine(vectors[n["node_id"]],vectors[o["node_id"]]),o["node_id"]) for o in ordered if o is not n),reverse=True)
-        for score,oid in scored[:top_k]: add(n["node_id"],oid,"embedding_top_k",score)
+    if len(ordered) >= 100:
+        import numpy as np
+        matrix=np.asarray([vectors[n["node_id"]] for n in ordered],dtype=np.float32)
+        similarities=matrix @ matrix.T
+        np.fill_diagonal(similarities,-np.inf)
+        for i,n in enumerate(ordered):
+            indices=np.argpartition(similarities[i],-top_k)[-top_k:]
+            indices=indices[np.argsort(similarities[i,indices])[::-1]]
+            for j in indices: add(n["node_id"],ordered[int(j)]["node_id"],"embedding_top_k",float(similarities[i,j]))
+    else:
+        for n in ordered:
+            scored=sorted(((cosine(vectors[n["node_id"]],vectors[o["node_id"]]),o["node_id"]) for o in ordered if o is not n),reverse=True)
+            for score,oid in scored[:top_k]: add(n["node_id"],oid,"embedding_top_k",score)
     by_section=defaultdict(list)
     for n in ordered:
         if n.get("section_id"): by_section[n["section_id"]].append(n)
@@ -84,6 +99,7 @@ def generate_semantic_candidates(nodes: list[dict[str, Any]], embeddings, config
     per_node=defaultdict(list)
     for item in pairs.values():
         score=len(item["candidate_reasons"])+(item["embedding_similarity"] or 0)
+        if item["content_unit_scope"] == "WITHIN_CONTENT_UNIT": score += 2
         per_node[item["node_a"]].append((score,item)); per_node[item["node_b"]].append((score,item))
     keep=set()
     for values in per_node.values():
@@ -95,7 +111,28 @@ def generate_semantic_candidates(nodes: list[dict[str, Any]], embeddings, config
         b = next(n for n in ordered if n["node_id"] == item["node_b"])
         hypotheses, relation_reasons = relation_hypotheses(a, b)
         item["candidate_reasons"].update(relation_reasons)
+        if item["content_unit_scope"] == "WITHIN_CONTENT_UNIT":
+            item["candidate_reasons"].add("same_content_unit")
+        elif item["content_unit_scope"] == "CROSS_CONTENT_UNIT":
+            strong = bool({"anaphoric_reference_signal", "formula_context_signal", "shared_entities"}
+                          & item["candidate_reasons"])
+            relation_signal = bool(set(relation_reasons) - {"shared_anchor_signal"})
+            strong = strong or (item["reading_order_distance"] == 1 and "structural_neighbor" in item["candidate_reasons"])
+            strong = strong or ((item.get("embedding_similarity") or 0) >= config.get("cross_unit_embedding_threshold", .45)
+                                and relation_signal)
+            if not strong:
+                continue
+            item["candidate_reasons"].add("cross_content_unit_bridge")
         item["candidate_reasons"]=sorted(item["candidate_reasons"])
         item["relation_hypotheses"] = hypotheses or ["PROVIDES_BACKGROUND_FOR", "EXPLAINS", "ELABORATES", "SUPPORTS", "QUALIFIES", "CONTRASTS_WITH", "DEPENDS_ON", "RESULTS_IN"]
         result.append(item)
-    return result
+    # Cross-unit bridges are intentionally sparse and cannot crowd out the
+    # article-internal graph. Keep only the strongest few per endpoint.
+    cross = [x for x in result if x["content_unit_scope"] == "CROSS_CONTENT_UNIT"]
+    within = [x for x in result if x["content_unit_scope"] != "CROSS_CONTENT_UNIT"]
+    cross.sort(key=lambda x: (-len(x["candidate_reasons"]), -(x.get("embedding_similarity") or 0), x["reading_order_distance"]))
+    counts=defaultdict(int); kept=[]; limit=config.get("maximum_cross_unit_candidates_per_node", 2)
+    for item in cross:
+        if counts[item["node_a"]] >= limit or counts[item["node_b"]] >= limit: continue
+        kept.append(item); counts[item["node_a"]] += 1; counts[item["node_b"]] += 1
+    return within + kept

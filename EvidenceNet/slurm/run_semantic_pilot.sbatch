@@ -43,3 +43,6 @@ srun "${PYTHON}" -m evidence_graph semantic-pilot \
   --doc-id "${DOC_ID}" \
   --config "${CONFIG_PATH}"
 
+srun "${PYTHON}" -m evidence_graph.visualize \
+  --doc-id "${DOC_ID}" \
+  --config "${CONFIG_PATH}"

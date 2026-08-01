@@ -117,6 +117,28 @@ def select_pilot(nodes, maximum=25, section_count=2, include_unsectioned=True):
     return selected, chosen
 
 
+def select_soft_unit_bridge_pilot(nodes, assignments, maximum=25):
+    """Select two substantial adjacent soft units, including both sides of their boundary."""
+    unit_by_node={r["node_id"]:r["content_unit_id"] for r in assignments}
+    by_unit=defaultdict(list); unit_order=[]
+    for node in sorted(nodes,key=lambda n:n["document_order"]):
+        unit=unit_by_node[node["node_id"]]
+        if unit not in by_unit: unit_order.append(unit)
+        by_unit[unit].append(node)
+    pairs=[]
+    for left,right in zip(unit_order,unit_order[1:]):
+        if len(by_unit[left])+len(by_unit[right])>=20:
+            pairs.append((min(len(by_unit[left]),len(by_unit[right])),left,right))
+    if not pairs: raise ValueError("No adjacent hybrid content units can supply a 20-node bridge pilot")
+    _,left,right=max(pairs)
+    left_count=min(len(by_unit[left]),maximum//2)
+    right_count=min(len(by_unit[right]),maximum-left_count)
+    if left_count+right_count<20:
+        left_count=min(len(by_unit[left]),maximum-right_count)
+    selected=by_unit[left][-left_count:]+by_unit[right][:right_count]
+    return [n["node_id"] for n in selected], [left,right], unit_by_node
+
+
 def _semantic_stats(nodes,candidates,accepted,rejected,unsupported):
     ids={n["node_id"] for n in nodes}; adjacency={x:set() for x in ids}
     for e in accepted: adjacency[e["source"]].add(e["target"]); adjacency[e["target"]].add(e["source"])
@@ -172,19 +194,13 @@ def run_semantic_pilot(doc_id,config):
     segmentation_cfg=config.get("article_segmentation", {})
     use_articles = (segmentation_cfg.get("enabled", False)
                     and any(doc_id.startswith(x) for x in segmentation_cfg.get("document_prefixes", [])))
-    article_id = None
+    article_id = None; selected_unit_map={}
     if use_articles:
-        assignments, boundaries, segmentation_failures = segment_articles(
-            evidence, llm, segmentation_cfg.get("batch_size", 10),
-            segmentation_cfg.get("generation_tokens", 1400),
-            root/"content_unit_checkpoint.jsonl")
-        if segmentation_failures:
-            write_jsonl(root/"article_segmentation_failures.jsonl", segmentation_failures)
-            raise RuntimeError(f"Article segmentation failed: {segmentation_failures}")
-        content_edges = _content_edges(boundaries)
-        write_jsonl(root/"content_unit_assignments.jsonl", assignments)
-        write_jsonl(root/"content_unit_edges.jsonl", content_edges)
-        selected_ids, article_id = select_article_pilot(evidence, assignments, pilot_cfg["maximum_nodes"])
+        assignment_path=root/"hybrid_content_unit_assignments.jsonl"
+        if not assignment_path.exists(): raise ValueError("Hybrid content-unit assignments are required for magazine pilots")
+        assignments=read_jsonl(assignment_path)
+        selected_ids, article_id, selected_unit_map = select_soft_unit_bridge_pilot(
+            evidence, assignments, pilot_cfg["maximum_nodes"])
         section_ids = sorted({n.get("section_id") for n in evidence
                               if n["node_id"] in set(selected_ids) and n.get("section_id")})
     else:
@@ -197,7 +213,7 @@ def run_semantic_pilot(doc_id,config):
     if failures: raise RuntimeError(f"Node enrichment failed: {failures}")
     selected_nodes=[n for n in enriched if n["node_id"] in selected]
     embeddings,embedding_meta=generate_document_embeddings(selected_nodes,selected,config["embedding"]["input_mode"])
-    candidates=generate_semantic_candidates(selected_nodes,embeddings,config["candidates"])
+    candidates=generate_semantic_candidates(selected_nodes,embeddings,config["candidates"],selected_unit_map)
     cap=pilot_cfg.get("maximum_candidates")
     if cap: candidates=sorted(candidates,key=lambda c:(-len(c["candidate_reasons"]),-(c.get("embedding_similarity") or 0),c["reading_order_distance"]))[:cap]
     accepted,rejected,unsupported,malformed=verify_semantic_relations(candidates,selected_nodes,llm,
@@ -213,6 +229,7 @@ def run_semantic_pilot(doc_id,config):
     write_json(root/"pilot_manifest.json",{"doc_id":doc_id,"node_ids":selected_ids,"section_ids":section_ids,
         "node_count":len(selected_ids),"candidate_count":len(candidates),"scope":"pilot",
         "content_unit_id":article_id,"content_unit_segmentation_applied":use_articles,
+        "content_unit_boundary_policy":"soft_intra_unit_plus_sparse_cross_unit_bridges" if use_articles else None,
         "protected_phase1_sha256":protected_hashes})
     graph=read_json(root/"graph.json"); graph["nodes"]=document_nodes+sections+enriched; graph["edges"]=structural+accepted
     graph["phase"]=3; graph["semantic_layer_status"]="pilot_pending_review"; graph["pilot_node_ids"]=selected_ids
@@ -222,6 +239,70 @@ def run_semantic_pilot(doc_id,config):
         raise RuntimeError("A protected Phase 1 artifact changed during semantic pilot")
     return {"output":str(root),"pilot_nodes":len(selected_ids),"candidates":len(candidates),"accepted":len(accepted),
             "rejected":len(rejected),"unsupported":len(unsupported),"malformed":len(malformed),"validation":validation["summary"]}
+
+
+def run_full_semantic_graph(doc_id, config):
+    """Resumable full-document semantics over soft content-unit hierarchy."""
+    root=Path(config["output"]["graph_root"])/doc_id
+    assignments=read_jsonl(root/"hybrid_content_unit_assignments.jsonl")
+    unit_by_node={r["node_id"]:r["content_unit_id"] for r in assignments}
+    nodes=read_jsonl(root/"evidence_nodes.jsonl")
+    if set(unit_by_node) != {n["node_id"] for n in nodes}:
+        raise ValueError("Hybrid assignments must cover every Evidence node")
+    status_path=root/"semantic_full_status.json"
+    status=read_json(status_path) if status_path.exists() else {"doc_id":doc_id,"enriched_units":[],"verified_groups":[],"complete":False}
+    if not status.get("started_at"):
+        status["started_at"]=datetime.now(timezone.utc).isoformat()
+        status["previous_semantic_snapshot"]=str(_snapshot_semantic_run(root,"before_full_semantic_graph") or "")
+        write_json(status_path,status)
+    by_unit=defaultdict(list)
+    for node in sorted(nodes,key=lambda n:n["document_order"]): by_unit[unit_by_node[node["node_id"]]].append(node["node_id"])
+    llm=create_llm(config["enrichment"]); enrichment_failures=[]
+    for unit,ids in by_unit.items():
+        if unit in status["enriched_units"]: continue
+        missing={nid for nid in ids if not next(n for n in nodes if n["node_id"]==nid).get("base_summary")}
+        if missing:
+            nodes,failures=enrich_evidence_nodes(nodes,missing,llm,config["enrichment"].get("batch_size",2),
+                config["enrichment"].get("generation_tokens",1000),config["enrichment"].get("retry_generation_tokens",1400))
+            enrichment_failures.extend({**f,"content_unit_id":unit} for f in failures)
+            write_jsonl(root/"evidence_nodes.jsonl",nodes)
+        status["enriched_units"].append(unit); write_json(status_path,status)
+    if enrichment_failures:
+        old=read_jsonl(root/"semantic_full_enrichment_failures.jsonl") if (root/"semantic_full_enrichment_failures.jsonl").exists() else []
+        write_jsonl(root/"semantic_full_enrichment_failures.jsonl",old+enrichment_failures)
+    selected={n["node_id"] for n in nodes}
+    embeddings,embedding_meta=generate_document_embeddings(nodes,selected,config["embedding"]["input_mode"])
+    full_cfg={**config["candidates"],**config.get("full_semantic",{})}
+    candidates=generate_semantic_candidates(nodes,embeddings,full_cfg,unit_by_node)
+    write_jsonl(root/"semantic_full_candidates.jsonl",candidates)
+    write_jsonl(root/"semantic_full_embedding_vectors.jsonl",embeddings)
+    write_json(root/"semantic_full_embedding_metadata.json",embedding_meta)
+    groups=defaultdict(list)
+    for candidate in candidates:
+        group=(candidate["content_unit_a"] if candidate["content_unit_scope"]=="WITHIN_CONTENT_UNIT"
+               else "CROSS_CONTENT_UNIT_BRIDGES")
+        groups[group].append(candidate)
+    accepted=read_jsonl(root/"semantic_full_edges.jsonl") if (root/"semantic_full_edges.jsonl").exists() else []
+    rejected=read_jsonl(root/"semantic_full_rejected.jsonl") if (root/"semantic_full_rejected.jsonl").exists() else []
+    unsupported=read_jsonl(root/"semantic_full_unsupported.jsonl") if (root/"semantic_full_unsupported.jsonl").exists() else []
+    malformed=read_jsonl(root/"semantic_full_malformed.jsonl") if (root/"semantic_full_malformed.jsonl").exists() else []
+    for group,group_candidates in groups.items():
+        if group in status["verified_groups"]: continue
+        a,r,u,m=verify_semantic_relations(group_candidates,nodes,llm,config["relations"]["acceptance_threshold"],
+            config["relations"].get("batch_size",2),config["relations"].get("generation_tokens",1000),
+            config["relations"].get("retry_generation_tokens",1400))
+        accepted+=a; rejected+=r; unsupported+=u; malformed+=m
+        write_jsonl(root/"semantic_full_edges.jsonl",accepted); write_jsonl(root/"semantic_full_rejected.jsonl",rejected)
+        write_jsonl(root/"semantic_full_unsupported.jsonl",unsupported); write_jsonl(root/"semantic_full_malformed.jsonl",malformed)
+        status["verified_groups"].append(group); status["last_group"]=group; write_json(status_path,status)
+        print({"verified_group":group,"candidates":len(group_candidates),"accepted":len(a)},flush=True)
+    validation=_validate_semantic(doc_id,nodes,accepted,config["relations"]["acceptance_threshold"],malformed)
+    stats=_semantic_stats(nodes,candidates,accepted,rejected,unsupported)
+    write_json(root/"semantic_full_validation_report.json",validation); write_json(root/"semantic_full_statistics.json",stats)
+    status.update({"complete":True,"completed_at":datetime.now(timezone.utc).isoformat(),"candidates":len(candidates),
+                   "accepted":len(accepted),"rejected":len(rejected),"malformed":len(malformed)})
+    write_json(status_path,status)
+    return status
 
 
 def verify_existing_pilot(doc_id, config, rebuild_candidates=False):

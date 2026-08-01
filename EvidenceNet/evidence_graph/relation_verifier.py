@@ -131,7 +131,10 @@ def verify_semantic_relations(candidates, nodes, llm, threshold=.8, batch_size=2
                 "edge_type": relation, "directed": relation != "CONTRASTS_WITH", "confidence": confidence,
                 "candidate_reasons": candidate["candidate_reasons"], "source_supporting_span": source_span,
                 "target_supporting_span": target_span, "rationale": base["rationale"], "model": generation.model,
-                "prompt_version": PROMPT_VERSION, "metadata": {"embedding_similarity": candidate.get("embedding_similarity"),
+                "prompt_version": PROMPT_VERSION, "content_unit_scope": candidate.get("content_unit_scope", "UNSCOPED"),
+                "source_content_unit_id": candidate.get("content_unit_a") if source == candidate["node_a"] else candidate.get("content_unit_b"),
+                "target_content_unit_id": candidate.get("content_unit_b") if target == candidate["node_b"] else candidate.get("content_unit_a"),
+                "metadata": {"embedding_similarity": candidate.get("embedding_similarity"),
                 "reading_order_distance": candidate["reading_order_distance"], "confidence_parsing": confidence_status,
                 "raw_confidence": raw_confidence, "retried_individually": retried}})
         else:

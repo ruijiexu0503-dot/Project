@@ -30,13 +30,13 @@ def verify_document(doc_id, candidate_report, config, llm):
                  "cross_similarity":candidate_report["similarities"][index],
                  "smoothed_similarity":candidate_report["smoothed"][index],
                  "prominence":candidate_report["prominence"][index]}
-        prompt=f'''Decide whether the right side begins a new independent article, editorial item,
-advertisement, appendix, or other standalone content unit. The nearest paragraphs may differ in
+        prompt=f'''Decide whether the right side begins a new independent article, appendix, or other
+standalone content unit. The nearest paragraphs may differ in
 topic without creating a new unit. A title/byline followed by coherent body text is strong evidence;
 a caption, subsection, running header, affiliation, date, or continuation is not.
 Return one object with boundary_index; decision (SAME_CONTENT_UNIT or STARTS_NEW_CONTENT_UNIT);
 confidence; supporting_span_left; supporting_span_right; rationale; right_unit_kind
-(editorial, advertisement, front_matter, back_matter, or other).
+(editorial, front_matter, back_matter, or other).
 INPUT:\n{json.dumps(payload,ensure_ascii=False)}'''
         try:
             g=llm.generate_json(system,prompt,max_new_tokens=900);row=g.parsed

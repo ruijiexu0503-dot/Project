@@ -32,6 +32,7 @@ external/
 **/output_*/
 **/logs/
 **/logs_*/
+*.log
 *.out
 *.err
 slurm-*.out

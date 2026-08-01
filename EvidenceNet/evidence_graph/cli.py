@@ -6,19 +6,21 @@ import json
 from .config import load_config
 from .pipeline import build_nodes
 from .semantic_pipeline import (run_semantic_pilot, verify_existing_pilot, adjudicate_existing_pilot,
-                                enrich_existing_formulas, run_content_unit_segmentation)
+                                enrich_existing_formulas, run_content_unit_segmentation, run_full_semantic_graph)
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Build a Phase 1 document-internal Evidence Graph")
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("build-nodes", "validate", "run", "semantic-pilot", "verify-pilot", "rebuild-verify-pilot", "adjudicate-pilot", "enrich-formulas", "segment-content-units"):
+    for command in ("build-nodes", "validate", "run", "semantic-pilot", "semantic-full", "verify-pilot", "rebuild-verify-pilot", "adjudicate-pilot", "enrich-formulas", "segment-content-units"):
         p = sub.add_parser(command)
         p.add_argument("--doc-id", required=True); p.add_argument("--config", required=True)
     args = parser.parse_args(argv)
     config = load_config(args.config)
     if args.command == "semantic-pilot":
         print(json.dumps(run_semantic_pilot(args.doc_id, config), indent=2)); return
+    if args.command == "semantic-full":
+        print(json.dumps(run_full_semantic_graph(args.doc_id, config), indent=2)); return
     if args.command == "verify-pilot":
         print(json.dumps(verify_existing_pilot(args.doc_id, config), indent=2)); return
     if args.command == "rebuild-verify-pilot":

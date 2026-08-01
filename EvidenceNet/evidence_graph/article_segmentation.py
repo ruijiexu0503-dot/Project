@@ -38,7 +38,7 @@ def segment_articles(nodes: list[dict[str, Any]], llm, batch_size: int = 10,
     def process(batch):
         prompt = f'''For every adjacent Evidence pair jointly decide (1) whether the right node continues the
 same independent content unit as the left node and (2) their semantic relation. A new title/byline, a clearly different topic,
-advertisement, contents entry, masthead, or new standalone editorial item can start a new article.
+contents entry, masthead, or new standalone item can start a new content unit.
 Page or section changes alone are not sufficient. Pronouns, continued sentences, shared argument,
 shared experiment, and a title followed by its body indicate the same article.
 Return a JSON array with exactly one object per pair containing left_id, right_id, decision

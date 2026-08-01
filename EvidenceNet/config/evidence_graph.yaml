@@ -34,6 +34,11 @@ candidates:
   shared_entity_top_k: 5
   same_section_top_k: 5
   maximum_candidates_per_node: 15
+  cross_unit_embedding_threshold: 0.45
+  maximum_cross_unit_candidates_per_node: 2
+full_semantic:
+  maximum_candidates_per_node: 6
+  maximum_cross_unit_candidates_per_node: 2
 relations:
   acceptance_threshold: 0.80
   allow_unsupported_relation_review: true
