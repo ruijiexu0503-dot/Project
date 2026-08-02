@@ -258,8 +258,10 @@ def run_full_semantic_graph(doc_id, config):
     by_unit=defaultdict(list)
     for node in sorted(nodes,key=lambda n:n["document_order"]): by_unit[unit_by_node[node["node_id"]]].append(node["node_id"])
     llm=create_llm(config["enrichment"]); enrichment_failures=[]
+    import time
     for unit,ids in by_unit.items():
         if unit in status["enriched_units"]: continue
+        unit_started=time.monotonic()
         missing={nid for nid in ids if not next(n for n in nodes if n["node_id"]==nid).get("base_summary")}
         if missing:
             nodes,failures=enrich_evidence_nodes(nodes,missing,llm,config["enrichment"].get("batch_size",2),
@@ -267,6 +269,8 @@ def run_full_semantic_graph(doc_id, config):
             enrichment_failures.extend({**f,"content_unit_id":unit} for f in failures)
             write_jsonl(root/"evidence_nodes.jsonl",nodes)
         status["enriched_units"].append(unit); write_json(status_path,status)
+        print({"enriched_unit":unit,"nodes":len(ids),"failures":len(failures) if missing else 0,
+               "elapsed_seconds":round(time.monotonic()-unit_started,2)},flush=True)
     if enrichment_failures:
         old=read_jsonl(root/"semantic_full_enrichment_failures.jsonl") if (root/"semantic_full_enrichment_failures.jsonl").exists() else []
         write_jsonl(root/"semantic_full_enrichment_failures.jsonl",old+enrichment_failures)

@@ -80,15 +80,24 @@ class Generation:
 
 class TransformersLLM:
     def __init__(self, model: str, dtype: str = "auto", max_new_tokens: int = 2048,
-                 device_map: str = "auto", require_cuda: bool = False):
+                 device_map: str = "auto", require_cuda: bool = False,
+                 enable_thinking: bool = False):
         import torch
-        from transformers import AutoTokenizer, Qwen2_5_VLForConditionalGeneration
+        from transformers import AutoConfig, AutoModelForCausalLM, AutoModelForImageTextToText, AutoTokenizer
         if require_cuda and not torch.cuda.is_available():
             raise RuntimeError("CUDA is required by configuration, but no GPU is visible")
         requested = getattr(torch, dtype) if dtype not in {"auto", "float32"} else ("auto" if dtype == "auto" else torch.float32)
         self.model_name = model
-        self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
-        self.model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+        self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True, local_files_only=True)
+        model_config = AutoConfig.from_pretrained(model, trust_remote_code=True, local_files_only=True)
+        self.model_type = model_config.model_type
+        self.enable_thinking = enable_thinking
+        # Qwen2.5-VL and Qwen3.5 use the multimodal auto class. Text-only
+        # variants (and future remote-code checkpoints) use the causal class.
+        # Selecting from config avoids hard-coding one Qwen generation.
+        multimodal_types = {"qwen2_5_vl", "qwen3_5", "qwen3_5_moe", "qwen3_vl", "qwen3_vl_moe"}
+        auto_class = AutoModelForImageTextToText if model_config.model_type in multimodal_types else AutoModelForCausalLM
+        self.model = auto_class.from_pretrained(
             model, torch_dtype=requested, device_map=device_map, trust_remote_code=True,
             low_cpu_mem_usage=True, local_files_only=True)
         self.model.eval(); self.max_new_tokens = max_new_tokens
@@ -96,7 +105,9 @@ class TransformersLLM:
 
     def generate_json(self, system: str, prompt: str, max_new_tokens: int | None = None) -> Generation:
         messages = [{"role": "system", "content": system}, {"role": "user", "content": prompt}]
-        rendered = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        rendered = self.tokenizer.apply_chat_template(
+            messages, tokenize=False, add_generation_prompt=True,
+            enable_thinking=self.enable_thinking)
         inputs = self.tokenizer([rendered], padding=True, return_tensors="pt")
         prompt_length = inputs["input_ids"].shape[1]
         # device_map="auto" places this model on CUDA, while tokenizers return CPU tensors.
@@ -110,35 +121,30 @@ class TransformersLLM:
 
     def generate_json_with_images(self, system: str, prompt: str, image_paths: list[str],
                                   max_new_tokens: int | None = None) -> Generation:
-        """Generate grounded JSON from local images without qwen-vl-utils."""
+        """Generate grounded JSON from local images using the checkpoint processor."""
         from PIL import Image
-        from transformers.models.qwen2_vl.image_processing_pil_qwen2_vl import Qwen2VLImageProcessorPil
+        from transformers import AutoProcessor
         if self._image_processor is None:
-            self._image_processor = Qwen2VLImageProcessorPil.from_pretrained(
-                self.model_name, local_files_only=True)
+            self._image_processor = AutoProcessor.from_pretrained(
+                self.model_name, trust_remote_code=True, local_files_only=True)
         images = []
         content = []
         for path in image_paths:
             image = Image.open(path).convert("RGB")
-            # Bound vision tokens for full-page magazine images.
-            image.thumbnail((1280, 1280))
+            image.thumbnail((1100, 1100))
             images.append(image)
-            content.append({"type": "image"})
+            content.append({"type": "image", "image": image})
         content.append({"type": "text", "text": prompt})
         messages = [{"role": "system", "content": system}, {"role": "user", "content": content}]
-        rendered = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        image_inputs = self._image_processor(images=images, return_tensors="pt")
-        merge_length = self._image_processor.merge_size ** 2
-        for grid in image_inputs["image_grid_thw"]:
-            token_count = int(grid.prod().item() // merge_length)
-            rendered = rendered.replace("<|image_pad|>", "<|image_pad|>" * token_count, 1)
-        inputs = self.tokenizer([rendered], padding=True, return_tensors="pt")
-        inputs.update(image_inputs)
+        inputs = self._image_processor.apply_chat_template(
+            messages, tokenize=True, add_generation_prompt=True, return_dict=True,
+            return_tensors="pt", enable_thinking=self.enable_thinking)
         prompt_length = inputs["input_ids"].shape[1]
         inputs = {name: tensor.to(self.model.device) for name, tensor in inputs.items()}
         generated = self.model.generate(**inputs, max_new_tokens=max_new_tokens or self.max_new_tokens,
                                         do_sample=False, repetition_penalty=1.05)
-        raw = self.tokenizer.batch_decode(generated[:, prompt_length:], skip_special_tokens=True)[0].strip()
+        raw = self._image_processor.batch_decode(
+            generated[:, prompt_length:], skip_special_tokens=True)[0].strip()
         for image in images:
             image.close()
         return Generation(extract_json(raw), raw, self.model_name, datetime.now(timezone.utc).isoformat())
@@ -149,4 +155,5 @@ def create_llm(config: dict[str, Any]) -> TransformersLLM:
     if provider != "transformers": raise ValueError(f"Unsupported LLM provider: {provider!r}")
     if not config.get("model"): raise ValueError("LLM model must be configured")
     return TransformersLLM(config["model"], config.get("dtype", "auto"), config.get("max_new_tokens", 2048),
-                           config.get("device_map", "auto"), config.get("require_cuda", False))
+                           config.get("device_map", "auto"), config.get("require_cuda", False),
+                           config.get("enable_thinking", False))

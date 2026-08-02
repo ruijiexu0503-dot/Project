@@ -1,0 +1,12 @@
+input:
+  aligned_root: ../parsing/output/hybrid_deepseek_layout_split_render/aligned_json
+output:
+  graph_root: output/evidence_graph
+enrichment:
+  provider: transformers
+  model: ../external/models/Qwen3.5-35B-A3B
+  dtype: bfloat16
+  device_map: auto
+  require_cuda: true
+  enable_thinking: false
+  max_new_tokens: 650
