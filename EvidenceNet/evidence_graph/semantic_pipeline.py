@@ -212,7 +212,8 @@ def run_semantic_pilot(doc_id,config):
         config["enrichment"].get("retry_generation_tokens",1400))
     if failures: raise RuntimeError(f"Node enrichment failed: {failures}")
     selected_nodes=[n for n in enriched if n["node_id"] in selected]
-    embeddings,embedding_meta=generate_document_embeddings(selected_nodes,selected,config["embedding"]["input_mode"])
+    embeddings,embedding_meta=generate_document_embeddings(selected_nodes,selected,config["embedding"]["input_mode"],
+        config["embedding"].get("model") if config["embedding"].get("enabled") else None)
     candidates=generate_semantic_candidates(selected_nodes,embeddings,config["candidates"],selected_unit_map)
     cap=pilot_cfg.get("maximum_candidates")
     if cap: candidates=sorted(candidates,key=lambda c:(-len(c["candidate_reasons"]),-(c.get("embedding_similarity") or 0),c["reading_order_distance"]))[:cap]
@@ -275,7 +276,8 @@ def run_full_semantic_graph(doc_id, config):
         old=read_jsonl(root/"semantic_full_enrichment_failures.jsonl") if (root/"semantic_full_enrichment_failures.jsonl").exists() else []
         write_jsonl(root/"semantic_full_enrichment_failures.jsonl",old+enrichment_failures)
     selected={n["node_id"] for n in nodes}
-    embeddings,embedding_meta=generate_document_embeddings(nodes,selected,config["embedding"]["input_mode"])
+    embeddings,embedding_meta=generate_document_embeddings(nodes,selected,config["embedding"]["input_mode"],
+        config["embedding"].get("model") if config["embedding"].get("enabled") else None)
     full_cfg={**config["candidates"],**config.get("full_semantic",{})}
     candidates=generate_semantic_candidates(nodes,embeddings,full_cfg,unit_by_node)
     write_jsonl(root/"semantic_full_candidates.jsonl",candidates)
@@ -326,7 +328,8 @@ def verify_existing_pilot(doc_id, config, rebuild_candidates=False):
     nodes = [n for n in enriched_all if n["node_id"] in selected]
     write_jsonl(root / "evidence_nodes.jsonl", enriched_all)
     if rebuild_candidates:
-        embeddings, embedding_meta = generate_document_embeddings(nodes, selected, config["embedding"]["input_mode"])
+        embeddings, embedding_meta = generate_document_embeddings(nodes, selected, config["embedding"]["input_mode"],
+            config["embedding"].get("model") if config["embedding"].get("enabled") else None)
         write_jsonl(root / "embedding_vectors.jsonl", embeddings)
         write_json(root / "embedding_metadata.json", embedding_meta)
         candidates = generate_semantic_candidates(nodes, embeddings, config["candidates"])

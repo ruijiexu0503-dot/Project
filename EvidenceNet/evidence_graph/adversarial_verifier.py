@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 from .relation_ontology import RELATIONS
 
-PROMPT_VERSION = "semantic-validity-adjudication-v3"
+PROMPT_VERSION = "semantic-validity-adjudication-v4-balanced-correction"
 ROLE_SCHEMAS = {
     "PROVIDES_BACKGROUND_FOR": ("background_node_id", "contextualized_node_id"),
     "EXPLAINS": ("explanation_node_id", "explained_node_id"),
@@ -16,6 +16,9 @@ ROLE_SCHEMAS = {
     "DEPENDS_ON": ("dependent_node_id", "requirement_node_id"),
     "RESULTS_IN": ("cause_or_process_node_id", "outcome_node_id"),
 }
+INVERSE_LABELS = {"PROVIDES_BACKGROUND_FOR":"HAS_BACKGROUND_FROM","EXPLAINS":"IS_EXPLAINED_BY",
+                  "ELABORATES":"IS_ELABORATED_BY","SUPPORTS":"IS_SUPPORTED_BY","QUALIFIES":"IS_QUALIFIED_BY",
+                  "CONTRASTS_WITH":"CONTRASTS_WITH","DEPENDS_ON":"IS_REQUIRED_BY","RESULTS_IN":"RESULTS_FROM"}
 
 
 def _view(node):
@@ -29,27 +32,42 @@ def _view(node):
 
 def _prompt(items, single=False):
     shape = "one JSON object" if single else "a JSON array with exactly one object per proposed edge"
-    return f'''Act as a balanced, conservative semantic-edge adjudicator. Do not favor acceptance or rejection.
-For each proposed edge, independently decide ACCEPT, CORRECT, or REJECT. Use CORRECT when a grounded relationship
-exists but its ontology label or direction must change. Reject only when nodes merely share a topic/entity, discuss
-different aspects without a defined relationship, require external knowledge, or lack exact grounding.
+    return f'''Act as a balanced semantic-edge adjudicator. Do not favor acceptance or rejection.
+For each pair, first test ALL ontology relations in BOTH directions using the supplied spans and full Evidence
+contexts. Then decide ACCEPT, CORRECT, or REJECT:
+- ACCEPT: the proposed label and direction are grounded.
+- CORRECT: any different allowed label or direction is grounded. CORRECT is mandatory in this case; never describe
+  a supported alternative relation in the rationale and then return REJECT.
+- REJECT: no allowed ontology relation is grounded between the nodes. A wrong proposal alone is not grounds for
+  rejection when another allowed relationship is supported.
 Ontology: {json.dumps(RELATIONS)}
 Semantic endpoint roles: {json.dumps(ROLE_SCHEMAS)}
 For ELABORATES, detailed node -> brief node. For SUPPORTS, evidence -> claim. For EXPLAINS,
 explanation -> explained content. For DEPENDS_ON, dependent content -> requirement. For RESULTS_IN, cause -> outcome.
-Apply strict proposition tests: ELABORATES requires the same proposition in both nodes, not different properties
-of one event. SUPPORTS requires evidence increasing credibility of the exact target claim. EXPLAINS requires a
-mechanism or reason for the exact target phenomenon. BACKGROUND must materially aid understanding; a shared name
-or location is insufficient. DEPENDS_ON requires an explicit prerequisite, method, resource, assumption, or result.
+Apply relation tests: ELABORATES requires a shared core proposition, with one node adding material detail.
+SUPPORTS requires evidence that increases credibility of the target claim. EXPLAINS requires a mechanism or reason
+that materially accounts for the target phenomenon; it need not independently derive every quantitative value.
+BACKGROUND must materially aid understanding; a shared name alone is insufficient. DEPENDS_ON includes explicit
+use or application of a method, equation, assumption, resource, or prior result. QUALIFIES includes a grounded
+limitation, boundary condition, or concrete case that narrows a general statement.
 Do not accept DEPENDS_ON merely because one node is a figure caption, depicts the same event, or precedes another.
 Do not duplicate deterministic caption/reference structure as a semantic dependency.
 The proposed supporting spans have already been validated as exact source substrings. Do not regenerate,
 paraphrase, or judge formatting of those spans. Judge only whether the two spans and their full Evidence
 contexts establish a semantic relation.
+If the forward relation is valid, express its logically equivalent inverse traversal using this exact mapping:
+{json.dumps(INVERSE_LABELS)}. The reverse source MUST be the forward target and the reverse target MUST be the
+forward source. This is not a second causal claim and does not require the target to perform the forward action:
+A EXPLAINS B is exactly equivalent to B IS_EXPLAINED_BY A. Set reverse_consistent true when the inverse fields
+correctly express the same supported assertion. CONTRASTS_WITH is symmetric.
 Return {shape} with: edge_key; semantic_validity (true or false); verdict (ACCEPT, CORRECT, or REJECT);
-relation_type; source_node_id; target_node_id; rationale; failure_modes; and confidence.
+relation_type; source_node_id; target_node_id; reverse_consistent; reverse_relation_type;
+reverse_source_node_id; reverse_target_node_id; reverse_interpretation; rationale;
+failure_modes; and confidence.
 confidence is confidence that the semantic relation exists, and MUST be a JSON number from 0.0 to 1.0.
-If semantic_validity is true, confidence must be at least 0.5. If false, confidence must be below 0.5.
+Before returning REJECT, explicitly confirm internally that none of the eight allowed relations works in either
+direction. Do not include that internal checklist in the output. If semantic_validity is true, confidence must be
+at least 0.5. If false, confidence must be below 0.5.
 Never return ACCEPT with semantic_validity false or confidence below 0.5. Return JSON only.
 PROPOSED EDGES:\n{json.dumps(items, ensure_ascii=False)}'''
 
@@ -129,6 +147,11 @@ def adversarially_verify(edges, nodes, llm, threshold=.85, batch_size=2,
         relation=str(row.get("relation_type") or edge["edge_type"]).upper()
         source=row.get("source_node_id") or edge["source"]
         target=row.get("target_node_id") or edge["target"]
+        expected_inverse=INVERSE_LABELS.get(relation)
+        reverse_consistent=(row.get("reverse_consistent") is True
+                            and str(row.get("reverse_relation_type") or "").upper()==expected_inverse
+                            and row.get("reverse_source_node_id")==target
+                            and row.get("reverse_target_node_id")==source)
         endpoint_pair={edge["source"],edge["target"]}
         span_by_node={edge["source"]:edge.get("source_supporting_span"),
                       edge["target"]:edge.get("target_supporting_span")}
@@ -142,6 +165,7 @@ def adversarially_verify(edges, nodes, llm, threshold=.85, batch_size=2,
             "source_span_exact":bool(source_span),
             "target_span_exact":bool(target_span),
             "above_threshold":confidence>=threshold,
+            "reverse_consistent":reverse_consistent,
             "internally_consistent":not contradictory,
         }
         passed=all(checks.values())
@@ -149,6 +173,11 @@ def adversarially_verify(edges, nodes, llm, threshold=.85, batch_size=2,
                "semantic_validity":semantic_valid,"confidence":confidence,"checks":checks,
                "failure_modes":list(row.get("failure_modes") or [])+failures,
                "source_supporting_span":source_span,"target_supporting_span":target_span,
+               "reverse_consistent":reverse_consistent,
+               "reverse_relation_type":str(row.get("reverse_relation_type") or ""),
+               "reverse_source_node_id":row.get("reverse_source_node_id"),
+               "reverse_target_node_id":row.get("reverse_target_node_id"),
+               "reverse_interpretation":str(row.get("reverse_interpretation") or ""),
                "rationale":str(row.get("rationale") or ""),"model":generation.model,
                "prompt_version":PROMPT_VERSION,"timestamp":generation.timestamp,
                "retried_individually":retried,"proposed_edge":edge}
@@ -160,6 +189,8 @@ def adversarially_verify(edges, nodes, llm, threshold=.85, batch_size=2,
                 rationale=audit["rationale"],prompt_version=PROMPT_VERSION)
             final["metadata"]={**edge.get("metadata",{}),"adversarial_confidence":confidence,
                 "semantic_roles":{"source":expected_roles[0],"target":expected_roles[1]},
+                "traversable_both_directions":True,
+                "inverse_interpretation":audit["reverse_interpretation"],
                 "adjudication_verdict":model_verdict,"original_proposal":{"source":edge["source"],
                 "target":edge["target"],"edge_type":edge["edge_type"]}}
             accepted.append(final)
@@ -184,11 +215,6 @@ def adversarially_verify(edges, nodes, llm, threshold=.85, batch_size=2,
                 malformed.append({"edge_key":key,"batch_error":batch_error,"retry_error":str(exc),
                                   "timestamp":datetime.now(timezone.utc).isoformat(),"proposed_edge":edge})
     return accepted,audits,malformed
-
-
-INVERSE_LABELS = {"PROVIDES_BACKGROUND_FOR":"HAS_BACKGROUND_FROM","EXPLAINS":"IS_EXPLAINED_BY",
-                  "ELABORATES":"IS_ELABORATED_BY","SUPPORTS":"IS_SUPPORTED_BY","QUALIFIES":"IS_QUALIFIED_BY",
-                  "CONTRASTS_WITH":"CONTRASTS_WITH","DEPENDS_ON":"IS_REQUIRED_BY","RESULTS_IN":"RESULTS_FROM"}
 
 
 def bidirectional_traversal_rows(edges):

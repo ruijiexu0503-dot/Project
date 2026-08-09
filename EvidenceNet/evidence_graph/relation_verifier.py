@@ -7,6 +7,9 @@ from .relation_ontology import RELATIONS
 
 PROMPT_VERSION = "semantic-relation-v2"
 CONFIDENCE_WORDS = {"high": 0.85, "medium": 0.60, "low": 0.30, "maybe": 0.40}
+INVERSE_LABELS = {"PROVIDES_BACKGROUND_FOR":"HAS_BACKGROUND_FROM","EXPLAINS":"IS_EXPLAINED_BY",
+                  "ELABORATES":"IS_ELABORATED_BY","SUPPORTS":"IS_SUPPORTED_BY","QUALIFIES":"IS_QUALIFIED_BY",
+                  "CONTRASTS_WITH":"CONTRASTS_WITH","DEPENDS_ON":"IS_REQUIRED_BY","RESULTS_IN":"RESULTS_FROM"}
 
 
 def _span_in(span: str, text: str) -> bool:
@@ -48,12 +51,20 @@ def _payload(candidate, by_id):
             "evidence_b": view(b), "candidate_signals": candidate}
 
 
-def _prompt(payloads, single=False):
+def _prompt(payloads, single=False, require_reverse_consistency=False):
     shape = "one JSON object" if single else "a JSON array with exactly one object per pair"
+    reverse_fields = (", reverse_consistent, reverse_relation_type, reverse_source_node_id, "
+                      "reverse_target_node_id, and reverse_interpretation"
+                      if require_reverse_consistency else "")
+    reverse_instruction = (f'''After choosing a supported forward relation, express its logically equivalent inverse
+using this exact mapping: {json.dumps(INVERSE_LABELS)}. The reverse source must equal the forward target and the
+reverse target must equal the forward source. A EXPLAINS B is equivalent to B IS_EXPLAINED_BY A; it does not mean
+B EXPLAINS A. Set reverse_consistent true when these inverse fields correctly express the same assertion.\n'''
+                           if require_reverse_consistency else "")
     return f'''Verify each pair independently using only the supplied evidence. Ontology: {json.dumps(RELATIONS)}.
 Return {shape}. Every result must contain pair_id, should_connect, source_evidence_id,
 target_evidence_id, relation_type, directed, source_supporting_span, target_supporting_span,
-rationale, and confidence. confidence MUST be a JSON number from 0.0 to 1.0; never use words or percentages.
+rationale, confidence{reverse_fields}. confidence MUST be a JSON number from 0.0 to 1.0; never use words or percentages.
 Spans must be exact short substrings copied from the corresponding original_text. Escape JSON backslashes.
 For a display-math endpoint, return the literal sentinel __FULL_FORMULA__ as its supporting span; never copy
 LaTeX into JSON. The system will resolve the sentinel to the complete original expression. If preceding prose
@@ -62,6 +73,11 @@ the formula to derive a value or conclusion, test application -> formula as DEPE
 candidate_signals.relation_hypotheses lists relations suggested by retrieval. Test each listed relation
 independently against its ontology definition; it is a hypothesis, not evidence. Choose one primary relation
 only if its full definition, direction, and both exact spans are grounded. Topic or entity overlap alone is NONE.
+For every plausible relation, explicitly test both A -> B and B -> A before choosing direction. Evidence A is
+not the default source. Assign direction from semantic endpoint roles: detailed -> brief for ELABORATES;
+evidence -> claim for SUPPORTS; explanation -> explained content for EXPLAINS; dependent -> requirement for
+DEPENDS_ON; cause/process -> outcome for RESULTS_IN; qualification -> qualified claim for QUALIFIES. If neither
+orientation satisfies the endpoint roles, return NONE.
 Do not create DEPENDS_ON merely because one node is a caption, depicts the event, or occurs earlier. Explicit
 figure/caption references are structural links and must not be duplicated as semantic dependence. A dependent
 node must actually use a target method, equation, assumption, resource, or result in its stated reasoning.
@@ -71,6 +87,7 @@ objects, results, or claims and then adds purpose, mechanism, or detail, test la
 or EXPLAINS. Copy the anaphoric phrase and its grounded antecedent as supporting spans.
 Use UNSUPPORTED_RELATION plus proposed_relation only for a grounded
 relationship outside the ontology. Reject rather than guess when direction, label, or spans are ambiguous.
+{reverse_instruction}
 Return JSON only.\nPAIRS:\n{json.dumps(payloads, ensure_ascii=False)}'''
 
 
@@ -82,7 +99,8 @@ def _rows(parsed):
 
 
 def verify_semantic_relations(candidates, nodes, llm, threshold=.8, batch_size=2,
-                              generation_tokens=1000, retry_generation_tokens=1400):
+                              generation_tokens=1000, retry_generation_tokens=1400,
+                              require_reverse_consistency=False):
     by_id = {n["node_id"]: n for n in nodes}
     accepted, rejected, unsupported, malformed = [], [], [], []
     system = ("You are a conservative evidence-relation verifier. Use only supplied text. "
@@ -123,9 +141,15 @@ def verify_semantic_relations(candidates, nodes, llm, threshold=.8, batch_size=2
                 and "formula_context_signal" in candidate.get("candidate_reasons", [])):
             if source in by_id and not source_span: source_span = by_id[source]["original_markdown"]
             if target in by_id and not target_span: target_span = by_id[target]["original_markdown"]
+        expected_inverse = INVERSE_LABELS.get(relation)
+        reverse_consistent = (row.get("reverse_consistent") is True
+                              and str(row.get("reverse_relation_type") or "").upper() == expected_inverse
+                              and row.get("reverse_source_node_id") == target
+                              and row.get("reverse_target_node_id") == source)
         valid = (row.get("should_connect") is True and relation in RELATIONS and source in by_id and target in by_id
                  and {source, target} == {candidate["node_a"], candidate["node_b"]}
-                 and confidence >= threshold and source_span and target_span)
+                 and confidence >= threshold and source_span and target_span
+                 and (reverse_consistent or not require_reverse_consistency))
         if valid:
             accepted.append({"source": source, "target": target, "edge_layer": "semantic",
                 "edge_type": relation, "directed": relation != "CONTRASTS_WITH", "confidence": confidence,
@@ -136,7 +160,11 @@ def verify_semantic_relations(candidates, nodes, llm, threshold=.8, batch_size=2
                 "target_content_unit_id": candidate.get("content_unit_b") if target == candidate["node_b"] else candidate.get("content_unit_a"),
                 "metadata": {"embedding_similarity": candidate.get("embedding_similarity"),
                 "reading_order_distance": candidate["reading_order_distance"], "confidence_parsing": confidence_status,
-                "raw_confidence": raw_confidence, "retried_individually": retried}})
+                "raw_confidence": raw_confidence, "retried_individually": retried,
+                "traversable_both_directions": True,
+                "reverse_consistent": reverse_consistent,
+                "inverse_relation": expected_inverse,
+                "inverse_interpretation": str(row.get("reverse_interpretation") or "")}})
         else:
             rejected.append({**base, "source_evidence_id": source, "target_evidence_id": target,
                              "source_supporting_span": source_span or "", "target_supporting_span": target_span or ""})
@@ -145,7 +173,8 @@ def verify_semantic_relations(candidates, nodes, llm, threshold=.8, batch_size=2
         batch = candidates[offset:offset + batch_size]
         pending = {f"{c['node_a']}||{c['node_b']}": c for c in batch}
         try:
-            generation = llm.generate_json(system, _prompt([_payload(c, by_id) for c in batch]), generation_tokens)
+            generation = llm.generate_json(system, _prompt([_payload(c, by_id) for c in batch],
+                                                           require_reverse_consistency=require_reverse_consistency), generation_tokens)
             returned = {r.get("pair_id"): r for r in _rows(generation.parsed) if isinstance(r, dict)}
             for pid in list(pending):
                 if pid in returned:
@@ -156,7 +185,8 @@ def verify_semantic_relations(candidates, nodes, llm, threshold=.8, batch_size=2
             batch_error = "missing result in batch response"
         for pid, candidate in pending.items():
             try:
-                generation = llm.generate_json(system, _prompt([_payload(candidate, by_id)], single=True), retry_generation_tokens)
+                generation = llm.generate_json(system, _prompt([_payload(candidate, by_id)], single=True,
+                                                               require_reverse_consistency=require_reverse_consistency), retry_generation_tokens)
                 rows = _rows(generation.parsed)
                 if not rows: raise ValueError("individual retry returned no result")
                 row = rows[0]

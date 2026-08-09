@@ -10,6 +10,9 @@ python -m evidence_graph run --doc-id gw150914_detection --config config/evidenc
 
 The output is written to `output/evidence_graph/<doc_id>/`. Empty semantic-layer files are intentional until Phase 1 has been reviewed.
 
+Document-level single-work versus multi-item detection and segmentation routing are documented in
+[`docs/structure_detection/README.md`](docs/structure_detection/README.md).
+
 Run the bounded Phase 2/3 pilot (25 nodes; never the full document):
 
 ```bash

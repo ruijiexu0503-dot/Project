@@ -99,13 +99,13 @@ def main():
     page_ids = sorted(pages, key=_page_number)
     checkpoint_path = output / "page_checkpoint.jsonl"
     checkpoint = read_jsonl(checkpoint_path) if checkpoint_path.exists() else []
-    completed = {r["page_id"]: r for r in checkpoint if r.get("status") == "ok"}
+    completed = {r["page_id"]: r for r in checkpoint if r.get("status") in {"ok", "unresolved"}}
     item_by_node = {}; item_kind = {}; active_item = None; edges = []; assignments = []
     # Replay completed pages to reconstruct state deterministically.
     for page_id in page_ids:
         if page_id not in completed: break
         row = completed[page_id]
-        for assignment in row["assignments"]:
+        for assignment in row.get("assignments", []):
             item_by_node[assignment["node_id"]] = assignment["content_item_id"]
             item_kind.setdefault(assignment["content_item_id"], assignment["content_kind"])
             active_item = assignment["content_item_id"]
@@ -134,7 +134,13 @@ INPUT:\n{json.dumps(payload, ensure_ascii=False)}'''
         image = _image_path(config["input"]["aligned_root"], args.doc_id, page_id)
         try:
             if not image: raise FileNotFoundError(f"page image missing for {page_id}")
-            generation = llm.generate_json_with_images(system, assignment_prompt, [str(image)], max_new_tokens=2200)
+            try:
+                generation = llm.generate_json_with_images(
+                    system, assignment_prompt, [str(image)], max_new_tokens=2200)
+            except Exception:
+                compact_retry = assignment_prompt + "\nRETRY: Return compact JSON only. Omit all explanations except page_rationale."
+                generation = llm.generate_json_with_images(
+                    system, compact_retry, [str(image)], max_new_tokens=3200)
             assignment_result = generation.parsed
             active_item, page_assignments = _apply_page_result(
                 assignment_result, current, item_by_node, item_kind, active_item)
@@ -145,20 +151,29 @@ For each edge return source, target, relation_type, confidence, exact source_sup
 target_supporting_span, and a rationale of at most 25 words. Topic overlap alone is not a relation.
 Return one object with page_id and semantic_edges.
 INPUT:\n{json.dumps(relation_payload, ensure_ascii=False)}'''
-            relation_generation = llm.generate_json_with_images(
-                system, relation_prompt, [str(image)], max_new_tokens=3000)
-            relation_result = relation_generation.parsed
-            accepted = _validate_edges(relation_result, {n["node_id"] for n in current}, edges, by_id)
+            try:
+                relation_generation = llm.generate_json_with_images(
+                    system, relation_prompt, [str(image)], max_new_tokens=3000)
+                relation_result = relation_generation.parsed
+                accepted = _validate_edges(relation_result, {n["node_id"] for n in current}, edges, by_id)
+                relation_status, relation_error = "ok", None
+            except Exception as relation_exc:
+                relation_result, accepted = {}, []
+                relation_status, relation_error = "error", str(relation_exc)
             record = {"page_id": page_id, "status": "ok", "assignments": page_assignments,
                       "accepted_edges": accepted, "assignment_result": assignment_result,
-                      "relation_result": relation_result, "model": generation.model,
+                      "relation_result": relation_result, "relation_status": relation_status,
+                      "relation_error": relation_error, "model": generation.model,
                       "timestamp": generation.timestamp, "prompt_version": PROMPT_VERSION}
             assignments.extend(page_assignments)
         except Exception as exc:
-            record = {"page_id": page_id, "status": "error", "error": str(exc),
+            record = {"page_id": page_id, "status": "unresolved", "error": str(exc),
+                      "assignments": [], "accepted_edges": [], "relation_status": "skipped",
                       "prompt_version": PROMPT_VERSION}
             checkpoint = [r for r in checkpoint if r.get("page_id") != page_id] + [record]
-            write_jsonl(checkpoint_path, checkpoint); raise
+            write_jsonl(checkpoint_path, checkpoint)
+            print({"page": page_id, "status": "unresolved", "error": str(exc)}, flush=True)
+            continue
         checkpoint = [r for r in checkpoint if r.get("page_id") != page_id] + [record]
         write_jsonl(checkpoint_path, checkpoint); write_jsonl(output / "content_item_assignments.jsonl", assignments)
         write_jsonl(output / "semantic_edges.jsonl", edges)

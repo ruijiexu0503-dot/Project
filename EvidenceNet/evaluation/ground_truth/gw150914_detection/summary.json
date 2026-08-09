@@ -1,0 +1,278 @@
+{
+  "document": "gw150914_detection",
+  "pilot_nodes": 22,
+  "all_unordered_pairs": 231,
+  "gold_relations": 36,
+  "gold_none": 195,
+  "generated_candidates": 143,
+  "gold_relations_retrieved": 35,
+  "candidate_generation_recall": 0.9722,
+  "threshold_evaluation": [
+    {
+      "threshold": 0.5,
+      "forwarded_pairs": 58,
+      "gold_relations_forwarded": 22,
+      "gold_relations_total": 36,
+      "forwarding_recall_all_pairs": 0.6111,
+      "forwarding_recall_retrieved_candidates": 0.6286,
+      "missed_gold_pairs": [
+        [
+          "gw150914_detection_EV_000001",
+          "gw150914_detection_EV_000010"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000011"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000012"
+        ],
+        [
+          "gw150914_detection_EV_000010",
+          "gw150914_detection_EV_000017"
+        ],
+        [
+          "gw150914_detection_EV_000013",
+          "gw150914_detection_EV_000015"
+        ],
+        [
+          "gw150914_detection_EV_000016",
+          "gw150914_detection_EV_000018"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000019"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000021"
+        ],
+        [
+          "gw150914_detection_EV_000019",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000021",
+          "gw150914_detection_EV_000027"
+        ],
+        [
+          "gw150914_detection_EV_000022",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000024",
+          "gw150914_detection_EV_000026"
+        ]
+      ]
+    },
+    {
+      "threshold": 0.6,
+      "forwarded_pairs": 58,
+      "gold_relations_forwarded": 22,
+      "gold_relations_total": 36,
+      "forwarding_recall_all_pairs": 0.6111,
+      "forwarding_recall_retrieved_candidates": 0.6286,
+      "missed_gold_pairs": [
+        [
+          "gw150914_detection_EV_000001",
+          "gw150914_detection_EV_000010"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000011"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000012"
+        ],
+        [
+          "gw150914_detection_EV_000010",
+          "gw150914_detection_EV_000017"
+        ],
+        [
+          "gw150914_detection_EV_000013",
+          "gw150914_detection_EV_000015"
+        ],
+        [
+          "gw150914_detection_EV_000016",
+          "gw150914_detection_EV_000018"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000019"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000021"
+        ],
+        [
+          "gw150914_detection_EV_000019",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000021",
+          "gw150914_detection_EV_000027"
+        ],
+        [
+          "gw150914_detection_EV_000022",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000024",
+          "gw150914_detection_EV_000026"
+        ]
+      ]
+    },
+    {
+      "threshold": 0.7,
+      "forwarded_pairs": 58,
+      "gold_relations_forwarded": 22,
+      "gold_relations_total": 36,
+      "forwarding_recall_all_pairs": 0.6111,
+      "forwarding_recall_retrieved_candidates": 0.6286,
+      "missed_gold_pairs": [
+        [
+          "gw150914_detection_EV_000001",
+          "gw150914_detection_EV_000010"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000011"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000012"
+        ],
+        [
+          "gw150914_detection_EV_000010",
+          "gw150914_detection_EV_000017"
+        ],
+        [
+          "gw150914_detection_EV_000013",
+          "gw150914_detection_EV_000015"
+        ],
+        [
+          "gw150914_detection_EV_000016",
+          "gw150914_detection_EV_000018"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000019"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000021"
+        ],
+        [
+          "gw150914_detection_EV_000019",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000021",
+          "gw150914_detection_EV_000027"
+        ],
+        [
+          "gw150914_detection_EV_000022",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000024",
+          "gw150914_detection_EV_000026"
+        ]
+      ]
+    },
+    {
+      "threshold": 0.8,
+      "forwarded_pairs": 56,
+      "gold_relations_forwarded": 22,
+      "gold_relations_total": 36,
+      "forwarding_recall_all_pairs": 0.6111,
+      "forwarding_recall_retrieved_candidates": 0.6286,
+      "missed_gold_pairs": [
+        [
+          "gw150914_detection_EV_000001",
+          "gw150914_detection_EV_000010"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000011"
+        ],
+        [
+          "gw150914_detection_EV_000007",
+          "gw150914_detection_EV_000012"
+        ],
+        [
+          "gw150914_detection_EV_000010",
+          "gw150914_detection_EV_000017"
+        ],
+        [
+          "gw150914_detection_EV_000013",
+          "gw150914_detection_EV_000015"
+        ],
+        [
+          "gw150914_detection_EV_000016",
+          "gw150914_detection_EV_000018"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000019"
+        ],
+        [
+          "gw150914_detection_EV_000018",
+          "gw150914_detection_EV_000021"
+        ],
+        [
+          "gw150914_detection_EV_000019",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000022"
+        ],
+        [
+          "gw150914_detection_EV_000020",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000021",
+          "gw150914_detection_EV_000027"
+        ],
+        [
+          "gw150914_detection_EV_000022",
+          "gw150914_detection_EV_000023"
+        ],
+        [
+          "gw150914_detection_EV_000024",
+          "gw150914_detection_EV_000026"
+        ]
+      ]
+    }
+  ],
+  "provenance": "Curated from immutable Evidence text and ontology; model predictions are evaluation inputs, not labels.",
+  "limitations": "Single-annotator reference v1; a second independent domain review is recommended for publication-grade claims."
+}
