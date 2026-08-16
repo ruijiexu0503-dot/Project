@@ -1,0 +1,34 @@
+{
+  "frozen_on": "2026-08-13",
+  "frozen_before_cross_document_label_inspection": true,
+  "policy_id": "scientific-comparative-ranking-v1-gw150914-frozen",
+  "policy_sha256": "002aae5235d19fc7ff90f4f11a255457d911ecd7f82f804b0ce134174ec01cf0",
+  "model": "Qwen3.5-9B",
+  "model_config_sha256": "d0883072e01861ed0b2d47be3c16c36a8e81c224c7ffaa310c6558fb3f932b05",
+  "tokenizer_config_sha256": "316230d6a809701f4db5ea8f8fc862bc3a6f3229c937c174e674ff3ca0a64ac8",
+  "candidate_generation": {
+    "distance_window": 12,
+    "code_sha256": {
+      "candidate_generator.py": "360414ff1785330a0dbbedfc8e87de30babef13e732f82b75ea9c57fdfc0250a",
+      "prepare_scientific_high_recall.py": "7c794588f6c5dc6566f31feb1b5b71b4b9d76f5682079e731df65f962ee85fba",
+      "evidence_graph.yaml": "3044987734ed5929cebdef9657b5e33649d067a43ddde24a9290340d1013dadc"
+    }
+  },
+  "absolute_screening": {
+    "prompt_version": "high-recall-binary-screen-v1",
+    "batch_size": 10,
+    "generation_tokens": 1800,
+    "keep_classification": "RELATED",
+    "code_sha256": "e729c0e560ac008935fb38de7812aedb948f50c9bc64e70c642784f57eaa539e"
+  },
+  "comparative_ranking": {
+    "prompt_version": "comparative-related-ranking-v1",
+    "generation_tokens": 700,
+    "code_sha256": "f6ea8cbb8ea4c8ee7b0a905d2c014611380154cb3ea0a790a39e20dfdf5db16e"
+  },
+  "ranking_evaluation": {
+    "code_sha256": "dcd5187c6f67d3916790661e719689c252901539e6286bf9a2b56614fcea3289",
+    "global_budgets": [80, 120, 150, 180, 220, 260]
+  },
+  "downstream_35b_enabled": false
+}

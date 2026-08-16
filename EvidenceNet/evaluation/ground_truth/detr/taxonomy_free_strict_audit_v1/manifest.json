@@ -1,0 +1,16 @@
+{
+  "version": "detr-taxonomy-free-strict-audit-v1",
+  "document_id": "detr",
+  "annotation_design": "Codex-assisted post-hoc strict audit from node text; not blinded; not independent human annotation",
+  "evaluation_scope": "ranking-selected verification pairs plus high-confidence direct reference pairs missed upstream",
+  "exhaustive_over_all_document_pairs": false,
+  "publication_grade": false,
+  "pairs": 152,
+  "semantic_positive": 128,
+  "semantic_negative": 24,
+  "reference_positive": 21,
+  "reference_target_unresolved": 1,
+  "verifier_false_negatives_codex_added": 38,
+  "upstream_reference_pair_positives_added": 5,
+  "production_graph_modified": false
+}

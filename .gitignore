@@ -3,6 +3,9 @@
 .codex/
 .git-history-backup/
 
+# Paused magazine-separation experiments
+/MagazineSeperation/
+
 # Python caches and environments
 **/__pycache__/
 *.py[cod]

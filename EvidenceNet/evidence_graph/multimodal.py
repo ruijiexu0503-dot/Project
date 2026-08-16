@@ -166,6 +166,9 @@ def build_multimodal(doc_id: str, config: dict[str,Any]):
         if node_id not in linked_formula: errors.append({"type":"isolated_formula","node_id":node_id})
     validation={"doc_id":doc_id,"valid":not errors,"errors":errors,"warnings":warnings,
                 "summary":{"error_count":len(errors),"warning_count":len(warnings)}}
+    if (config.get("canonicalization") or {}).get("enabled"):
+        from .canonical_pipeline import materialize_canonical_graph
+        report["canonicalization"] = materialize_canonical_graph(doc_id, config)
     write_json(root/"multimodal_report.json",report);write_json(root/"multimodal_validation_report.json",validation)
     return {**report,"validation":validation["summary"]}
 

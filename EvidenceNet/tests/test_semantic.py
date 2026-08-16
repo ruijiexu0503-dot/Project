@@ -1,4 +1,8 @@
-from evidence_graph.candidate_generator import generate_semantic_candidates, relation_hypotheses
+from evidence_graph.candidate_generator import (
+    add_high_recall_distance_candidates,
+    generate_semantic_candidates,
+    relation_hypotheses,
+)
 from evidence_graph.embeddings import generate_document_embeddings
 
 
@@ -44,3 +48,19 @@ def test_adjacent_anaphora_generates_discourse_hypotheses():
     hypotheses,reasons=relation_hypotheses(antecedent,continuation)
     assert {"ELABORATES","EXPLAINS"}.issubset(hypotheses)
     assert "anaphoric_reference_signal" in reasons
+
+
+def test_high_recall_window_is_added_after_normal_candidate_cap():
+    nodes = [node(i) for i in range(1, 7)]
+    baseline = [{"node_a": nodes[0]["node_id"], "node_b": nodes[-1]["node_id"],
+                 "candidate_reasons": ["embedding_top_k"], "embedding_similarity": .8,
+                 "reading_order_distance": 5, "content_unit_scope": "UNSCOPED",
+                 "content_unit_a": None, "content_unit_b": None,
+                 "relation_hypotheses": ["ELABORATES"]}]
+    expanded = add_high_recall_distance_candidates(nodes, baseline, 2)
+    pairs = {(row["node_a"], row["node_b"]): row for row in expanded}
+    assert (nodes[0]["node_id"], nodes[-1]["node_id"]) in pairs
+    assert (nodes[0]["node_id"], nodes[2]["node_id"]) in pairs
+    assert "high_recall_distance_window" in pairs[
+        (nodes[0]["node_id"], nodes[2]["node_id"])]["candidate_reasons"]
+    assert (nodes[0]["node_id"], nodes[3]["node_id"]) not in pairs

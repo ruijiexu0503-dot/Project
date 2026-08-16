@@ -1,0 +1,52 @@
+{
+  "benchmark_version": "gw150914-split-edge-taxonomy-v1",
+  "taxonomy_version": "evidencenet-split-edge-taxonomy-v1",
+  "scope": "oracle_pair_semantic_and_reference_only",
+  "production_graph_modified": false,
+  "candidate_generation_modified": false,
+  "model_inference_run": false,
+  "oracle_pairs": 28,
+  "semantic_resolved": 27,
+  "semantic_unresolved": 1,
+  "semantic_distribution": {
+    "EXPLAINS_OR_ELABORATES": 21,
+    "SUPPORTS": 4,
+    "MODIFIES": 1,
+    "CONTRASTS_WITH": 1
+  },
+  "reference_resolved": 28,
+  "reference_true": 6,
+  "reference_false": 22,
+  "continues_audit_true_not_scored": 4,
+  "hashes": {
+    "original_strict_ground_truth_sha256": "83b082a0e196c964cbfd565690898a1cac8fe346801317cab2c711ab31d19064",
+    "derived_ground_truth_sha256": "3e52f49f709050ade443d4856c6dc2050d8079fcff308df79c00aea4fef51d17",
+    "oracle_pairs_sha256": "d183f207e6093b0b64f91839b5f7dea3cd2d34569224204b783a11fc1ebb0cc8",
+    "taxonomy_spec_sha256": "c01d4b8c421cfe2100e26febf85e117507dd84020889d4a00a5f60c6e7701062",
+    "benchmark_report_sha256": "b6f0ea4423ad7478d1e798be04d447474738054244660ac09fba17ef9f56cd68"
+  },
+  "evaluation_dimensions": {
+    "semantic": [
+      "type_accuracy",
+      "direction_accuracy",
+      "exact_type_and_direction_accuracy",
+      "macro_precision",
+      "macro_recall",
+      "macro_f1",
+      "per_class_f1",
+      "confusion_matrix"
+    ],
+    "reference": [
+      "precision",
+      "recall",
+      "f1",
+      "direction_accuracy"
+    ],
+    "joint": [
+      "both_correct",
+      "semantic_only",
+      "reference_only",
+      "both_wrong"
+    ]
+  }
+}

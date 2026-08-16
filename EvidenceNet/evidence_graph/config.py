@@ -11,6 +11,12 @@ DEFAULT_CONFIG: dict[str, Any] = {
     "evidence": {"one_aligned_block_per_node": True, "split_on_single_newline": False,
                  "merge_continuations": False, "keep_incomplete_nodes": True},
     "structure": {"create_previous_edges": True, "detect_continuations": True},
+    "canonicalization": {
+        "enabled": False,
+        "output_root": None,
+        "include_legacy_semantic": False,
+        "semantic_sources": {},
+    },
     "validation": {"deepseek_order_conflict_threshold": 3},
     "enrichment": {"enabled": False, "provider": "transformers", "model": None,
                    "dtype": "float32", "max_new_tokens": 2048, "batch_size": 3, "prompt_version": "v1"},
@@ -45,4 +51,16 @@ def load_config(path: str | Path) -> dict[str, Any]:
         if not value.is_absolute():
             value = (path.parent.parent / value).resolve()
         config[group][key] = str(value)
+    canonical_root = config.get("canonicalization", {}).get("output_root")
+    if canonical_root:
+        value = Path(canonical_root)
+        if not value.is_absolute():
+            value = (path.parent.parent / value).resolve()
+        config["canonicalization"]["output_root"] = str(value)
+    semantic_sources = config.get("canonicalization", {}).get("semantic_sources") or {}
+    for doc_id, configured in semantic_sources.items():
+        value = Path(configured)
+        if not value.is_absolute():
+            value = (path.parent.parent / value).resolve()
+        semantic_sources[doc_id] = str(value)
     return config

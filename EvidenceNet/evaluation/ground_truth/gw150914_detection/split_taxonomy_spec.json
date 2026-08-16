@@ -1,0 +1,135 @@
+{
+  "taxonomy_version": "evidencenet-split-edge-taxonomy-v1",
+  "status": "benchmark_design_only_production_graph_unchanged",
+  "node_metadata": {
+    "preferred_fields": [
+      "document_id",
+      "page",
+      "section",
+      "reading_order"
+    ],
+    "optional_order_pointer": "next_node_id",
+    "not_edges_when_only_encoding_membership_or_order": [
+      "NEXT",
+      "PREVIOUS",
+      "IN_DOCUMENT",
+      "IN_SECTION",
+      "PART_OF"
+    ]
+  },
+  "edge_families": {
+    "discourse": {
+      "REFERENCES": {
+        "definition": "A has an explicit, localizable cue that cites, points to, or refers back to B.",
+        "direction": "referring_node -> referenced_node",
+        "requires_explicit_cue": true,
+        "can_coexist_with_semantic_edge": true
+      },
+      "CONTINUES": {
+        "status": "optional_strict_use_only",
+        "definition": "The same logical content continues across a physical page, column, figure, or layout interruption.",
+        "direction": "earlier_fragment -> later_fragment",
+        "must_not_mean": "merely the next node in reading order"
+      }
+    },
+    "semantic": {
+      "SUPPORTS": {
+        "definition": "A supplies evidence, observation, data, or results that make B more credible.",
+        "direction": "evidence -> supported_statement"
+      },
+      "EXPLAINS_OR_ELABORATES": {
+        "definition": "A explains, develops, adds detail, mechanism, background, or context to B.",
+        "direction": "explanation_or_detail -> explained_or_developed_statement",
+        "merged_from": [
+          "ELABORATES",
+          "EXPLAINS",
+          "PROVIDES_BACKGROUND_FOR",
+          "PROVIDES_CONTEXT_FOR"
+        ]
+      },
+      "MODIFIES": {
+        "definition": "A qualifies, corrects, conditions, weakens, narrows, or constrains B.",
+        "direction": "modifier_or_condition -> modified_statement",
+        "primarily_maps_from": [
+          "QUALIFIES"
+        ],
+        "depends_on_policy": "manual review only; map only a true prerequisite, condition, constraint, or limitation"
+      },
+      "CONTRASTS_WITH": {
+        "definition": "A and B have an explicit important difference, opposition, conflict, or comparison.",
+        "direction": "symmetric"
+      }
+    }
+  },
+  "not_added": {
+    "CAPTION_OF": "image and caption are normally merged into one Evidence node",
+    "PART_OF": "document/section membership belongs in node metadata"
+  },
+  "edge_schema": {
+    "required": [
+      "source",
+      "target",
+      "edge_family",
+      "relation"
+    ],
+    "edge_family_values": [
+      "semantic",
+      "discourse"
+    ]
+  },
+  "oracle_pair_tasks": {
+    "semantic": {
+      "choices": [
+        "SUPPORTS",
+        "EXPLAINS_OR_ELABORATES",
+        "MODIFIES",
+        "CONTRASTS_WITH",
+        "REJECT_UNCERTAIN"
+      ],
+      "output": [
+        "relation",
+        "source",
+        "target",
+        "confidence"
+      ],
+      "direction_is_semantic_role_not_input_order": true
+    },
+    "reference": {
+      "independent_of_semantic_task": true,
+      "output": [
+        "exists",
+        "source",
+        "target",
+        "cue",
+        "confidence"
+      ],
+      "exists_type": "boolean",
+      "direction": "referring_node -> referenced_node"
+    }
+  },
+  "evaluation": {
+    "semantic": [
+      "type_accuracy",
+      "direction_accuracy",
+      "exact_type_and_direction_accuracy",
+      "macro_precision",
+      "macro_recall",
+      "macro_f1",
+      "per_class_f1",
+      "confusion_matrix"
+    ],
+    "reference": [
+      "precision",
+      "recall",
+      "f1",
+      "direction_accuracy"
+    ],
+    "joint": [
+      "both_correct",
+      "semantic_only",
+      "reference_only",
+      "both_wrong"
+    ],
+    "unresolved_policy": "exclude the unresolved dimension from its exact metrics; report it separately"
+  }
+}

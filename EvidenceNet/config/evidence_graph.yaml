@@ -10,6 +10,14 @@ evidence:
 structure:
   create_previous_edges: true
   detect_continuations: true
+canonicalization:
+  enabled: true
+  output_root: output/canonical_graph
+  # Keep old, unreviewed VLM semantic predictions out of the production graph.
+  include_legacy_semantic: false
+  # Only explicitly configured, non-legacy model outputs enter the semantic layer.
+  semantic_sources:
+    gw150914_detection: output/scientific_body_semantics/Qwen3.5-35B-A3B/gw150914_detection/accepted_edges.jsonl
 validation:
   deepseek_order_conflict_threshold: 3
 enrichment:

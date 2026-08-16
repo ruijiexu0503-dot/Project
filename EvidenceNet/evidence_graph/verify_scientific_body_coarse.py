@@ -4,6 +4,7 @@ import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from time import monotonic
 
 from .config import load_config
 from .io_utils import read_jsonl, write_json, write_jsonl
@@ -21,7 +22,7 @@ FAMILIES = {
 }
 SUBTYPES = ["PROVIDES_BACKGROUND_FOR", "EXPLAINS", "ELABORATES", "SUPPORTS", "QUALIFIES",
             "CONTRASTS_WITH", "DEPENDS_ON", "RESULTS_IN", "AMBIGUOUS"]
-PROMPT_VERSION = "coarse-family-existence-first-v1"
+PROMPT_VERSION = "coarse-family-existence-first-v2"
 
 
 def prompt(payloads, single=False):
@@ -51,9 +52,10 @@ PAIRS:
 {json.dumps(payloads, ensure_ascii=False)}'''
 
 
-def verify(candidates, nodes, llm, batch_size=2):
+def verify(candidates, nodes, llm, batch_size=2, existence_threshold=.80,
+           generation_tokens=700, retry_generation_tokens=900):
     by_id = {node["node_id"]: node for node in nodes}
-    accepted, rejected, malformed = [], [], []
+    accepted, related, ambiguous, rejected, malformed = [], [], [], [], []
     system = "You are an evidence-network relation evaluator. Separate existence, family, and direction. JSON only."
 
     def evaluate(candidate, row, generation, retried=False):
@@ -67,17 +69,30 @@ def verify(candidates, nodes, llm, batch_size=2):
                                      by_id[source]["original_markdown"]) if source in by_id else None)
         target_span = (_recover_span(str(row.get("target_supporting_span") or ""),
                                      by_id[target]["original_markdown"]) if target in by_id else None)
-        valid = (row.get("related") is True and family in FAMILIES and source in by_id and target in by_id
-                 and {source, target} == {candidate["node_a"], candidate["node_b"]}
-                 and existence >= .80 and family_conf >= .55 and direction_conf >= .55
-                 and source_span and target_span)
+        pair_roles_valid = (source in by_id and target in by_id
+                            and {source, target} == {candidate["node_a"], candidate["node_b"]})
+        existence_valid = row.get("related") is True and existence >= existence_threshold
+        annotation_valid = (existence_valid and pair_roles_valid and family in FAMILIES
+                            and family_conf >= .55 and direction_conf >= .55
+                            and source_span and target_span)
         base = {"candidate": candidate, "relation_family": family, "relation_subtype": subtype,
                 "source_evidence_id": source, "target_evidence_id": target,
                 "existence_confidence": existence, "family_confidence": family_conf,
                 "direction_confidence": direction_conf, "rationale": str(row.get("rationale") or ""),
                 "model": generation.model, "prompt_version": PROMPT_VERSION,
                 "verification_timestamp": generation.timestamp, "retried_individually": retried}
-        if valid:
+        if existence_valid:
+            existence_row = {
+                "node_a": candidate["node_a"], "node_b": candidate["node_b"],
+                "edge_layer": "semantic_existence", "existence_confidence": existence,
+                "relation_family": family, "relation_subtype": subtype,
+                "proposed_source": source, "proposed_target": target,
+                "candidate_reasons": candidate["candidate_reasons"],
+                "rationale": base["rationale"], "model": generation.model,
+                "prompt_version": PROMPT_VERSION,
+            }
+            related.append(existence_row)
+        if annotation_valid:
             accepted.append({"source": source, "target": target, "edge_layer": "semantic",
                              "edge_type": family, "relation_family": family, "relation_subtype": subtype,
                              "directed": subtype != "CONTRASTS_WITH", "confidence": existence,
@@ -86,6 +101,15 @@ def verify(candidates, nodes, llm, batch_size=2):
                              "source_supporting_span": source_span, "target_supporting_span": target_span,
                              "rationale": base["rationale"], "model": generation.model,
                              "prompt_version": PROMPT_VERSION})
+        elif existence_valid:
+            failures = []
+            if not pair_roles_valid: failures.append("endpoint_roles")
+            if family not in FAMILIES or family_conf < .55: failures.append("relation_family")
+            if direction_conf < .55: failures.append("direction")
+            if not source_span or not target_span: failures.append("supporting_spans")
+            ambiguous.append({**base, "annotation_failures": failures,
+                              "source_supporting_span": source_span or "",
+                              "target_supporting_span": target_span or ""})
         else:
             rejected.append({**base, "source_supporting_span": source_span or "",
                              "target_supporting_span": target_span or ""})
@@ -95,7 +119,8 @@ def verify(candidates, nodes, llm, batch_size=2):
         pending = {f"{row['node_a']}||{row['node_b']}": row for row in batch}
         batch_error = "missing result"
         try:
-            generation = llm.generate_json(system, prompt([_payload(row, by_id) for row in batch]), 700)
+            generation = llm.generate_json(
+                system, prompt([_payload(row, by_id) for row in batch]), generation_tokens)
             returned = {row.get("pair_id"): row for row in _rows(generation.parsed) if isinstance(row, dict)}
             for pid in list(pending):
                 if pid in returned:
@@ -104,7 +129,8 @@ def verify(candidates, nodes, llm, batch_size=2):
             batch_error = str(exc)
         for pid, candidate in pending.items():
             try:
-                generation = llm.generate_json(system, prompt([_payload(candidate, by_id)], single=True), 900)
+                generation = llm.generate_json(
+                    system, prompt([_payload(candidate, by_id)], single=True), retry_generation_tokens)
                 rows = _rows(generation.parsed)
                 if not rows:
                     raise ValueError("retry returned no result")
@@ -113,35 +139,60 @@ def verify(candidates, nodes, llm, batch_size=2):
             except Exception as exc:
                 malformed.append({"candidate": candidate, "batch_error": batch_error, "retry_error": str(exc),
                                   "timestamp": datetime.now(timezone.utc).isoformat()})
-    return accepted, rejected, malformed
+    return accepted, related, ambiguous, rejected, malformed
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True); parser.add_argument("--output", required=True)
+    parser.add_argument("--source", default="output/scientific_body_semantics/shared_candidates/gw150914_detection")
     parser.add_argument("--config", default="config/evidence_graph.yaml"); parser.add_argument("--chunk-size", type=int, default=5)
+    parser.add_argument("--batch-size", type=int, default=2)
+    parser.add_argument("--generation-tokens", type=int, default=700)
+    parser.add_argument("--retry-generation-tokens", type=int, default=900)
+    parser.add_argument("--existence-threshold", type=float, default=.80)
+    parser.add_argument("--maximum-runtime-minutes", type=float, default=None,
+                        help="Stop cleanly between checkpointed chunks after this many minutes")
     args = parser.parse_args()
-    source = ROOT = Path("output/scientific_body_semantics/shared_candidates/gw150914_detection")
+    source = Path(args.source)
     target = Path(args.output); target.mkdir(parents=True, exist_ok=True)
     nodes = read_jsonl(source / "evidence_nodes.jsonl"); candidates = read_jsonl(source / "candidates.jsonl")
     status_path = target / "status.json"
     status = json.loads(status_path.read_text()) if status_path.exists() else {"processed": 0}
     accepted = read_jsonl(target / "accepted_edges.jsonl") if (target / "accepted_edges.jsonl").exists() else []
+    related = read_jsonl(target / "related_edges.jsonl") if (target / "related_edges.jsonl").exists() else []
+    ambiguous = read_jsonl(target / "ambiguous_edges.jsonl") if (target / "ambiguous_edges.jsonl").exists() else []
     rejected = read_jsonl(target / "rejected.jsonl") if (target / "rejected.jsonl").exists() else []
     malformed = read_jsonl(target / "malformed.jsonl") if (target / "malformed.jsonl").exists() else []
+    if start := int(status.get("processed", 0)):
+        if start >= len(candidates):
+            print(json.dumps(status, indent=2)); return
     config = load_config(args.config)
     config["enrichment"].update(model=str(Path(args.model).resolve()), require_cuda=True, enable_thinking=False)
+    deadline = (monotonic() + args.maximum_runtime_minutes * 60
+                if args.maximum_runtime_minutes else None)
     llm = create_llm(config["enrichment"]); start = int(status.get("processed", 0))
     for offset in range(start, len(candidates), args.chunk_size):
         chunk = candidates[offset:offset + args.chunk_size]
-        aa, rr, mm = verify(chunk, nodes, llm)
-        accepted += aa; rejected += rr; malformed += mm
+        aa, ee, uu, rr, mm = verify(
+            chunk, nodes, llm, batch_size=args.batch_size,
+            existence_threshold=args.existence_threshold,
+            generation_tokens=args.generation_tokens,
+            retry_generation_tokens=args.retry_generation_tokens)
+        accepted += aa; related += ee; ambiguous += uu; rejected += rr; malformed += mm
         write_jsonl(target / "accepted_edges.jsonl", accepted); write_jsonl(target / "rejected.jsonl", rejected)
+        write_jsonl(target / "related_edges.jsonl", related)
+        write_jsonl(target / "ambiguous_edges.jsonl", ambiguous)
         write_jsonl(target / "malformed.jsonl", malformed)
         status = {"processed": min(offset + len(chunk), len(candidates)), "total": len(candidates),
-                  "accepted": len(accepted), "rejected": len(rejected), "malformed": len(malformed),
+                  "related": len(related), "verified": len(accepted), "ambiguous": len(ambiguous),
+                  "rejected": len(rejected), "malformed": len(malformed),
+                  "existence_threshold": args.existence_threshold,
                   "complete": offset + len(chunk) >= len(candidates)}
         write_json(status_path, status); print(json.dumps(status), flush=True)
+        if deadline is not None and monotonic() >= deadline:
+            print(json.dumps({"checkpoint_exit": True, **status}), flush=True)
+            break
 
 
 if __name__ == "__main__":

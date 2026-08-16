@@ -136,3 +136,51 @@ def generate_semantic_candidates(nodes: list[dict[str, Any]], embeddings, config
         if counts[item["node_a"]] >= limit or counts[item["node_b"]] >= limit: continue
         kept.append(item); counts[item["node_a"]] += 1; counts[item["node_b"]] += 1
     return within + kept
+
+
+def add_high_recall_distance_candidates(nodes: list[dict[str, Any]], candidates: list[dict[str, Any]],
+                                        distance_window: int,
+                                        content_units: dict[str, str] | None = None):
+    """Union deterministic nearby pairs into an existing candidate set.
+
+    This deliberately happens after the normal per-node candidate cap.  It is
+    intended for the first, recall-oriented stage of scientific-paper relation
+    extraction; these rows remain hypotheses and are not semantic edges.
+    """
+    if distance_window < 1:
+        return candidates
+    ordered = sorted(nodes, key=lambda node: node["document_order"])
+    positions = {node["node_id"]: index for index, node in enumerate(ordered)}
+    by_id = {node["node_id"]: node for node in ordered}
+    content_units = content_units or {}
+    by_pair = {
+        tuple(sorted((row["node_a"], row["node_b"]))): {
+            **row, "candidate_reasons": list(row.get("candidate_reasons") or [])}
+        for row in candidates
+    }
+    for index, node_a in enumerate(ordered):
+        for node_b in ordered[index + 1:index + distance_window + 1]:
+            key = tuple(sorted((node_a["node_id"], node_b["node_id"])))
+            unit_a, unit_b = content_units.get(key[0]), content_units.get(key[1])
+            scope = ("WITHIN_CONTENT_UNIT" if unit_a and unit_a == unit_b else
+                     "CROSS_CONTENT_UNIT" if unit_a and unit_b else "UNSCOPED")
+            hypotheses, relation_reasons = relation_hypotheses(by_id[key[0]], by_id[key[1]])
+            row = by_pair.setdefault(key, {
+                "node_a": key[0], "node_b": key[1], "candidate_reasons": [],
+                "embedding_similarity": None,
+                "reading_order_distance": abs(positions[key[0]] - positions[key[1]]),
+                "content_unit_scope": scope,
+                "content_unit_a": unit_a, "content_unit_b": unit_b,
+                "relation_hypotheses": hypotheses or list(MARKERS) + [
+                    "PROVIDES_BACKGROUND_FOR", "ELABORATES", "SUPPORTS"],
+            })
+            reasons = set(row.get("candidate_reasons") or [])
+            reasons.add("high_recall_distance_window")
+            reasons.update(relation_reasons)
+            if scope == "WITHIN_CONTENT_UNIT":
+                reasons.add("same_content_unit")
+            row["candidate_reasons"] = sorted(reasons)
+            if not row.get("relation_hypotheses"):
+                row["relation_hypotheses"] = hypotheses or list(MARKERS) + [
+                    "PROVIDES_BACKGROUND_FOR", "ELABORATES", "SUPPORTS"]
+    return [by_pair[key] for key in sorted(by_pair)]

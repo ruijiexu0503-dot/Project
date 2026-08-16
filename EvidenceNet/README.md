@@ -41,3 +41,17 @@ Build the self-contained semantic-edge review visualization:
 ```bash
 python -m evidence_graph.visualize --doc-id gw150914_detection --config config/evidence_graph.yaml
 ```
+
+After the multimodal phase, materialize the production canonical graph. Raw graph artifacts remain
+unchanged in `output/evidence_graph/<doc_id>`; the canonical graph is written to
+`output/canonical_graph/<doc_id>`.
+
+```bash
+python -m evidence_graph materialize-canonical --doc-id detr --config config/evidence_graph.yaml
+python -m evidence_graph visualize-canonical --doc-id detr --config config/evidence_graph.yaml
+```
+
+Canonicalization absorbs linked caption/image/table fragments, stores reading order as metadata,
+remaps downstream endpoints through `node_aliases.jsonl`, and emits only deterministic explicit-label
+`REFERENCES` edges. Formula “where” backreferences and anaphora remain in
+`shadow_discourse_edges.jsonl` and are not part of the production graph.

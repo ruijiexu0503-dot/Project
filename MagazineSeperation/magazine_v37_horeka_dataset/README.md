@@ -26,3 +26,6 @@ magazine_v37_horeka_dataset/
 Use `document_id + pdf_page` to join the JSON annotation with `image_manifest`.
 
 Important: only annotated pages are rendered here; unannotated PDF pages are not included.
+
+Milestone-one audit, grouped-target, chain, and visualization tooling is documented in
+[`docs/MILESTONE1.md`](docs/MILESTONE1.md). No model training is included in this milestone.
