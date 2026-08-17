@@ -61,3 +61,7 @@ temp/
 **/.obsidian/workspace-mobile.json
 **/.obsidian/cache/
 **/.obsidian/plugins/
+
+# CERN advertisement detection pilot generated outputs
+cern_advertisement_detection_pilot/footer_validation/
+cern_advertisement_detection_pilot/*.jsonl
