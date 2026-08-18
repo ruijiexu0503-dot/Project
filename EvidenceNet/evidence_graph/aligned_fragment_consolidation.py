@@ -82,13 +82,6 @@ def _fragmentary(block: dict[str, Any], max_chars: int) -> tuple[bool, str | Non
     return False, None
 
 
-def _target_eligible(block: dict[str, Any] | None, min_target_chars: int) -> bool:
-    if block is None:
-        return False
-    text = _clean_text(block)
-    return bool(text) and len(text) >= min_target_chars and not _excluded(block) and not _title_like(text)
-
-
 def _is_unmatched_fragment(block: dict[str, Any]) -> bool:
     return (
         block.get("matched_region_id") is None
@@ -143,11 +136,18 @@ def _choose_target(
         return previous, "attach_after_previous"
     if following and _unfinished(fragment_text) and _starts_like_continuation(next_text):
         return following, "attach_before_next"
-    if previous:
-        return previous, "attach_after_previous_by_reading_order"
-    if following:
-        return following, "attach_before_next_by_reading_order"
-    return None, "no_target"
+    return None, "ambiguous_target"
+
+
+def _block_key(block: dict[str, Any] | None) -> tuple[str, str] | None:
+    if block is None or block.get("block_id") is None:
+        return None
+    page = str(block.get("_page") if block.get("_page") is not None else block.get("page") or "")
+    return page, str(block.get("block_id"))
+
+
+def _proposal_key(page: Any, block_id: Any) -> tuple[str, str]:
+    return str(page if page is not None else ""), str(block_id)
 
 
 def collect_fragment_review_rows(
@@ -198,6 +198,7 @@ def _context_row(block: dict[str, Any] | None, tail: bool) -> dict[str, Any] | N
     preview = text[-220:] if tail else text[:220]
     return {
         "block_id": block.get("block_id"),
+        "page": block.get("_page"),
         "text_preview": preview,
         "block_type": block.get("block_type"),
         "matched_region_id": block.get("matched_region_id"),
@@ -213,11 +214,12 @@ def _context_row(block: dict[str, Any] | None, tail: bool) -> dict[str, Any] | N
 def propose_hybrid_fragment_attachments(
     blocks: list[dict[str, Any]], config: dict[str, Any] | None = None
 ) -> tuple[list[dict[str, Any]], dict[str, int]]:
-    """Propose fragment absorption using hybrid-alignment state before optional geometry.
+    """Propose conservative fragment absorption candidates.
 
-    HIGH confidence is intentionally narrow: an unmatched short fragment must be sandwiched between
-    two text-like blocks grounded to the same layout region and must show textual continuation.
-    MEDIUM candidates are recorded for review but are not safe for automatic application.
+    HIGH confidence requires an unmatched fragment, a textual continuation signal, and two
+    surrounding text-like blocks grounded to the same layout region. MEDIUM is audit-only.
+    Targets are chosen only when textual directionality is explicit; reading-order fallback is
+    intentionally removed to prevent arbitrary absorption.
     """
     cfg = config or {}
     max_chars = int(cfg.get("max_chars", 120))
@@ -229,6 +231,7 @@ def propose_hybrid_fragment_attachments(
         "textual_bridges": 0,
         "high_confidence": 0,
         "medium_confidence": 0,
+        "ambiguous_target_rejected": 0,
     }
     proposals: list[dict[str, Any]] = []
 
@@ -268,11 +271,18 @@ def propose_hybrid_fragment_attachments(
 
         target, merge_direction = _choose_target(previous, fragment, following)
         if target is None:
+            stats["ambiguous_target_rejected"] += 1
+            continue
+        target_key = _block_key(target)
+        fragment_key = _block_key(fragment)
+        if target_key is None or fragment_key is None or target_key == fragment_key:
             continue
         proposals.append({
             "fragment_block_id": fragment.get("block_id"),
             "target_block_id": target.get("block_id"),
             "page": fragment.get("_page"),
+            "fragment_key": list(fragment_key),
+            "target_key": list(target_key),
             "confidence": confidence,
             "reasons": reasons,
             "fragment_reason": fragment_reason,
@@ -294,63 +304,99 @@ def propose_hybrid_fragment_attachments(
 def apply_aligned_fragment_attachments(
     blocks: list[dict[str, Any]], proposals: list[dict[str, Any]], allowed_confidence: set[str] | None = None
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Absorb reviewed hybrid fragments while preserving source provenance."""
+    """Absorb reviewed hybrid fragments while preserving source provenance.
+
+    Safety rules:
+    - blocks are keyed by (page, block_id), never block_id alone;
+    - a block cannot be both an absorbed fragment and a merge target in the same pass;
+    - duplicate fragment assignments are rejected;
+    - only same-page attachments are accepted;
+    - original target and absorbed source blocks are copied into provenance metadata.
+    """
     allowed_confidence = allowed_confidence or {"HIGH"}
-    by_id = {str(block.get("block_id")): block for block in blocks if block.get("block_id") is not None}
-    attached_ids: set[str] = set()
-    provenance: list[dict[str, Any]] = []
-    grouped: dict[str, list[dict[str, Any]]] = {}
+    source_by_key = {key: block for block in blocks if (key := _block_key(block)) is not None}
+    order_by_key = {key: index for index, block in enumerate(blocks) if (key := _block_key(block)) is not None}
+
+    eligible: list[dict[str, Any]] = []
+    claimed_fragments: set[tuple[str, str]] = set()
+    proposed_target_keys: set[tuple[str, str]] = set()
     for proposal in proposals:
         if str(proposal.get("confidence") or "").upper() not in allowed_confidence:
             continue
-        fragment_id = str(proposal.get("fragment_block_id"))
-        target_id = str(proposal.get("target_block_id"))
-        if fragment_id == target_id or fragment_id not in by_id or target_id not in by_id:
+        fragment_key = _proposal_key(proposal.get("page"), proposal.get("fragment_block_id"))
+        target_key = _proposal_key(proposal.get("page"), proposal.get("target_block_id"))
+        if fragment_key == target_key or fragment_key not in source_by_key or target_key not in source_by_key:
             continue
-        grouped.setdefault(target_id, []).append(proposal)
+        if fragment_key[0] != target_key[0]:
+            continue
+        if fragment_key in claimed_fragments:
+            continue
+        claimed_fragments.add(fragment_key)
+        proposed_target_keys.add(target_key)
+        eligible.append({**proposal, "_fragment_key": fragment_key, "_target_key": target_key})
+
+    # Prevent chains/cycles: if A is proposed as a fragment anywhere, A cannot also be a target.
+    absorbed_keys = {row["_fragment_key"] for row in eligible}
+    safe_rows = [row for row in eligible if row["_target_key"] not in absorbed_keys]
+
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for row in safe_rows:
+        grouped.setdefault(row["_target_key"], []).append(row)
 
     output = [copy.deepcopy(block) for block in blocks]
-    output_by_id = {str(block.get("block_id")): block for block in output if block.get("block_id") is not None}
-    order_by_id = {str(block.get("block_id")): index for index, block in enumerate(blocks)}
+    output_by_key = {key: block for block in output if (key := _block_key(block)) is not None}
+    actually_absorbed: set[tuple[str, str]] = set()
+    provenance: list[dict[str, Any]] = []
 
-    for target_id, rows in grouped.items():
-        target = output_by_id[target_id]
-        source_target = by_id[target_id]
-        rows.sort(key=lambda row: order_by_id.get(str(row["fragment_block_id"]), 10**9))
-        target_order = order_by_id[target_id]
-        before = [row for row in rows if order_by_id.get(str(row["fragment_block_id"]), 10**9) < target_order]
-        after = [row for row in rows if order_by_id.get(str(row["fragment_block_id"]), -1) > target_order]
-        parts = [_clean_text(by_id[str(row["fragment_block_id"])]) for row in before]
+    for target_key, rows in grouped.items():
+        target = output_by_key[target_key]
+        source_target = source_by_key[target_key]
+        target_order = order_by_key[target_key]
+        rows.sort(key=lambda row: order_by_key.get(row["_fragment_key"], 10**9))
+        before = [row for row in rows if order_by_key.get(row["_fragment_key"], 10**9) < target_order]
+        after = [row for row in rows if order_by_key.get(row["_fragment_key"], -1) > target_order]
+        if len(before) + len(after) != len(rows):
+            continue
+
+        parts = [_clean_text(source_by_key[row["_fragment_key"]]) for row in before]
         parts.append(_clean_text(source_target))
-        parts.extend(_clean_text(by_id[str(row["fragment_block_id"])]) for row in after)
+        parts.extend(_clean_text(source_by_key[row["_fragment_key"]]) for row in after)
         merged_text = " ".join(part for part in parts if part).strip()
         if not merged_text:
             continue
+
         if target.get("markdown") is not None:
             target["markdown"] = merged_text
         elif target.get("text") is not None:
             target["text"] = merged_text
         else:
             target["text"] = merged_text
-        absorbed = [str(row["fragment_block_id"]) for row in rows]
-        attached_ids.update(absorbed)
-        target["_absorbed_source_blocks"] = [copy.deepcopy(by_id[source_id]) for source_id in absorbed]
+
+        absorbed = [row["_fragment_key"] for row in rows]
+        actually_absorbed.update(absorbed)
+        target["_fragment_consolidation_original_target"] = copy.deepcopy(source_target)
+        target["_absorbed_source_blocks"] = [copy.deepcopy(source_by_key[key]) for key in absorbed]
         target["_fragment_consolidation"] = {
-            "absorbed_block_ids": absorbed,
-            "method": "hybrid_alignment_fragment_absorption_v2",
+            "absorbed_block_keys": [list(key) for key in absorbed],
+            "method": "hybrid_alignment_fragment_absorption_v3_safe",
             "allowed_confidence": sorted(allowed_confidence),
         }
-        provenance.extend({
-            "source_block_id": source_id,
-            "target_block_id": target_id,
-            "reason": "hybrid_alignment_micro_fragment_absorbed",
-            "confidence": next(
-                (row["confidence"] for row in rows if str(row["fragment_block_id"]) == source_id),
-                None,
-            ),
-        } for source_id in absorbed)
 
-    consolidated = [block for block in output if str(block.get("block_id")) not in attached_ids]
+        for row in rows:
+            source_key = row["_fragment_key"]
+            provenance.append({
+                "source_page": source_key[0],
+                "source_block_id": source_key[1],
+                "target_page": target_key[0],
+                "target_block_id": target_key[1],
+                "reason": "hybrid_alignment_micro_fragment_absorbed",
+                "confidence": row.get("confidence"),
+                "merge_direction": row.get("merge_direction"),
+                "source_block": copy.deepcopy(source_by_key[source_key]),
+                "target_block_before_merge": copy.deepcopy(source_target),
+            })
+
+    consolidated = [block for block in output if _block_key(block) not in actually_absorbed]
     return consolidated, provenance
 
 
