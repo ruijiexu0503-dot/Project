@@ -15,7 +15,10 @@ def _bbox(node: dict[str, Any]) -> list[float] | None:
     members = node.get("source_members") or []
     if not members:
         return None
-    bbox = members[0].get("bbox")
+    member = members[0]
+    # In magazine parsing the aligned bbox may be absent even though DeepSeek retained
+    # a usable source bbox. Prefer aligned geometry, then fall back to DeepSeek geometry.
+    bbox = member.get("bbox") or member.get("deepseek_bbox")
     if not isinstance(bbox, (list, tuple)) or len(bbox) != 4:
         return None
     try:
@@ -53,9 +56,6 @@ def _fragmentary(node: dict[str, Any], max_chars: int) -> bool:
     evidence_type = str(node.get("evidence_type") or "").lower()
     if evidence_type in SKIP_TYPES or _title_like(node, text):
         return False
-
-    # The provisional Evidence builder already records incompleteness/continuation cues.
-    # For magazine parsing these are stronger signals than punctuation alone.
     if node.get("possible_continuation") or not node.get("is_complete", True):
         return True
     if text[0].islower() or text[0] in ",.;:)]}–—-":
@@ -92,15 +92,14 @@ def _geometry_score(fragment: dict[str, Any], target: dict[str, Any], min_axis_o
 
     x_overlap = _overlap(ax1, ax2, bx1, bx2) / max(min(aw, bw), 1e-6)
     y_overlap = _overlap(ay1, ay2, by1, by2) / max(min(ah, bh), 1e-6)
-
     vertical_gap = max(0.0, max(ay1, by1) - min(ay2, by2))
     horizontal_gap = max(0.0, max(ax1, bx1) - min(ax2, bx2))
 
     scores = []
     if x_overlap >= min_axis_overlap and vertical_gap <= max_vertical_gap_px:
-        scores.append(vertical_gap / max_vertical_gap_px + (1.0 - x_overlap))
+        scores.append(vertical_gap / max(max_vertical_gap_px, 1e-6) + (1.0 - x_overlap))
     if y_overlap >= min_axis_overlap and horizontal_gap <= max_horizontal_gap_px:
-        scores.append(horizontal_gap / max_horizontal_gap_px + (1.0 - y_overlap))
+        scores.append(horizontal_gap / max(max_horizontal_gap_px, 1e-6) + (1.0 - y_overlap))
     return min(scores) if scores else None
 
 
@@ -108,13 +107,7 @@ def detect_micro_fragment_attachments(
     evidence: list[dict[str, Any]],
     config: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    """Return conservative fragment -> host attachments without mutating Evidence nodes.
-
-    This pass is aimed at layout/parsing shards in multi-item magazine pages. It considers a short
-    fragment and a small local reading-order window on the same page, requires compatible geometry,
-    and records an auditable attachment hypothesis only. Standalone headings, captions, formulas,
-    references, tables and figures are never attached here.
-    """
+    """Return conservative fragment -> host attachments without mutating Evidence nodes."""
     cfg = config or {}
     max_chars = int(cfg.get("max_chars", 120))
     min_target_chars = int(cfg.get("min_target_chars", 40))
@@ -137,11 +130,7 @@ def detect_micro_fragment_attachments(
                 if not _target_eligible(target, min_target_chars):
                     continue
                 score = _geometry_score(
-                    fragment,
-                    target,
-                    min_axis_overlap,
-                    max_vertical_gap_px,
-                    max_horizontal_gap_px,
+                    fragment, target, min_axis_overlap, max_vertical_gap_px, max_horizontal_gap_px
                 )
                 if score is not None:
                     candidates.append((score, offset, neighbour_index, target))
@@ -156,6 +145,8 @@ def detect_micro_fragment_attachments(
             "fragment_is_complete": fragment.get("is_complete"),
             "fragment_possible_continuation": fragment.get("possible_continuation"),
             "reading_order_distance": distance,
+            "fragment_bbox_source": "aligned" if (fragment.get("source_members") or [{}])[0].get("bbox") else "deepseek",
+            "target_bbox_source": "aligned" if (target.get("source_members") or [{}])[0].get("bbox") else "deepseek",
             "geometry_score": round(float(score), 6),
             "reason": "short_or_incomplete_fragment_same_page_local_geometry",
         })
