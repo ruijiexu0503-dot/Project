@@ -14,6 +14,15 @@ magazine_role_routing:
   enabled: true
   document_prefixes:
     - CERNCourier
+repeated_template_detection:
+  enabled: true
+  document_prefixes:
+    - CERNCourier
+  max_chars: 180
+  edge_fraction: 0.14
+  min_pages: 4
+  min_page_fraction: 0.35
+  bboxless_min_page_fraction: 0.60
 micro_fragment_consolidation:
   enabled: true
   apply: false
