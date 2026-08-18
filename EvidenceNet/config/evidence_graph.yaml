@@ -10,6 +10,15 @@ evidence:
 structure:
   create_previous_edges: true
   detect_continuations: true
+micro_fragment_consolidation:
+  enabled: true
+  document_prefixes:
+    - CERNCourier
+  max_chars: 80
+  min_target_chars: 80
+  min_axis_overlap: 0.45
+  max_vertical_gap_ratio: 2.0
+  max_horizontal_gap_ratio: 0.75
 canonicalization:
   enabled: true
   output_root: output/canonical_graph
