@@ -10,6 +10,10 @@ evidence:
 structure:
   create_previous_edges: true
   detect_continuations: true
+magazine_role_routing:
+  enabled: true
+  document_prefixes:
+    - CERNCourier
 micro_fragment_consolidation:
   enabled: true
   apply: false
