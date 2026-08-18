@@ -12,13 +12,15 @@ structure:
   detect_continuations: true
 micro_fragment_consolidation:
   enabled: true
+  apply: false
   document_prefixes:
     - CERNCourier
-  max_chars: 80
-  min_target_chars: 80
-  min_axis_overlap: 0.45
-  max_vertical_gap_ratio: 2.0
-  max_horizontal_gap_ratio: 0.75
+  max_chars: 120
+  min_target_chars: 40
+  neighbour_window: 2
+  min_axis_overlap: 0.30
+  max_vertical_gap_px: 120
+  max_horizontal_gap_px: 100
 canonicalization:
   enabled: true
   output_root: output/canonical_graph
