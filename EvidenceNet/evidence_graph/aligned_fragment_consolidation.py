@@ -89,6 +89,49 @@ def _geometry_score(a: list[float], b: list[float], min_axis_overlap: float,
     return min(candidates, key=lambda item: item[0]) if candidates else None
 
 
+def collect_fragment_review_rows(
+    blocks: list[dict[str, Any]], config: dict[str, Any] | None = None
+) -> list[dict[str, Any]]:
+    """Expose short/incomplete parsing blocks with local text context, even when geometry is missing.
+
+    This file is diagnostic only. It must not be used for automatic merging. In the current CERN
+    magazine parse, the short fragments are precisely the blocks most likely to have no bbox, so a
+    geometry-only proposal stage otherwise hides all of the useful evidence.
+    """
+    cfg = config or {}
+    max_chars = int(cfg.get("max_chars", 120))
+    rows: list[dict[str, Any]] = []
+    for index, block in enumerate(blocks):
+        is_fragment, reason = _fragmentary(block, max_chars)
+        if not is_fragment:
+            continue
+        previous = blocks[index - 1] if index > 0 and blocks[index - 1].get("_page") == block.get("_page") else None
+        following = (
+            blocks[index + 1]
+            if index + 1 < len(blocks) and blocks[index + 1].get("_page") == block.get("_page")
+            else None
+        )
+        rows.append({
+            "block_id": block.get("block_id"),
+            "page": block.get("_page"),
+            "text": _clean_text(block),
+            "reason": reason,
+            "block_type": block.get("block_type"),
+            "flags": block.get("flags") or [],
+            "bbox": _bbox(block),
+            "bbox_source": block.get("bbox_source"),
+            "matched_region_id": block.get("matched_region_id"),
+            "matched_region_label": block.get("matched_region_label"),
+            "previous_block_id": previous.get("block_id") if previous else None,
+            "previous_text_preview": _clean_text(previous)[-220:] if previous else None,
+            "previous_bbox": _bbox(previous) if previous else None,
+            "next_block_id": following.get("block_id") if following else None,
+            "next_text_preview": _clean_text(following)[:220] if following else None,
+            "next_bbox": _bbox(following) if following else None,
+        })
+    return rows
+
+
 def propose_aligned_fragment_attachments(
     blocks: list[dict[str, Any]], config: dict[str, Any] | None = None
 ) -> tuple[list[dict[str, Any]], dict[str, int]]:
@@ -104,6 +147,7 @@ def propose_aligned_fragment_attachments(
         "ordered_blocks": len(blocks),
         "fragment_candidates": 0,
         "fragment_candidates_with_bbox": 0,
+        "fragment_candidates_without_bbox": 0,
         "same_page_target_candidates": 0,
         "geometry_accepted": 0,
     }
@@ -115,6 +159,7 @@ def propose_aligned_fragment_attachments(
         stats["fragment_candidates"] += 1
         fragment_bbox = _bbox(fragment)
         if fragment_bbox is None:
+            stats["fragment_candidates_without_bbox"] += 1
             continue
         stats["fragment_candidates_with_bbox"] += 1
         candidates = []
@@ -159,12 +204,10 @@ def propose_aligned_fragment_attachments(
 def apply_aligned_fragment_attachments(
     blocks: list[dict[str, Any]], proposals: list[dict[str, Any]]
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Conservatively absorb proposed parsing shards while preserving source-block provenance."""
+    """Conservatively absorb geometry-backed parsing shards while preserving provenance."""
     by_id = {str(block.get("block_id")): block for block in blocks if block.get("block_id") is not None}
     attached_ids: set[str] = set()
     provenance: list[dict[str, Any]] = []
-
-    # A target may absorb several local fragments; apply in original reading order.
     indexed = {id(block): i for i, block in enumerate(blocks)}
     grouped: dict[str, list[dict[str, Any]]] = {}
     for proposal in proposals:
