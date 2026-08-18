@@ -50,31 +50,58 @@ def _vertical_zone(block: dict[str, Any], edge_fraction: float) -> str | None:
     return "middle"
 
 
+def _page_edge_positions(blocks: list[dict[str, Any]], edge_items: int) -> dict[tuple[str, str], str]:
+    """Label the first/last few reading-order blocks on each page.
+
+    This is a fallback for magazine chrome that survives OCR but has no bbox. It is intentionally
+    weaker than geometry and only becomes useful when the same text recurs across many pages.
+    """
+    by_page: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for block in blocks:
+        by_page[str(block.get("_page") or "")].append(block)
+    positions: dict[tuple[str, str], str] = {}
+    for rows in by_page.values():
+        n = len(rows)
+        for index, block in enumerate(rows):
+            key = block_key(block)
+            if index < edge_items:
+                positions[key] = "head"
+            if index >= max(0, n - edge_items):
+                positions[key] = "tail"
+    return positions
+
+
 def detect_repeated_templates(
     blocks: list[dict[str, Any]], config: dict[str, Any] | None = None
 ) -> tuple[set[tuple[str, str]], list[dict[str, Any]], dict[str, int]]:
     """Find high-confidence repeated document chrome before Evidence-node construction.
 
-    Two conservative channels are used:
-    1. repeated short text at a consistent top/bottom page zone when geometry exists;
-    2. very frequent exact-ish short text repetition when geometry is missing.
+    Priority order:
+    1. repeated text at a stable geometric top/bottom zone;
+    2. repeated bboxless text at the first/last few reading-order positions of a page;
+    3. very frequent bboxless repetition anywhere on the page.
 
-    The second channel deliberately requires a higher page-frequency threshold so recurring article
-    language is not mistaken for template chrome.
+    This lets magazine footer/header chrome be found even when hybrid alignment preserved the OCR
+    block without layout geometry, while keeping the fallback conservative.
     """
     cfg = config or {}
     max_chars = int(cfg.get("max_chars", 180))
     edge_fraction = float(cfg.get("edge_fraction", 0.14))
+    edge_items = int(cfg.get("reading_order_edge_items", 3))
     min_pages = int(cfg.get("min_pages", 4))
     min_page_fraction = float(cfg.get("min_page_fraction", 0.35))
+    bboxless_edge_min_page_fraction = float(cfg.get("bboxless_edge_min_page_fraction", 0.25))
     bboxless_min_page_fraction = float(cfg.get("bboxless_min_page_fraction", 0.60))
 
     pages = {str(block.get("_page") or "") for block in blocks}
     page_count = max(1, len(pages))
     spatial_required = max(min_pages, math.ceil(page_count * min_page_fraction))
+    bboxless_edge_required = max(min_pages, math.ceil(page_count * bboxless_edge_min_page_fraction))
     bboxless_required = max(min_pages, math.ceil(page_count * bboxless_min_page_fraction))
 
+    edge_positions = _page_edge_positions(blocks, edge_items)
     spatial_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    bboxless_edge_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     bboxless_groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
 
     for block in blocks:
@@ -87,21 +114,28 @@ def detect_repeated_templates(
         zone = _vertical_zone(block, edge_fraction)
         if zone in {"top", "bottom"}:
             spatial_groups[(zone, fp)].append(block)
-        elif _bbox(block) is None:
+            continue
+        if _bbox(block) is None:
+            edge_position = edge_positions.get(block_key(block))
+            if edge_position in {"head", "tail"}:
+                bboxless_edge_groups[(edge_position, fp)].append(block)
             bboxless_groups[fp].append(block)
 
     detected: set[tuple[str, str]] = set()
     review: list[dict[str, Any]] = []
     spatial_clusters = 0
+    bboxless_edge_clusters = 0
     bboxless_clusters = 0
 
     def accept_group(rows: list[dict[str, Any]], method: str, threshold: int, fingerprint: str, zone: str | None):
-        nonlocal spatial_clusters, bboxless_clusters
+        nonlocal spatial_clusters, bboxless_edge_clusters, bboxless_clusters
         distinct_pages = sorted({str(row.get("_page") or "") for row in rows})
         if len(distinct_pages) < threshold:
             return
         if method == "repeated_edge_text":
             spatial_clusters += 1
+        elif method == "repeated_reading_order_edge_text":
+            bboxless_edge_clusters += 1
         else:
             bboxless_clusters += 1
         for row in rows:
@@ -113,22 +147,32 @@ def detect_repeated_templates(
             "page_count": len(distinct_pages),
             "pages": distinct_pages,
             "examples": [
-                {"page": row.get("_page"), "block_id": row.get("block_id"), "text": _text(row), "bbox": _bbox(row)}
+                {
+                    "page": row.get("_page"),
+                    "block_id": row.get("block_id"),
+                    "text": _text(row),
+                    "bbox": _bbox(row),
+                    "final_order": row.get("final_order"),
+                }
                 for row in rows[:5]
             ],
         })
 
     for (zone, fp), rows in spatial_groups.items():
         accept_group(rows, "repeated_edge_text", spatial_required, fp, zone)
+    for (position, fp), rows in bboxless_edge_groups.items():
+        accept_group(rows, "repeated_reading_order_edge_text", bboxless_edge_required, fp, position)
     for fp, rows in bboxless_groups.items():
         accept_group(rows, "repeated_bboxless_text", bboxless_required, fp, None)
 
     stats = {
         "document_pages": page_count,
         "spatial_required_pages": spatial_required,
+        "bboxless_edge_required_pages": bboxless_edge_required,
         "bboxless_required_pages": bboxless_required,
-        "template_clusters": spatial_clusters + bboxless_clusters,
+        "template_clusters": spatial_clusters + bboxless_edge_clusters + bboxless_clusters,
         "spatial_template_clusters": spatial_clusters,
+        "bboxless_edge_template_clusters": bboxless_edge_clusters,
         "bboxless_template_clusters": bboxless_clusters,
         "template_blocks": len(detected),
     }
