@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from .aligned_fragment_consolidation import (
-    apply_aligned_fragment_attachments,
     collect_fragment_review_rows,
     propose_aligned_fragment_attachments,
 )
@@ -10,6 +9,7 @@ from .evidence_builder import build_provisional_evidence_nodes
 from .exporter import export_graph
 from .io_utils import write_json, write_jsonl
 from .loader import load_aligned_document
+from .magazine_role_router import route_magazine_roles
 from .metadata_extractor import extract_document_metadata
 from .reading_order import order_blocks
 from .schemas import document_node
@@ -19,8 +19,8 @@ from .structural_graph import build_structural_edges
 from .validator import validate_graph
 
 
-def _micro_fragment_enabled(doc_id, config):
-    cfg = config.get("micro_fragment_consolidation", {})
+def _enabled_for_doc(doc_id, config, key):
+    cfg = config.get(key, {})
     if not cfg.get("enabled", False):
         return False
     prefixes = cfg.get("document_prefixes", [])
@@ -33,20 +33,43 @@ def build_nodes(doc_id, config):
         pages, config["validation"]["deepseek_order_conflict_threshold"]
     )
 
-    blocks = raw_blocks
-    fragment_proposals = []
-    fragment_review_rows = []
-    fragment_provenance = []
-    fragment_stats = {}
-    fragment_cfg = config.get("micro_fragment_consolidation", {})
-    fragment_enabled = _micro_fragment_enabled(doc_id, config)
-    if fragment_enabled:
-        fragment_review_rows = collect_fragment_review_rows(raw_blocks, fragment_cfg)
-        fragment_proposals, fragment_stats = propose_aligned_fragment_attachments(raw_blocks, fragment_cfg)
-        if fragment_cfg.get("apply", False):
-            blocks, fragment_provenance = apply_aligned_fragment_attachments(raw_blocks, fragment_proposals)
+    # First classify every fused DeepSeek+layout block with the generic classifier.
+    base_classified = [(block, classify_block_role(block)) for block in raw_blocks]
 
-    classified = [(b, classify_block_role(b)) for b in blocks]
+    # Magazine routing is a conservative pre-Evidence layer. It removes only high-confidence
+    # navigation/advertisement/template material from ordinary Evidence content; it does not
+    # perform article segmentation and it preserves every aligned block for audit.
+    role_routing_enabled = _enabled_for_doc(doc_id, config, "magazine_role_routing")
+    role_routing_review = []
+    role_routing_counts = {}
+    if role_routing_enabled:
+        classified, role_routing_review, role_routing_counts = route_magazine_roles(
+            raw_blocks, base_classified
+        )
+    else:
+        classified = base_classified
+
+    # Fragment diagnostics now run only over blocks that survived routing as evidence_content.
+    # This prevents TOC bullets, advertisement copy, wrapper symbols, etc. from polluting the
+    # fragment candidate pool. Automatic absorption remains disabled at this stage.
+    fragment_enabled = _enabled_for_doc(doc_id, config, "micro_fragment_consolidation")
+    fragment_cfg = config.get("micro_fragment_consolidation", {})
+    fragment_review_rows = []
+    fragment_proposals = []
+    fragment_stats = {}
+    if fragment_enabled:
+        evidence_blocks = [block for block, role in classified if role == "evidence_content"]
+        fragment_review_rows = collect_fragment_review_rows(evidence_blocks, fragment_cfg)
+        fragment_proposals, fragment_stats = propose_aligned_fragment_attachments(
+            evidence_blocks, fragment_cfg
+        )
+        fragment_stats["routed_evidence_input_blocks"] = len(evidence_blocks)
+        fragment_stats["apply"] = False
+        if fragment_cfg.get("apply", False):
+            fragment_stats["apply_blocked_reason"] = (
+                "role routing must be validated before automatic fragment absorption"
+            )
+
     metadata = extract_document_metadata(doc_id, classified, [p["_source_file"] for p in pages])
     sections, assignments = build_sections(doc_id, classified)
     evidence = build_provisional_evidence_nodes(doc_id, classified, assignments)
@@ -62,15 +85,19 @@ def build_nodes(doc_id, config):
         doc_id, pages, classified, documents, sections, evidence, edges, reading_issues
     )
     stats = calculate_statistics(pages, classified, evidence, edges)
+
+    if role_routing_enabled:
+        stats["magazine_role_routing"] = {
+            "changed_blocks": len(role_routing_review),
+            "roles_after_routing": role_routing_counts,
+        }
     if fragment_enabled:
         stats["micro_fragment_consolidation"] = {
             **fragment_stats,
             "review_rows": len(fragment_review_rows),
-            "apply": bool(fragment_cfg.get("apply", False)),
-            "input_blocks": len(raw_blocks),
-            "output_blocks": len(blocks),
-            "absorbed_fragments": len(fragment_provenance),
+            "proposal_rows": len(fragment_proposals),
         }
+
     output = export_graph(
         config["output"]["graph_root"],
         doc_id,
@@ -83,17 +110,19 @@ def build_nodes(doc_id, config):
         stats,
     )
 
+    if role_routing_enabled:
+        write_jsonl(output / "magazine_role_routing_review.jsonl", role_routing_review)
+        write_json(output / "magazine_role_routing_statistics.json", {
+            "changed_blocks": len(role_routing_review),
+            "roles_after_routing": role_routing_counts,
+        })
     if fragment_enabled:
         write_jsonl(output / "aligned_fragment_review.jsonl", fragment_review_rows)
         write_jsonl(output / "aligned_fragment_proposals.jsonl", fragment_proposals)
-        write_jsonl(output / "aligned_fragment_provenance.jsonl", fragment_provenance)
         write_json(output / "aligned_fragment_statistics.json", {
             **fragment_stats,
             "review_rows": len(fragment_review_rows),
-            "apply": bool(fragment_cfg.get("apply", False)),
-            "input_blocks": len(raw_blocks),
-            "output_blocks": len(blocks),
-            "absorbed_fragments": len(fragment_provenance),
+            "proposal_rows": len(fragment_proposals),
         })
 
     return {
@@ -104,7 +133,7 @@ def build_nodes(doc_id, config):
         "structural_edges": edges,
         "validation": validation,
         "statistics": stats,
+        "magazine_role_routing_review": role_routing_review,
         "aligned_fragment_review": fragment_review_rows,
         "aligned_fragment_proposals": fragment_proposals,
-        "aligned_fragment_provenance": fragment_provenance,
     }
