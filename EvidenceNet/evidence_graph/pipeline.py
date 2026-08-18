@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from .aligned_fragment_consolidation import (
     apply_aligned_fragment_attachments,
+    collect_fragment_review_rows,
     propose_aligned_fragment_attachments,
 )
 from .block_classifier import classify_block_role
@@ -32,16 +33,15 @@ def build_nodes(doc_id, config):
         pages, config["validation"]["deepseek_order_conflict_threshold"]
     )
 
-    # Magazine-only parsing cleanup happens before role classification and Evidence-node creation.
-    # The diagnostic proposal file is always written when enabled; physical consolidation is
-    # controlled separately with `apply: true` so experiments remain auditable and reversible.
     blocks = raw_blocks
     fragment_proposals = []
+    fragment_review_rows = []
     fragment_provenance = []
     fragment_stats = {}
     fragment_cfg = config.get("micro_fragment_consolidation", {})
     fragment_enabled = _micro_fragment_enabled(doc_id, config)
     if fragment_enabled:
+        fragment_review_rows = collect_fragment_review_rows(raw_blocks, fragment_cfg)
         fragment_proposals, fragment_stats = propose_aligned_fragment_attachments(raw_blocks, fragment_cfg)
         if fragment_cfg.get("apply", False):
             blocks, fragment_provenance = apply_aligned_fragment_attachments(raw_blocks, fragment_proposals)
@@ -65,6 +65,7 @@ def build_nodes(doc_id, config):
     if fragment_enabled:
         stats["micro_fragment_consolidation"] = {
             **fragment_stats,
+            "review_rows": len(fragment_review_rows),
             "apply": bool(fragment_cfg.get("apply", False)),
             "input_blocks": len(raw_blocks),
             "output_blocks": len(blocks),
@@ -83,10 +84,12 @@ def build_nodes(doc_id, config):
     )
 
     if fragment_enabled:
+        write_jsonl(output / "aligned_fragment_review.jsonl", fragment_review_rows)
         write_jsonl(output / "aligned_fragment_proposals.jsonl", fragment_proposals)
         write_jsonl(output / "aligned_fragment_provenance.jsonl", fragment_provenance)
         write_json(output / "aligned_fragment_statistics.json", {
             **fragment_stats,
+            "review_rows": len(fragment_review_rows),
             "apply": bool(fragment_cfg.get("apply", False)),
             "input_blocks": len(raw_blocks),
             "output_blocks": len(blocks),
@@ -101,6 +104,7 @@ def build_nodes(doc_id, config):
         "structural_edges": edges,
         "validation": validation,
         "statistics": stats,
+        "aligned_fragment_review": fragment_review_rows,
         "aligned_fragment_proposals": fragment_proposals,
         "aligned_fragment_provenance": fragment_provenance,
     }
