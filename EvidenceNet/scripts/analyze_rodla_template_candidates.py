@@ -78,6 +78,47 @@ def _dedupe_page_candidates(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return kept
 
 
+def _cluster_summary(
+    cluster: list[dict[str, Any]],
+    *,
+    cluster_id: str,
+    total_pages: int,
+    min_pages: int,
+) -> dict[str, Any]:
+    distinct_pages = sorted({row["page"] for row in cluster})
+    representative = max(cluster, key=lambda row: row["score"])
+    labels = Counter(row["class_name"] for row in cluster)
+    scores = [row["score"] for row in cluster]
+    boxes = [row["normalized_bbox"] for row in cluster]
+
+    def mean_at(index: int) -> float:
+        return sum(box[index] for box in boxes) / len(boxes)
+
+    mean_bbox = [mean_at(i) for i in range(4)]
+    max_abs_deviation = max(
+        max(abs(box[i] - mean_bbox[i]) for i in range(4))
+        for box in boxes
+    )
+    accepted = len(distinct_pages) >= min_pages
+
+    return {
+        "cluster_id": cluster_id,
+        "accepted": accepted,
+        "rejection_reason": None if accepted else f"page_count_below_min_pages:{len(distinct_pages)}<{min_pages}",
+        "page_count": len(distinct_pages),
+        "support_fraction": round(len(distinct_pages) / max(1, total_pages), 4),
+        "pages": distinct_pages,
+        "class_counts": dict(labels.most_common()),
+        "score_min": round(min(scores), 4),
+        "score_max": round(max(scores), 4),
+        "score_mean": round(sum(scores) / len(scores), 4),
+        "mean_normalized_bbox": [round(value, 6) for value in mean_bbox],
+        "max_abs_bbox_deviation": round(max_abs_deviation, 6),
+        "representative": representative,
+        "examples": sorted(cluster, key=lambda row: row["score"], reverse=True)[:10],
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Audit repeated page-edge templates from existing RoDLA detections")
     parser.add_argument("--input", required=True, help="RoDLA allclasses JSONL")
@@ -139,27 +180,27 @@ def main() -> None:
                 class_counter[row["class_name"]] += 1
 
     clusters = _cluster(candidates, args.cluster_distance)
+    raw_cluster_rows: list[dict[str, Any]] = []
     accepted: list[dict[str, Any]] = []
-    for cluster in clusters:
-        distinct_pages = sorted({row["page"] for row in cluster})
-        if len(distinct_pages) < args.min_pages:
-            continue
-        # Select strongest detection as human-readable representative.
-        representative = max(cluster, key=lambda row: row["score"])
-        labels = Counter(row["class_name"] for row in cluster)
-        scores = [row["score"] for row in cluster]
-        accepted.append({
-            "cluster_id": f"rodla_template_{len(accepted) + 1:02d}",
-            "page_count": len(distinct_pages),
-            "support_fraction": round(len(distinct_pages) / max(1, pages), 4),
-            "pages": distinct_pages,
-            "class_counts": dict(labels.most_common()),
-            "score_min": round(min(scores), 4),
-            "score_max": round(max(scores), 4),
-            "score_mean": round(sum(scores) / len(scores), 4),
-            "representative": representative,
-            "examples": sorted(cluster, key=lambda row: row["score"], reverse=True)[:10],
-        })
+
+    # Largest clusters first makes audit output easier to inspect.
+    ordered_clusters = sorted(
+        clusters,
+        key=lambda cluster: len({row["page"] for row in cluster}),
+        reverse=True,
+    )
+    for index, cluster in enumerate(ordered_clusters, 1):
+        summary = _cluster_summary(
+            cluster,
+            cluster_id=f"rodla_geometry_{index:02d}",
+            total_pages=pages,
+            min_pages=args.min_pages,
+        )
+        raw_cluster_rows.append(summary)
+        if summary["accepted"]:
+            accepted_row = dict(summary)
+            accepted_row["cluster_id"] = f"rodla_template_{len(accepted) + 1:02d}"
+            accepted.append(accepted_row)
 
     stats = {
         "document_pages": pages,
@@ -167,6 +208,7 @@ def main() -> None:
         "candidate_detections": len(candidates),
         "raw_geometry_clusters": len(clusters),
         "accepted_template_clusters": len(accepted),
+        "rejected_geometry_clusters": len(raw_cluster_rows) - len(accepted),
         "min_pages": args.min_pages,
         "geometry": {
             "min_score": args.min_score,
@@ -178,12 +220,16 @@ def main() -> None:
             "cluster_distance": args.cluster_distance,
         },
         "candidate_classes": dict(class_counter.most_common()),
+        "raw_cluster_support": [row["page_count"] for row in raw_cluster_rows],
         "accepted_cluster_support": [row["page_count"] for row in accepted],
     }
 
     (output_dir / "statistics.json").write_text(json.dumps(stats, indent=2), encoding="utf-8")
     with (output_dir / "clusters.jsonl").open("w", encoding="utf-8") as handle:
         for row in accepted:
+            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
+    with (output_dir / "all_raw_clusters.jsonl").open("w", encoding="utf-8") as handle:
+        for row in raw_cluster_rows:
             handle.write(json.dumps(row, ensure_ascii=False) + "\n")
     with (output_dir / "candidates.jsonl").open("w", encoding="utf-8") as handle:
         for row in candidates:
@@ -192,6 +238,7 @@ def main() -> None:
     print(json.dumps(stats, indent=2))
     print(f"wrote: {output_dir / 'statistics.json'}")
     print(f"wrote: {output_dir / 'clusters.jsonl'}")
+    print(f"wrote: {output_dir / 'all_raw_clusters.jsonl'}")
     print(f"wrote: {output_dir / 'candidates.jsonl'}")
 
 
