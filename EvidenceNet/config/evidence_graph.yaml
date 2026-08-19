@@ -28,8 +28,6 @@ micro_fragment_consolidation:
   apply: false
   document_prefixes:
     - CERNCourier
-  max_chars: 120
-  min_target_chars: 40
   neighbour_window: 2
   min_axis_overlap: 0.30
   max_vertical_gap_px: 120
