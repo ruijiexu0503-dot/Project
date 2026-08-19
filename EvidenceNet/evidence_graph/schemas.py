@@ -16,6 +16,13 @@ class SourceMember:
     matched_region_label: str | None
     match_score: float | None
     role: str = "core"
+    raw_bbox: list[float] | None = None
+    raw_bbox_scale: str | None = None
+    page_width: float | None = None
+    page_height: float | None = None
+    bbox_source: str | None = None
+    bbox_granularity: str | None = None
+    matched_region_candidates: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -51,4 +58,3 @@ class EvidenceNode:
 def document_node(doc_id: str, metadata: dict[str, Any]) -> dict[str, Any]:
     return {"node_id": doc_id, "node_type": "document", "doc_id": doc_id,
             "title": metadata.get("title")}
-
