@@ -66,9 +66,15 @@ def _title_like(text: str) -> bool:
     return False
 
 
-def _fragmentary(block: dict[str, Any], max_chars: int) -> tuple[bool, str | None]:
+def _fragmentary(block: dict[str, Any]) -> tuple[bool, str | None]:
+    """Return whether a body-text block looks like an interrupted continuation.
+
+    Intentionally has no length cutoff: paragraph length is a layout/parsing property, not a
+    semantic boundary. Long blocks can still end mid-sentence and short blocks can be valid
+    standalone content.
+    """
     text = _clean_text(block)
-    if not text or len(text) > max_chars or _excluded(block) or _title_like(text):
+    if not text or _excluded(block) or _title_like(text):
         return False, None
     complete, possible, reason = completeness(text)
     if possible or not complete:
@@ -153,12 +159,10 @@ def _proposal_key(page: Any, block_id: Any) -> tuple[str, str]:
 def collect_fragment_review_rows(
     blocks: list[dict[str, Any]], config: dict[str, Any] | None = None
 ) -> list[dict[str, Any]]:
-    """Expose short/incomplete hybrid blocks with their alignment state and local context."""
-    cfg = config or {}
-    max_chars = int(cfg.get("max_chars", 120))
+    """Expose incomplete/continuation-like body blocks with alignment state and local context."""
     rows: list[dict[str, Any]] = []
     for index, block in enumerate(blocks):
-        is_fragment, reason = _fragmentary(block, max_chars)
+        is_fragment, reason = _fragmentary(block)
         if not is_fragment:
             continue
         previous = blocks[index - 1] if index > 0 and blocks[index - 1].get("_page") == block.get("_page") else None
@@ -219,10 +223,8 @@ def propose_hybrid_fragment_attachments(
     HIGH confidence requires an unmatched fragment, a textual continuation signal, and two
     surrounding text-like blocks grounded to the same layout region. MEDIUM is audit-only.
     Targets are chosen only when textual directionality is explicit; reading-order fallback is
-    intentionally removed to prevent arbitrary absorption.
+    intentionally removed to prevent arbitrary absorption. Candidate discovery is length-agnostic.
     """
-    cfg = config or {}
-    max_chars = int(cfg.get("max_chars", 120))
     stats = {
         "ordered_blocks": len(blocks),
         "fragment_candidates": 0,
@@ -236,7 +238,7 @@ def propose_hybrid_fragment_attachments(
     proposals: list[dict[str, Any]] = []
 
     for index, fragment in enumerate(blocks):
-        is_fragment, fragment_reason = _fragmentary(fragment, max_chars)
+        is_fragment, fragment_reason = _fragmentary(fragment)
         if not is_fragment:
             continue
         stats["fragment_candidates"] += 1
@@ -319,7 +321,6 @@ def apply_aligned_fragment_attachments(
 
     eligible: list[dict[str, Any]] = []
     claimed_fragments: set[tuple[str, str]] = set()
-    proposed_target_keys: set[tuple[str, str]] = set()
     for proposal in proposals:
         if str(proposal.get("confidence") or "").upper() not in allowed_confidence:
             continue
@@ -332,10 +333,8 @@ def apply_aligned_fragment_attachments(
         if fragment_key in claimed_fragments:
             continue
         claimed_fragments.add(fragment_key)
-        proposed_target_keys.add(target_key)
         eligible.append({**proposal, "_fragment_key": fragment_key, "_target_key": target_key})
 
-    # Prevent chains/cycles: if A is proposed as a fragment anywhere, A cannot also be a target.
     absorbed_keys = {row["_fragment_key"] for row in eligible}
     safe_rows = [row for row in eligible if row["_target_key"] not in absorbed_keys]
 
@@ -378,7 +377,7 @@ def apply_aligned_fragment_attachments(
         target["_absorbed_source_blocks"] = [copy.deepcopy(source_by_key[key]) for key in absorbed]
         target["_fragment_consolidation"] = {
             "absorbed_block_keys": [list(key) for key in absorbed],
-            "method": "hybrid_alignment_fragment_absorption_v3_safe",
+            "method": "hybrid_alignment_fragment_absorption_v4_length_agnostic",
             "allowed_confidence": sorted(allowed_confidence),
         }
 
