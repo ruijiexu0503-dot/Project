@@ -10,17 +10,24 @@
 
 set -euo pipefail
 
-# Run the OCR parsing + layout detection + hybrid alignment pipeline from
-# output/split_render_result/<doc_id>/pages/page_000001.png.
+# Legacy orchestrator retained for compatibility.
+# Preferred human-facing entrypoint:
+#   sbatch pipeline_steps/step1_run_parsing_pipeline.sbatch
+#
+# Canonical execution order:
+#   Step 1A -> DeepSeek OCR parsing
+#   Step 1B -> PP-DocLayout detection
+#   Step 1C -> Hybrid OCR/layout alignment
+#   Step 1D -> Enrichment + page Markdown/crop export
 #
 # Run all split-rendered docs:
-#   sbatch src_splitpage/run_parse_layout_from_split_render.sbatch
+#   sbatch pipeline_steps/step1_run_parsing_pipeline.sbatch
 #
 # Run one doc:
-#   sbatch --export=ALL,DOC_ID=CERNCourier2022NovDec-digitaledition src_splitpage/run_parse_layout_from_split_render.sbatch
+#   sbatch --export=ALL,DOC_ID=CERNCourier2022NovDec-digitaledition pipeline_steps/step1_run_parsing_pipeline.sbatch
 #
 # Quick smoke test on first N pages after filtering:
-#   sbatch --export=ALL,DOC_ID=CERNCourier2022NovDec-digitaledition,LIMIT=5 src_splitpage/run_parse_layout_from_split_render.sbatch
+#   sbatch --export=ALL,DOC_ID=CERNCourier2022NovDec-digitaledition,LIMIT=5 pipeline_steps/step1_run_parsing_pipeline.sbatch
 
 PROJECT_ROOT="${PROJECT_ROOT:-$PWD}"
 SPLIT_RENDER_ROOT="${SPLIT_RENDER_ROOT:-output/split_render_result}"
@@ -45,10 +52,12 @@ PARSE_VENV_DIR="${PARSE_VENV_DIR:-.venv}"
 LAYOUT_VENV_DIR="${LAYOUT_VENV_DIR:-.venv_layout}"
 HYBRID_VENV_DIR="${HYBRID_VENV_DIR:-.venv}"
 
-DEEPSEEK_SCRIPT="${DEEPSEEK_SCRIPT:-src/deepseekocr2_parsing/parse_incoming_deepseekocr2_bbox.py}"
-LAYOUT_SCRIPT="${LAYOUT_SCRIPT:-src/layout_detection/run_pp_doclayout_detection.py}"
-ALIGN_SCRIPT="${ALIGN_SCRIPT:-src/hybrid_align_deepseek_layout.py}"
-ENRICH_SCRIPT="${ENRICH_SCRIPT:-src/enrich_hybrid_aligned_and_export_page_md.py}"
+# Human-facing ordered wrappers. They delegate to the original implementation
+# files so history/imports remain stable while the execution order is obvious.
+DEEPSEEK_SCRIPT="${DEEPSEEK_SCRIPT:-pipeline_steps/step1_a_parsing_deepseek_ocr.py}"
+LAYOUT_SCRIPT="${LAYOUT_SCRIPT:-pipeline_steps/step1_b_parsing_layout_detection.py}"
+ALIGN_SCRIPT="${ALIGN_SCRIPT:-pipeline_steps/step1_c_parsing_hybrid_alignment.py}"
+ENRICH_SCRIPT="${ENRICH_SCRIPT:-pipeline_steps/step1_d_parsing_enrich_export.py}"
 
 DEEPSEEK_MODEL_NAME="${DEEPSEEK_MODEL_NAME:-deepseek-ai/DeepSeek-OCR-2}"
 LAYOUT_MODEL_NAME="${LAYOUT_MODEL_NAME:-PP-DocLayout-L}"
@@ -169,7 +178,7 @@ PY
 deactivate
 
 echo "============================================================"
-echo "[STEP] DeepSeekOCR2 parsing"
+echo "[STEP 1A] DeepSeekOCR2 parsing"
 echo "============================================================"
 source "$PARSE_VENV_DIR/bin/activate"
 python - <<'PY'
@@ -211,7 +220,7 @@ fi
 deactivate
 
 echo "============================================================"
-echo "[STEP] PP-DocLayout detection"
+echo "[STEP 1B] PP-DocLayout detection"
 echo "============================================================"
 source "$LAYOUT_VENV_DIR/bin/activate"
 
@@ -238,7 +247,7 @@ fi
 deactivate
 
 echo "============================================================"
-echo "[STEP] Hybrid alignment"
+echo "[STEP 1C] Hybrid alignment"
 echo "============================================================"
 source "$HYBRID_VENV_DIR/bin/activate"
 
@@ -261,7 +270,7 @@ fi
 "${ALIGN_CMD[@]}"
 
 echo "============================================================"
-echo "[STEP] Enrich aligned JSON and export Markdown"
+echo "[STEP 1D] Enrich aligned JSON and export Markdown"
 echo "============================================================"
 
 ENRICH_CMD=(
@@ -284,7 +293,7 @@ deactivate
 
 echo ""
 echo "============================================================"
-echo "[DONE] parse/layout pipeline from split render finished"
+echo "[DONE] Step 1 parsing/layout pipeline finished"
 echo "[INFO] staged images:    $STAGED_IMAGE_ROOT"
 echo "[INFO] parser outputs:   $DEEPSEEK_ROOT"
 echo "[INFO] layout JSON:      $LAYOUT_ROOT"
