@@ -1,0 +1,166 @@
+{
+  "experiment": "dolphin_v2_vs_deepseekocr2_cross_document_pilot_v2",
+  "production_modified": false,
+  "cases": [
+    {
+      "case_id": "gw150914_page_0002",
+      "document_type": "scientific_paper",
+      "input_image": "parsing/output/deepseekocr2_split_render/gw150914_detection/page_0002/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/gw150914_detection/page_0002/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/gw150914_detection/page_0002/ocr.md",
+      "audit_focus": ["scientific_text", "figure", "caption", "reading_order"]
+    },
+    {
+      "case_id": "cern_page_0017",
+      "document_type": "multi_article_magazine_page",
+      "input_image": "parsing/output/deepseekocr2_split_render/CERNCourier2022NovDec-digitaledition/page_0017/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/CERNCourier2022NovDec-digitaledition/page_0017/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/CERNCourier2022NovDec-digitaledition/page_0017/ocr.md",
+      "audit_focus": ["two_articles", "multi_column", "figures", "reading_order"]
+    },
+    {
+      "case_id": "clad_page_0063",
+      "document_type": "multi_article_magazine_page",
+      "input_image": "parsing/output/deepseekocr2_h100_clad/CLADmag_2025_H2/page_0063/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_h100_clad/CLADmag_2025_H2/page_0063/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_h100_clad/CLADmag_2025_H2/page_0063/ocr.md",
+      "audit_focus": ["two_articles", "mixed_text_image", "reading_order"]
+    },
+    {
+      "case_id": "dlr_source_spread_000009",
+      "document_type": "uncut_magazine_spread",
+      "input_image": "parsing/output/split_render_result/DLRmagazine_176_EN/pages/page_000009.png",
+      "deepseek_overlay": "EvidenceNet/output/uncut_magazine_article_order_30page_v1/DLRmagazine_176_EN/page_000009/spread_overlay.png",
+      "deepseek_markdown": null,
+      "audit_focus": ["cross_gutter_ship_and_sea", "overlapping_worker_inset", "article_reading_order"]
+    },
+    {
+      "case_id": "dlr_source_spread_000013",
+      "document_type": "full_spread_infographic",
+      "input_image": "parsing/output/split_render_result/DLRmagazine_176_EN/pages/page_000013.png",
+      "deepseek_overlay": "EvidenceNet/output/uncut_magazine_article_order_30page_v1/DLRmagazine_176_EN/page_000013/spread_overlay.png",
+      "deepseek_markdown": null,
+      "audit_focus": ["full_spread_visual", "callouts", "overlapping_layers", "reading_order"]
+    },
+    {
+      "case_id": "cern2025_page_0007",
+      "document_type": "magazine_advertisement_or_mixed_content",
+      "input_image": "parsing/output/deepseekocr2_split_render/CERNCourier2025JanFeb-digitaledition/page_0007/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/CERNCourier2025JanFeb-digitaledition/page_0007/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/CERNCourier2025JanFeb-digitaledition/page_0007/ocr.md",
+      "audit_focus": ["advertisement", "mixed_visual_text", "small_text", "reading_order"]
+    },
+    {
+      "case_id": "cern2025_page_0017",
+      "document_type": "multi_column_magazine_page",
+      "input_image": "parsing/output/deepseekocr2_split_render/CERNCourier2025JanFeb-digitaledition/page_0017/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/CERNCourier2025JanFeb-digitaledition/page_0017/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/CERNCourier2025JanFeb-digitaledition/page_0017/ocr.md",
+      "audit_focus": ["multi_column", "figure_caption", "article_boundary", "reading_order"]
+    },
+    {
+      "case_id": "cern2026_page_0008",
+      "document_type": "magazine_mixed_layout",
+      "input_image": "parsing/output/deepseekocr2_split_render/CERNCourier2026MayJun-digitaledition/page_0008/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/CERNCourier2026MayJun-digitaledition/page_0008/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/CERNCourier2026MayJun-digitaledition/page_0008/ocr.md",
+      "audit_focus": ["multi_article", "image", "caption", "reading_order"]
+    },
+    {
+      "case_id": "cern2026_page_0021",
+      "document_type": "magazine_mixed_layout",
+      "input_image": "parsing/output/deepseekocr2_split_render/CERNCourier2026MayJun-digitaledition/page_0021/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/CERNCourier2026MayJun-digitaledition/page_0021/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/CERNCourier2026MayJun-digitaledition/page_0021/ocr.md",
+      "audit_focus": ["multi_column", "visual_interruption", "footer", "reading_order"]
+    },
+    {
+      "case_id": "luminous_page_0003",
+      "document_type": "art_catalogue",
+      "input_image": "parsing/output/deepseekocr2_split_render/Luminous Garden Agnes Northrop and the Women of Tiffany Studios/page_0003/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/Luminous Garden Agnes Northrop and the Women of Tiffany Studios/page_0003/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/Luminous Garden Agnes Northrop and the Women of Tiffany Studios/page_0003/ocr.md",
+      "audit_focus": ["artwork", "decorative_layout", "sparse_text", "no_template_control"]
+    },
+    {
+      "case_id": "luminous_page_0014",
+      "document_type": "art_catalogue",
+      "input_image": "parsing/output/deepseekocr2_split_render/Luminous Garden Agnes Northrop and the Women of Tiffany Studios/page_0014/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/Luminous Garden Agnes Northrop and the Women of Tiffany Studios/page_0014/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/Luminous Garden Agnes Northrop and the Women of Tiffany Studios/page_0014/ocr.md",
+      "audit_focus": ["image_dominant", "caption", "decorative_text", "reading_order"]
+    },
+    {
+      "case_id": "cyber_ch4_page_0004",
+      "document_type": "technical_book_chapter",
+      "input_image": "parsing/output/deepseekocr2_split_render/CyberPhysicalModelingChapter4/page_0004/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/CyberPhysicalModelingChapter4/page_0004/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/CyberPhysicalModelingChapter4/page_0004/ocr.md",
+      "audit_focus": ["distributed_footer", "technical_text", "equation", "reading_order"]
+    },
+    {
+      "case_id": "cyber_ch4_page_0016",
+      "document_type": "technical_book_chapter",
+      "input_image": "parsing/output/deepseekocr2_split_render/CyberPhysicalModelingChapter4/page_0016/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/CyberPhysicalModelingChapter4/page_0016/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/CyberPhysicalModelingChapter4/page_0016/ocr.md",
+      "audit_focus": ["technical_figure", "caption", "formula", "reading_order"]
+    },
+    {
+      "case_id": "detr_page_0003",
+      "document_type": "scientific_paper",
+      "input_image": "parsing/output/deepseekocr2_split_render/detr/page_0003/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/detr/page_0003/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/detr/page_0003/ocr.md",
+      "audit_focus": ["two_column_paper", "equations", "figures", "reading_order"]
+    },
+    {
+      "case_id": "detr_page_0012",
+      "document_type": "scientific_paper",
+      "input_image": "parsing/output/deepseekocr2_split_render/detr/page_0012/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/detr/page_0012/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/detr/page_0012/ocr.md",
+      "audit_focus": ["table", "references", "two_column_paper", "reading_order"]
+    },
+    {
+      "case_id": "climate_ml_page_0005",
+      "document_type": "scientific_paper",
+      "input_image": "parsing/output/deepseekocr2_split_render/climate_change_with_ml/page_0005/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/climate_change_with_ml/page_0005/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/climate_change_with_ml/page_0005/ocr.md",
+      "audit_focus": ["dense_two_column", "figure", "caption", "reading_order"]
+    },
+    {
+      "case_id": "climate_ml_page_0020",
+      "document_type": "scientific_paper",
+      "input_image": "parsing/output/deepseekocr2_split_render/climate_change_with_ml/page_0020/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/climate_change_with_ml/page_0020/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/climate_change_with_ml/page_0020/ocr.md",
+      "audit_focus": ["dense_scientific_text", "table_or_figure", "cross_column_order"]
+    },
+    {
+      "case_id": "hallmarks_page_0004",
+      "document_type": "biomedical_review",
+      "input_image": "parsing/output/deepseekocr2_split_render/hallmarks_of_aging/page_0004/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/hallmarks_of_aging/page_0004/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/hallmarks_of_aging/page_0004/ocr.md",
+      "audit_focus": ["biomedical_diagram", "dense_labels", "caption", "reading_order"]
+    },
+    {
+      "case_id": "hallmarks_page_0018",
+      "document_type": "biomedical_review",
+      "input_image": "parsing/output/deepseekocr2_split_render/hallmarks_of_aging/page_0018/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/hallmarks_of_aging/page_0018/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/hallmarks_of_aging/page_0018/ocr.md",
+      "audit_focus": ["multi_panel_figure", "caption", "two_column_text", "reading_order"]
+    },
+    {
+      "case_id": "entropy_page_0010",
+      "document_type": "formula_dense_scientific_paper",
+      "input_image": "parsing/output/deepseekocr2_split_render/entropy/page_0010/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/entropy/page_0010/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/entropy/page_0010/ocr.md",
+      "audit_focus": ["formula_dense", "equations", "two_column_text", "reading_order"]
+    }
+  ]
+}

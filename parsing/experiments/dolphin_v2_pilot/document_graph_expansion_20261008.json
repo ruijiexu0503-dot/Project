@@ -1,0 +1,71 @@
+{
+  "experiment": "dolphin_v2_document_graph_expansion_20261008",
+  "title": "Dolphin-v2 document graph expansion corpus",
+  "description": "Cross-domain papers and magazines for article segmentation, reading order, and cross-page edge evaluation.",
+  "production_modified": false,
+  "documents": [
+    {
+      "document_id": "Document_Parsing_Unveiled_2410_21169",
+      "document_type": "research_paper",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/Document_Parsing_Unveiled_2410_21169.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 10, 23, 45, 46]
+    },
+    {
+      "document_id": "PDF_MVQA_2404_12720",
+      "document_type": "research_paper",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/PDF_MVQA_2404_12720.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 8, 15, 22]
+    },
+    {
+      "document_id": "ESA_Bulletin_137",
+      "document_type": "magazine",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/ESA_Bulletin_137.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 3, 20, 40, 60, 80, 100, 120]
+    },
+    {
+      "document_id": "ESA_Highlights_2024",
+      "document_type": "visual_publication",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/ESA_Highlights_2024.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 3, 20, 40, 60, 84]
+    },
+    {
+      "document_id": "NASA_History_News_Notes_Fall_2024",
+      "document_type": "magazine",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/NASA_History_News_Notes_Fall_2024.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 3, 10, 20, 30, 38]
+    },
+    {
+      "document_id": "Glasgow_Science_Centre_The_Spark_Issue_30",
+      "document_type": "magazine",
+      "input_pdf": "parsing/output/split_pages/Glasgow_Science_Centre_The_Spark_Issue_30/Glasgow_Science_Centre_The_Spark_Issue_30_split.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 3, 6, 10, 12]
+    },
+    {
+      "document_id": "IMF_Finance_and_Development_December_2025",
+      "document_type": "magazine",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/IMF_Finance_and_Development_December_2025.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 3, 18, 36, 54, 72]
+    },
+    {
+      "document_id": "WIPO_Magazine_2025_Issue_1",
+      "document_type": "magazine",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/WIPO_Magazine_2025_Issue_1.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 3, 20, 40, 60, 80]
+    },
+    {
+      "document_id": "FAO_Unasylva_255_2024",
+      "document_type": "journal_magazine",
+      "input_pdf": "data/incoming/document_graph_expansion_20261008/FAO_Unasylva_255_2024.pdf",
+      "source_metadata": "data/incoming/document_graph_expansion_20261008/corpus_manifest.json",
+      "audit_pages": [1, 2, 3, 20, 40, 60, 80, 100, 120]
+    }
+  ]
+}

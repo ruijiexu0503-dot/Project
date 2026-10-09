@@ -1,0 +1,54 @@
+{
+  "version": "cross-page-article-reading-v1",
+  "notes": "Human-reviewed integration fixture from the 49-page regression. The page-5 main sentence continues at the page-6 main flow. Caption/footnote alternatives must not become NEXT edges.",
+  "decisions": [
+    {
+      "decision_id": "climate_5_6_main_to_caption",
+      "source_local_content_item_id": "climate_change_with_ml::page_0005::CI_1",
+      "target_local_content_item_id": "climate_change_with_ml::page_0006::CI_1",
+      "source_flow_id": "climate_change_with_ml::page_0005::CI_1::FLOW_1",
+      "target_flow_id": "climate_change_with_ml::page_0006::CI_1::FLOW_1",
+      "source_node_id": "climate_change_with_ml_page_0005_T_006",
+      "target_node_id": "climate_change_with_ml_page_0006_T_001",
+      "label": "SAME_ARTICLE_NO_EDGE",
+      "confidence": 0.99,
+      "review_basis": "target is a figure caption in the same paper, but not the continuation of the unfinished sentence"
+    },
+    {
+      "decision_id": "climate_5_6_main_continuation",
+      "source_local_content_item_id": "climate_change_with_ml::page_0005::CI_1",
+      "target_local_content_item_id": "climate_change_with_ml::page_0006::CI_2",
+      "source_flow_id": "climate_change_with_ml::page_0005::CI_1::FLOW_1",
+      "target_flow_id": "climate_change_with_ml::page_0006::CI_2::FLOW_2",
+      "source_node_id": "climate_change_with_ml_page_0005_T_006",
+      "target_node_id": "climate_change_with_ml_page_0006_T_002",
+      "label": "SAME_SENTENCE",
+      "confidence": 0.99,
+      "review_basis": "the source ends with 'wind' and the target begins with 'turbine'"
+    },
+    {
+      "decision_id": "climate_5_6_notes_to_caption",
+      "source_local_content_item_id": "climate_change_with_ml::page_0005::CI_1",
+      "target_local_content_item_id": "climate_change_with_ml::page_0006::CI_1",
+      "source_flow_id": "climate_change_with_ml::page_0005::CI_1::FLOW_2",
+      "target_flow_id": "climate_change_with_ml::page_0006::CI_1::FLOW_1",
+      "source_node_id": "climate_change_with_ml_page_0005_T_007",
+      "target_node_id": "climate_change_with_ml_page_0006_T_001",
+      "label": "SAME_ARTICLE_NO_EDGE",
+      "confidence": 0.99,
+      "review_basis": "footnotes and the figure caption belong to the same paper but are separate reading flows"
+    },
+    {
+      "decision_id": "climate_5_6_notes_to_main_membership",
+      "source_local_content_item_id": "climate_change_with_ml::page_0005::CI_1",
+      "target_local_content_item_id": "climate_change_with_ml::page_0006::CI_2",
+      "source_flow_id": "climate_change_with_ml::page_0005::CI_1::FLOW_2",
+      "target_flow_id": "climate_change_with_ml::page_0006::CI_2::FLOW_2",
+      "source_node_id": "climate_change_with_ml_page_0005_T_007",
+      "target_node_id": "climate_change_with_ml_page_0006_T_002",
+      "label": "SAME_ARTICLE_NO_EDGE",
+      "confidence": 0.95,
+      "review_basis": "both flows belong to the same paper section, but they are not directly adjacent in reading order"
+    }
+  ]
+}

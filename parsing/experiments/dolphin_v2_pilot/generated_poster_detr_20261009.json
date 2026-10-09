@@ -1,0 +1,15 @@
+{
+  "experiment": "dolphin_v2_generated_poster_detr_20261009",
+  "title": "Generated DETR poster through Dolphin-v2",
+  "description": "Single-page generated poster exported as an image-only PDF.",
+  "production_modified": false,
+  "documents": [
+    {
+      "document_id": "detr_postergen_qwen35b",
+      "document_type": "generated_scientific_poster",
+      "input_pdf": "data/generated_posters/detr_20261009/detr_postergen_qwen35b.pdf",
+      "source_metadata": "data/generated_posters/detr_20261009/preview.png",
+      "audit_pages": [1]
+    }
+  ]
+}

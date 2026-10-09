@@ -1,0 +1,10 @@
+deps/
+libreoffice/
+output/
+gpu-*.out
+gpu-*.err
+more-*.out
+more-*.err
+__pycache__/
+font-cache/
+fonts.conf

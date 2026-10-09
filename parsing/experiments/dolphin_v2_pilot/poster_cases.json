@@ -1,0 +1,12 @@
+{
+  "experiment": "dolphin_v2_native_jpeg_poster_v1",
+  "cases": [
+    {
+      "case_id": "nasa_cosmic_temperatures_poster",
+      "document_type": "scientific_infographic_poster",
+      "input_format": "native_jpeg",
+      "input_image": "data/incoming/non_pdf_posters/nasa_cosmic_temperatures/Cosmic_Temperatures_Infographic_Final_Full.jpg",
+      "source_metadata": "data/incoming/non_pdf_posters/nasa_cosmic_temperatures/source_metadata.json"
+    }
+  ]
+}

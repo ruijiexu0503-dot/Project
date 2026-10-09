@@ -1,0 +1,20 @@
+{
+  "experiment": "dolphin_v2_government_financial_full_document_v1",
+  "production_modified": false,
+  "documents": [
+    {
+      "document_id": "nist_ai_rmf_1_0",
+      "document_type": "government_report",
+      "input_pdf": "data/incoming/government_reports/NIST_AI_100-1_AI_RMF_1.0.pdf",
+      "source_metadata": "data/incoming/government_reports/NIST_AI_100-1_AI_RMF_1.0.source.json",
+      "audit_pages": [1, 2, 4, 12, 24, 36, 48]
+    },
+    {
+      "document_id": "nvidia_2026_annual_report",
+      "document_type": "financial_report",
+      "input_pdf": "data/incoming/financial_reports/NVIDIA_2026_Annual_Report.pdf",
+      "source_metadata": "data/incoming/financial_reports/NVIDIA_2026_Annual_Report.source.json",
+      "audit_pages": [1, 2, 5, 20, 50, 90, 120, 150, 175]
+    }
+  ]
+}

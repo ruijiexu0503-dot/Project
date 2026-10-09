@@ -28,10 +28,12 @@ def classify_block_role(block: dict[str, Any]) -> str:
     if "heading" in block_type and text: return "section_heading"
     if re.match(r"^(?:doi\s*:|https?://(?:dx\.)?doi\.org/)", text, re.I): return "identifier_metadata"
     if re.search(r"\b(?:received|accepted|published)\s+\d{1,2}\s+[A-Za-z]+\s+\d{4}\b", text, re.I): return "publication_metadata"
-    if (len(text) <= 250 and not re.match(r"^\s*\[\d+\]", text)
+    if (block.get("metadata_candidate", True) and len(text) <= 250 and not re.match(r"^\s*\[\d+\]", text)
             and re.search(r"\b(?:collaboration|consortium)\b", text, re.I)):
         return "author_metadata"
-    if re.match(r"^[A-Z](?:\.\s*)?[A-Z]?\.?(?:\s+[A-Z][\w'’-]+)+(?:\s+et al\.)?\s*(?:\\\(|\(|$)", text): return "author_metadata"
+    if (block.get("metadata_candidate", True)
+            and re.match(r"^[A-Z](?:\.\s*)?[A-Z]?\.?(?:\s+[A-Z][\w'’-]+)+(?:\s+et al\.)?\s*(?:\\\(|\(|$)", text)):
+        return "author_metadata"
     visible = re.sub(r"[\W_]+", "", re.sub(r"\\[()\[\]]", "", text), flags=re.UNICODE)
     if not text or len(visible) <= 1 or (len(visible) <= 3 and not any(c.isalpha() for c in visible)):
         return "ocr_noise"

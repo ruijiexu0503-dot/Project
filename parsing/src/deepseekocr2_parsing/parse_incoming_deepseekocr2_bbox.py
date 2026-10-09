@@ -13,6 +13,12 @@ from PIL import Image, ImageDraw, ImageFont
 import fitz  # PyMuPDF
 from transformers import AutoModel, AutoTokenizer
 
+from grounding_groups import (
+    GROUNDING_GROUPS_FILENAME,
+    grounding_manifest_from_raw_file,
+    matches_ref_to_grounding_manifest,
+)
+
 
 DEFAULT_MODEL_NAME = "deepseek-ai/DeepSeek-OCR-2"
 
@@ -554,11 +560,28 @@ def install_official_bbox_capture_patch(model):
                         image_width=image_width,
                         image_height=image_height,
                     )
+                    grounding_manifest = matches_ref_to_grounding_manifest(
+                        matches_ref=matches_ref,
+                        image_width=image_width,
+                        image_height=image_height,
+                    )
                 else:
                     items = []
+                    grounding_manifest = {
+                        "schema_version": "deepseekocr2_grounding_groups_v1",
+                        "source": "matches_ref_raw",
+                        "error": "missing_image_dimensions",
+                        "groups": [],
+                    }
 
                 save_json(items, output_dir / OFFICIAL_BBOX_JSON)
+                save_json(grounding_manifest, output_dir / GROUNDING_GROUPS_FILENAME)
                 print(f"[INFO] Captured official bbox items: {len(items)} -> {output_dir / OFFICIAL_BBOX_JSON}")
+                print(
+                    "[INFO] Captured official grounding groups: "
+                    f"{grounding_manifest.get('group_count', 0)} -> "
+                    f"{output_dir / GROUNDING_GROUPS_FILENAME}"
+                )
 
             except Exception:
                 err = {
@@ -720,6 +743,63 @@ def load_official_bbox_items(page_dir: Path):
     return []
 
 
+def ensure_grounding_group_manifest(
+    page_dir: Path,
+    image_width: int,
+    image_height: int,
+    overwrite: bool = False,
+):
+    """Create the group-preserving manifest from an existing capture, without OCR."""
+    output_path = page_dir / GROUNDING_GROUPS_FILENAME
+    if output_path.exists() and not overwrite:
+        return "skipped", output_path
+    raw_path = page_dir / OFFICIAL_MATCHES_RAW
+    if not raw_path.exists():
+        return "missing_raw", output_path
+    try:
+        manifest = grounding_manifest_from_raw_file(raw_path, image_width, image_height)
+    except Exception as exc:
+        save_json({
+            "schema_version": "deepseekocr2_grounding_groups_v1",
+            "source": str(raw_path),
+            "error": str(exc),
+            "groups": [],
+        }, output_path)
+        return "error", output_path
+    save_json(manifest, output_path)
+    return "written", output_path
+
+
+def backfill_grounding_group_manifests(
+    output_root: Path,
+    doc_id: str | None,
+    overwrite: bool,
+) -> dict:
+    """CPU-only backfill for already captured matches_ref_raw files."""
+    doc_dirs = [output_root / doc_id] if doc_id else sorted(
+        path for path in output_root.iterdir() if path.is_dir()
+    )
+    counts = {"written": 0, "skipped": 0, "missing_raw": 0, "error": 0}
+    for doc_dir in doc_dirs:
+        if not doc_dir.is_dir():
+            continue
+        for page_dir in sorted(path for path in doc_dir.glob("page_*") if path.is_dir()):
+            image_path = page_dir / "page.png"
+            if not image_path.exists():
+                counts["error"] += 1
+                continue
+            with Image.open(image_path) as image:
+                width, height = image.size
+            status, _ = ensure_grounding_group_manifest(
+                page_dir,
+                image_width=int(width),
+                image_height=int(height),
+                overwrite=overwrite,
+            )
+            counts[status] += 1
+    return counts
+
+
 def process_one_page(tokenizer, model, page_info, args):
     page_dir = page_info["page_dir"]
     image_path = page_info["image_path"]
@@ -738,6 +818,7 @@ def process_one_page(tokenizer, model, page_info, args):
             existing_items = []
 
         if existing_items or args.allow_empty_bbox:
+            ensure_grounding_group_manifest(page_dir, width, height)
             return {
                 "status": "skipped",
                 "bbox_count": len(existing_items),
@@ -777,6 +858,7 @@ def process_one_page(tokenizer, model, page_info, args):
             item["id"] = idx
 
         save_json(items, bbox_json_path)
+        ensure_grounding_group_manifest(page_dir, width, height)
         draw_preview(image_path, items, preview_path)
 
         if not items and not args.allow_empty_bbox:
@@ -871,6 +953,19 @@ def main():
 
     parser.add_argument("--overwrite-render", action="store_true")
     parser.add_argument("--skip-existing", action="store_true")
+    parser.add_argument(
+        "--backfill-grounding-groups-only",
+        action="store_true",
+        help=(
+            "CPU-only: build bbox_groups_official.json from existing matches_ref_raw.txt "
+            "under --output, then exit without loading the OCR model."
+        ),
+    )
+    parser.add_argument(
+        "--overwrite-grounding-groups",
+        action="store_true",
+        help="Overwrite existing bbox_groups_official.json during CPU-only backfill.",
+    )
     parser.add_argument("--no-flash-attn", action="store_true")
 
     parser.add_argument("--max-docs", type=int, default=None)
@@ -893,6 +988,22 @@ def main():
     output_dir = Path(args.output)
     processed_dir = Path(args.processed_dir)
     failed_dir = Path(args.failed_dir)
+
+    if args.backfill_grounding_groups_only:
+        if not output_dir.exists():
+            raise SystemExit(f"[ERROR] output root not found: {output_dir}")
+        counts = backfill_grounding_group_manifests(
+            output_root=output_dir,
+            doc_id=args.doc_id,
+            overwrite=args.overwrite_grounding_groups,
+        )
+        print(json.dumps({
+            "mode": "backfill_grounding_groups_only",
+            "output_root": str(output_dir.resolve()),
+            "doc_id": args.doc_id,
+            **counts,
+        }, indent=2))
+        return
 
     ensure_dir(output_dir)
     ensure_dir(processed_dir)
@@ -1013,6 +1124,9 @@ def main():
                     "bbox_count": result.get("bbox_count", 0),
                     "bbox_json": str(page_info["page_dir"] / "bbox_items.json"),
                     "official_bbox_json": str(page_info["page_dir"] / OFFICIAL_BBOX_JSON),
+                    "official_grounding_groups_json": str(
+                        page_info["page_dir"] / GROUNDING_GROUPS_FILENAME
+                    ),
                     "ocr_md": str(page_info["page_dir"] / "ocr.md"),
                     "raw_response": str(page_info["page_dir"] / "raw_response.txt"),
                     "preview": str(page_info["page_dir"] / "bboxes_preview.jpg"),

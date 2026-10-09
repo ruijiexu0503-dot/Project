@@ -1,0 +1,47 @@
+{
+  "source": {
+    "slug": "gw150914_detection",
+    "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+    "year": 2016,
+    "pdf": "data/processed/gw150914_detection.pdf",
+    "aligned_dir": "parsing/output/bbox_provenance_pilot/aligned_json/gw150914_detection",
+    "version_label": "journal_version",
+    "identifiers": [
+      {"scheme": "doi", "value": "10.1103/PhysRevLett.116.061102"}
+    ]
+  },
+  "later_arriving_documents": [
+    {
+      "slug": "arxiv_1511_05999",
+      "title": "Method for detection and reconstruction of gravitational wave transients with networks of advanced detectors",
+      "year": 2015,
+      "pdf": "data/processed/gNtSaU-1511.05999v3.pdf",
+      "version_label": "arXiv_v3",
+      "expected_identifiers": [{"scheme": "arxiv", "value": "1511.05999"}]
+    },
+    {
+      "slug": "arxiv_1508_02357",
+      "title": "The PyCBC search for gravitational waves from compact binary coalescence",
+      "year": 2015,
+      "pdf": "data/cited_papers/gw150914_detection/arxiv_1508.02357.pdf",
+      "version_label": "arXiv_v3",
+      "expected_identifiers": [{"scheme": "arxiv", "value": "1508.02357"}]
+    },
+    {
+      "slug": "arxiv_1511_05955",
+      "title": "An information-theoretic approach to the gravitational-wave burst detection problem",
+      "year": 2015,
+      "pdf": "data/cited_papers/gw150914_detection/arxiv_1511.05955.pdf",
+      "version_label": "arXiv",
+      "expected_identifiers": [{"scheme": "arxiv", "value": "1511.05955"}]
+    },
+    {
+      "slug": "arxiv_1510_04615",
+      "title": "Compact Binary Merger Rates: Comparison with LIGO/Virgo Upper Limits",
+      "year": 2015,
+      "pdf": "data/cited_papers/gw150914_detection/arxiv_1510.04615.pdf",
+      "version_label": "arXiv",
+      "expected_identifiers": [{"scheme": "arxiv", "value": "1510.04615"}]
+    }
+  ]
+}

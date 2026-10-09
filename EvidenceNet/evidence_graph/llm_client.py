@@ -81,7 +81,8 @@ class Generation:
 class TransformersLLM:
     def __init__(self, model: str, dtype: str = "auto", max_new_tokens: int = 2048,
                  device_map: str = "auto", require_cuda: bool = False,
-                 enable_thinking: bool = False):
+                 enable_thinking: bool = False, max_memory: dict[Any, str] | None = None,
+                 offload_folder: str | None = None):
         import torch
         from transformers import AutoConfig, AutoModelForCausalLM, AutoModelForImageTextToText, AutoTokenizer
         if require_cuda and not torch.cuda.is_available():
@@ -97,9 +98,19 @@ class TransformersLLM:
         # Selecting from config avoids hard-coding one Qwen generation.
         multimodal_types = {"qwen2_5_vl", "qwen3_5", "qwen3_5_moe", "qwen3_vl", "qwen3_vl_moe"}
         auto_class = AutoModelForImageTextToText if model_config.model_type in multimodal_types else AutoModelForCausalLM
+        placement = {}
+        if max_memory:
+            # YAML may encode CUDA device indices as strings. Accelerate expects
+            # integer CUDA keys and the literal string "cpu".
+            placement["max_memory"] = {
+                (int(key) if str(key).isdigit() else key): value
+                for key, value in max_memory.items()
+            }
+        if offload_folder:
+            placement["offload_folder"] = offload_folder
         self.model = auto_class.from_pretrained(
             model, torch_dtype=requested, device_map=device_map, trust_remote_code=True,
-            low_cpu_mem_usage=True, local_files_only=True)
+            low_cpu_mem_usage=True, local_files_only=True, **placement)
         self.model.eval(); self.max_new_tokens = max_new_tokens
         self._image_processor = None
 
@@ -121,7 +132,13 @@ class TransformersLLM:
 
     def generate_json_with_images(self, system: str, prompt: str, image_paths: list[str],
                                   max_new_tokens: int | None = None) -> Generation:
-        """Generate grounded JSON from local images using the checkpoint processor."""
+        generation = self.generate_raw_with_images(system, prompt, image_paths, max_new_tokens)
+        generation.parsed = extract_json(generation.raw)
+        return generation
+
+    def generate_raw_with_images(self, system: str, prompt: str, image_paths: list[str],
+                                 max_new_tokens: int | None = None) -> Generation:
+        """Generate grounded text while allowing callers to checkpoint malformed JSON."""
         from PIL import Image
         from transformers import AutoProcessor
         if self._image_processor is None:
@@ -141,13 +158,15 @@ class TransformersLLM:
             return_tensors="pt", enable_thinking=self.enable_thinking)
         prompt_length = inputs["input_ids"].shape[1]
         inputs = {name: tensor.to(self.model.device) for name, tensor in inputs.items()}
-        generated = self.model.generate(**inputs, max_new_tokens=max_new_tokens or self.max_new_tokens,
-                                        do_sample=False, repetition_penalty=1.05)
-        raw = self._image_processor.batch_decode(
-            generated[:, prompt_length:], skip_special_tokens=True)[0].strip()
-        for image in images:
-            image.close()
-        return Generation(extract_json(raw), raw, self.model_name, datetime.now(timezone.utc).isoformat())
+        try:
+            generated = self.model.generate(**inputs, max_new_tokens=max_new_tokens or self.max_new_tokens,
+                                            do_sample=False, repetition_penalty=1.05)
+            raw = self._image_processor.batch_decode(
+                generated[:, prompt_length:], skip_special_tokens=True)[0].strip()
+        finally:
+            for image in images:
+                image.close()
+        return Generation(None, raw, self.model_name, datetime.now(timezone.utc).isoformat())
 
 
 def create_llm(config: dict[str, Any]) -> TransformersLLM:
@@ -156,4 +175,5 @@ def create_llm(config: dict[str, Any]) -> TransformersLLM:
     if not config.get("model"): raise ValueError("LLM model must be configured")
     return TransformersLLM(config["model"], config.get("dtype", "auto"), config.get("max_new_tokens", 2048),
                            config.get("device_map", "auto"), config.get("require_cuda", False),
-                           config.get("enable_thinking", False))
+                           config.get("enable_thinking", False), config.get("max_memory"),
+                           config.get("offload_folder"))

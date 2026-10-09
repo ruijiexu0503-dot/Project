@@ -1,0 +1,14 @@
+{
+  "experiment": "dolphin_v2_gw150914_additional_pages_v1",
+  "production_modified": false,
+  "cases": [
+    {
+      "case_id": "gw150914_page_0004",
+      "document_type": "scientific_paper",
+      "input_image": "parsing/output/deepseekocr2_split_render/gw150914_detection/page_0004/page.png",
+      "deepseek_overlay": "parsing/output/deepseekocr2_split_render/gw150914_detection/page_0004/result_with_boxes.jpg",
+      "deepseek_markdown": "parsing/output/deepseekocr2_split_render/gw150914_detection/page_0004/ocr.md",
+      "audit_focus": ["scientific_figure", "caption", "two_column_text", "reading_order"]
+    }
+  ]
+}

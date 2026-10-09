@@ -1,0 +1,11 @@
+{
+  "cases": [
+    {
+      "case_id": "nasa_cosmic_temperatures_poster",
+      "title": "NASA — A Guide to Cosmic Temperatures",
+      "note": "Native JPEG poster swallowed by Dolphin as one full-page fig; raster-only OCR recovery audit.",
+      "image": "/hkfs/home/project/hk-project-p0025545/dv3352/Project/data/incoming/non_pdf_posters/nasa_cosmic_temperatures/Cosmic_Temperatures_Infographic_Final_Full.jpg",
+      "visual_parent": "nasa_cosmic_temperatures_poster:fig:0"
+    }
+  ]
+}

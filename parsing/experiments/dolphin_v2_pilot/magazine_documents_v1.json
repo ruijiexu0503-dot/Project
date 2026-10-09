@@ -1,0 +1,43 @@
+{
+  "experiment": "dolphin_v2_full_magazine_corpus_v1",
+  "title": "Dolphin-v2 · full magazine corpus",
+  "description": "Five full born-digital magazines parsed in isolation; native header and foot elements are preserved.",
+  "production_modified": false,
+  "documents": [
+    {
+      "document_id": "cladmag_2025_h2",
+      "document_type": "magazine",
+      "input_pdf": "data/incoming/CLADmag_2025_H2.pdf",
+      "source_metadata": "parsing/experiments/dolphin_v2_pilot/metadata/cladmag_2025_h2.source.json",
+      "audit_pages": [1, 2, 3, 20, 40, 60, 80, 100, 116]
+    },
+    {
+      "document_id": "dlrmagazine_176_en",
+      "document_type": "magazine",
+      "input_pdf": "data/incoming/DLRmagazine_176_EN.pdf",
+      "source_metadata": "parsing/experiments/dolphin_v2_pilot/metadata/dlrmagazine_176_en.source.json",
+      "audit_pages": [1, 2, 3, 8, 9, 16, 24, 32]
+    },
+    {
+      "document_id": "cern_courier_2022_nov_dec",
+      "document_type": "magazine",
+      "input_pdf": "data/processed/CERNCourier2022NovDec-digitaledition.pdf",
+      "source_metadata": "parsing/experiments/dolphin_v2_pilot/metadata/cern_courier_2022_nov_dec.source.json",
+      "audit_pages": [1, 2, 3, 7, 8, 17, 24, 31]
+    },
+    {
+      "document_id": "cern_courier_2025_jan_feb",
+      "document_type": "magazine",
+      "input_pdf": "data/processed/CERNCourier2025JanFeb-digitaledition.pdf",
+      "source_metadata": "parsing/experiments/dolphin_v2_pilot/metadata/cern_courier_2025_jan_feb.source.json",
+      "audit_pages": [1, 2, 3, 7, 8, 17, 24, 27]
+    },
+    {
+      "document_id": "cern_courier_2026_may_jun",
+      "document_type": "magazine",
+      "input_pdf": "data/processed/CERNCourier2026MayJun-digitaledition.pdf",
+      "source_metadata": "parsing/experiments/dolphin_v2_pilot/metadata/cern_courier_2026_may_jun.source.json",
+      "audit_pages": [1, 2, 3, 7, 8, 17, 24, 29]
+    }
+  ]
+}

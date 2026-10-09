@@ -113,6 +113,8 @@ done
 
 echo "[INFO] staging split-rendered pages..."
 source "$HYBRID_VENV_DIR/bin/activate"
+export VIRTUAL_ENV="$PROJECT_ROOT/$HYBRID_VENV_DIR"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
 python - <<'PY'
 import os
 import re
@@ -181,6 +183,8 @@ echo "============================================================"
 echo "[STEP 1A] DeepSeekOCR2 parsing"
 echo "============================================================"
 source "$PARSE_VENV_DIR/bin/activate"
+export VIRTUAL_ENV="$PROJECT_ROOT/$PARSE_VENV_DIR"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
 python - <<'PY'
 import torch
 print("[INFO] torch:", torch.__version__)
@@ -223,6 +227,8 @@ echo "============================================================"
 echo "[STEP 1B] PP-DocLayout detection"
 echo "============================================================"
 source "$LAYOUT_VENV_DIR/bin/activate"
+export VIRTUAL_ENV="$PROJECT_ROOT/$LAYOUT_VENV_DIR"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
 
 LAYOUT_CMD=(
   python "$LAYOUT_SCRIPT"
@@ -250,6 +256,8 @@ echo "============================================================"
 echo "[STEP 1C] Hybrid alignment"
 echo "============================================================"
 source "$HYBRID_VENV_DIR/bin/activate"
+export VIRTUAL_ENV="$PROJECT_ROOT/$HYBRID_VENV_DIR"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
 
 ALIGN_CMD=(
   python "$ALIGN_SCRIPT"

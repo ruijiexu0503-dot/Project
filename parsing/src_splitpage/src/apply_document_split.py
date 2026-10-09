@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply a document-level split decision to a PDF or rendered page-image folder."""
+"""Apply a document split decision while preserving portrait pages in mixed PDFs."""
 
 from __future__ import annotations
 
@@ -89,6 +89,7 @@ def apply_split_to_pdf(
     document_id: str,
     should_split: bool,
     split_position: float,
+    aspect_threshold: float,
     copy_unsplit: bool,
 ) -> dict[str, Any]:
     fitz = import_fitz()
@@ -122,14 +123,18 @@ def apply_split_to_pdf(
 
     out_dir.mkdir(parents=True, exist_ok=True)
     dst = fitz.open()
+    source_page_count = int(src.page_count)
     for page_index in range(src.page_count):
         page = src[page_index]
         rect = page.rect
-        split_x = rect.x0 + rect.width * split_position
-        clips = [
-            ("left", fitz.Rect(rect.x0, rect.y0, split_x, rect.y1)),
-            ("right", fitz.Rect(split_x, rect.y0, rect.x1, rect.y1)),
-        ]
+        if rect.width / rect.height >= aspect_threshold:
+            split_x = rect.x0 + rect.width * split_position
+            clips = [
+                ("left", fitz.Rect(rect.x0, rect.y0, split_x, rect.y1)),
+                ("right", fitz.Rect(split_x, rect.y0, rect.x1, rect.y1)),
+            ]
+        else:
+            clips = [("full", rect)]
 
         for side, clip in clips:
             out_page = dst.new_page(width=clip.width, height=clip.height)
@@ -148,6 +153,8 @@ def apply_split_to_pdf(
                 }
             )
 
+    if out_pdf.exists():
+        out_pdf.unlink()
     dst.save(str(out_pdf), garbage=4, deflate=True)
     dst.close()
     src.close()
@@ -159,8 +166,9 @@ def apply_split_to_pdf(
         "should_split": True,
         "split_axis": "vertical",
         "split_position_norm": split_position,
+        "per_page_aspect_threshold": aspect_threshold,
         "output_pdf": str(out_pdf),
-        "source_page_count": len(manifest_pages) // 2,
+        "source_page_count": source_page_count,
         "output_page_count": len(manifest_pages),
         "pages": manifest_pages,
     }
@@ -182,6 +190,7 @@ def apply_split_to_image_dir(
     document_id: str,
     should_split: bool,
     split_position: float,
+    aspect_threshold: float,
     copy_unsplit: bool,
     image_format: str,
 ) -> dict[str, Any]:
@@ -224,14 +233,20 @@ def apply_split_to_image_dir(
     out_pages_dir.mkdir(parents=True, exist_ok=True)
     extension = "." + image_format.lower().lstrip(".")
 
+    for old_page in out_pages_dir.glob(f"page_*{extension}"):
+        old_page.unlink()
+
     for page_index, image_path in enumerate(images):
         with Image.open(image_path) as img:
             width, height = img.size
-            split_x = int(round(width * split_position))
-            crops = [
-                ("left", (0, 0, split_x, height)),
-                ("right", (split_x, 0, width, height)),
-            ]
+            if width / height >= aspect_threshold:
+                split_x = int(round(width * split_position))
+                crops = [
+                    ("left", (0, 0, split_x, height)),
+                    ("right", (split_x, 0, width, height)),
+                ]
+            else:
+                crops = [("full", (0, 0, width, height))]
             for side, box in crops:
                 output_index = len(manifest_pages)
                 output_path = out_pages_dir / f"page_{output_index + 1:06d}_{side}{extension}"
@@ -259,6 +274,7 @@ def apply_split_to_image_dir(
         "should_split": True,
         "split_axis": "vertical",
         "split_position_norm": split_position,
+        "per_page_aspect_threshold": aspect_threshold,
         "output_dir": str(out_pages_dir),
         "source_page_count": len(images),
         "output_page_count": len(manifest_pages),
@@ -276,6 +292,12 @@ def apply_split(args: argparse.Namespace) -> dict[str, Any]:
 
     decision = read_decision(decision_path)
     should_split, split_position = validate_split_decision(decision)
+    parameters = decision.get("parameters")
+    aspect_threshold = 1.15
+    if isinstance(parameters, dict):
+        aspect_threshold = float(parameters.get("aspect_min", aspect_threshold))
+    if aspect_threshold <= 1.0:
+        raise ValueError(f"Per-page aspect threshold must be greater than 1, got: {aspect_threshold}")
     document_id = args.document_id or document_id_from_input(input_path, decision)
 
     if input_path.is_file() and input_path.suffix.lower() == ".pdf":
@@ -285,6 +307,7 @@ def apply_split(args: argparse.Namespace) -> dict[str, Any]:
             document_id=document_id,
             should_split=should_split,
             split_position=split_position,
+            aspect_threshold=aspect_threshold,
             copy_unsplit=args.copy_unsplit,
         )
     elif input_path.is_dir():
@@ -294,6 +317,7 @@ def apply_split(args: argparse.Namespace) -> dict[str, Any]:
             document_id=document_id,
             should_split=should_split,
             split_position=split_position,
+            aspect_threshold=aspect_threshold,
             copy_unsplit=args.copy_unsplit,
             image_format=args.image_format,
         )

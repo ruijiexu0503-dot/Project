@@ -1,0 +1,39 @@
+{
+  "documents": [
+    {
+      "slug": "gw150914_detection",
+      "title": "Observation of Gravitational Waves from a Binary Black Hole Merger",
+      "year": 2016,
+      "pdf": "data/processed/gw150914_detection.pdf",
+      "aligned_dir": "parsing/output/bbox_provenance_pilot/aligned_json/gw150914_detection",
+      "version_label": "journal_version",
+      "identifiers": [
+        {"scheme": "doi", "value": "10.1103/PhysRevLett.116.061102"},
+        {"scheme": "journal_fingerprint", "value": "phys rev lett|116|061102|2016"}
+      ]
+    },
+    {
+      "slug": "gw150914_properties",
+      "title": "Properties of the Binary Black Hole Merger GW150914",
+      "year": 2016,
+      "pdf": "data/processed/gw150914_properties.pdf",
+      "aligned_dir": "parsing/output/hybrid_deepseek_layout_split_render/aligned_json/gw150914_properties",
+      "version_label": "journal_version",
+      "identifiers": [
+        {"scheme": "doi", "value": "10.1103/PhysRevLett.116.241102"},
+        {"scheme": "journal_fingerprint", "value": "phys rev lett|116|241102|2016"}
+      ]
+    },
+    {
+      "slug": "gw150914_gr_test",
+      "title": "Tests of General Relativity with GW150914",
+      "year": 2016,
+      "pdf": "data/processed/gw150914_gr_test.pdf",
+      "aligned_dir": "parsing/output/hybrid_deepseek_layout_split_render/aligned_json/gw150914_gr_test",
+      "version_label": "arXiv_v3",
+      "identifiers": [
+        {"scheme": "arxiv", "value": "1602.03841"}
+      ]
+    }
+  ]
+}

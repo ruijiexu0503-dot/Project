@@ -15,7 +15,9 @@ class Generated:
 
 
 class Tokenizer:
-    def apply_chat_template(self, messages, tokenize, add_generation_prompt): return "prompt"
+    def apply_chat_template(self, messages, tokenize, add_generation_prompt, enable_thinking):
+        assert enable_thinking is False
+        return "prompt"
     def __call__(self, values, padding, return_tensors): return {"input_ids": Tensor([1, 2]), "attention_mask": Tensor([1, 1])}
     def batch_decode(self, values, skip_special_tokens): return [json.dumps({"ok": True})]
 
@@ -31,6 +33,7 @@ class Model:
 def test_generation_uses_mapping_input_ids_after_device_transfer():
     client = object.__new__(TransformersLLM)
     client.tokenizer = Tokenizer(); client.model = Model(); client.model_name = "test"; client.max_new_tokens = 10
+    client.enable_thinking = False
     result = client.generate_json("system", "prompt")
     assert result.parsed == {"ok": True}
 

@@ -227,12 +227,24 @@ def run_semantic_pilot(doc_id,config):
     write_jsonl(root/"rejected_semantic_candidates.jsonl",rejected); write_jsonl(root/"unsupported_relations.jsonl",unsupported)
     write_jsonl(root/"embedding_vectors.jsonl",embeddings); write_json(root/"embedding_metadata.json",embedding_meta)
     write_json(root/"semantic_validation_report.json",validation); write_json(root/"semantic_statistics.json",stats)
+    # A pilot limits expensive enrichment/retrieval/verification only.  It must
+    # never become a node-inclusion filter: every EvidenceNode remains in the
+    # graph, including nodes outside the pilot scope (with zero semantic edges
+    # until they are processed by a full run).
+    all_evidence_ids = {n["node_id"] for n in enriched}
+    if all_evidence_ids != {n["node_id"] for n in evidence}:
+        raise RuntimeError("EvidenceNode coverage changed during semantic pilot")
     write_json(root/"pilot_manifest.json",{"doc_id":doc_id,"node_ids":selected_ids,"section_ids":section_ids,
-        "node_count":len(selected_ids),"candidate_count":len(candidates),"scope":"pilot",
+        "excluded_from_pilot_processing":sorted(all_evidence_ids - selected),
+        "node_count":len(selected_ids),"total_evidence_nodes":len(all_evidence_ids),
+        "node_inclusion_policy":"ALL_EVIDENCE_NODES_RETAINED",
+        "candidate_count":len(candidates),"scope":"pilot",
         "content_unit_id":article_id,"content_unit_segmentation_applied":use_articles,
         "content_unit_boundary_policy":"soft_intra_unit_plus_sparse_cross_unit_bridges" if use_articles else None,
         "protected_phase1_sha256":protected_hashes})
     graph=read_json(root/"graph.json"); graph["nodes"]=document_nodes+sections+enriched; graph["edges"]=structural+accepted
+    if not all_evidence_ids.issubset({n["node_id"] for n in graph["nodes"]}):
+        raise RuntimeError("Pilot graph would drop EvidenceNodes")
     graph["phase"]=3; graph["semantic_layer_status"]="pilot_pending_review"; graph["pilot_node_ids"]=selected_ids
     write_json(root/"graph.json",graph)
     after={name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in protected_names}

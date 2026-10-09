@@ -1,0 +1,51 @@
+{
+  "experiment_id": "bge-m3-open-set-neighbour-audit-v1",
+  "absolute_thresholds": [0.45, 0.5, 0.525, 0.55, 0.575, 0.6, 0.625, 0.65],
+  "local_z_thresholds": [0.5, 1.0, 1.5, 2.0],
+  "fixed_top_k": 5,
+  "reciprocal_source_fraction": 0.125,
+  "known_pair_audit": [
+    {
+      "label": "likely_related",
+      "source": "CERNCourier2022NovDec-digitaledition_EV_000129",
+      "target": "gw150914_detection::section::VIII. CONCLUSION",
+      "reason": "Primordial-black-hole/gravitational-wave discussion versus the direct binary-black-hole detection conclusion."
+    },
+    {
+      "label": "likely_related",
+      "source": "CERNCourier2022NovDec-digitaledition_EV_000129",
+      "target": "gw150914_detection::section::VI. SOURCE DISCUSSION",
+      "reason": "Primordial-black-hole dark-matter discussion versus astrophysical implications of GW150914."
+    },
+    {
+      "label": "likely_related",
+      "source": "CERNCourier2022NovDec-digitaledition_EV_000214",
+      "target": "gw150914_detection::section::VII. OUTLOOK",
+      "reason": "ANTARES participation in LIGO/Virgo alerts versus future global GW detector network."
+    },
+    {
+      "label": "likely_related",
+      "source": "CERNCourier2022NovDec-digitaledition_EV_000220",
+      "target": "gw150914_detection::section::VII. OUTLOOK",
+      "reason": "KM3NeT multi-messenger alerts versus expansion of the GW observing network."
+    },
+    {
+      "label": "likely_unrelated",
+      "source": "CERNCourier2022NovDec-digitaledition_EV_000047",
+      "target": "gw150914_detection::section::VIII. CONCLUSION",
+      "reason": "AGN/supermassive-black-hole lexical overlap with a stellar-mass binary merger."
+    },
+    {
+      "label": "likely_unrelated",
+      "source": "CERNCourier2022NovDec-digitaledition_EV_000100",
+      "target": "gw150914_properties::section::A. BBH waveform models",
+      "reason": "Neutron-star dense-core microphysics versus binary-black-hole waveform modelling."
+    },
+    {
+      "label": "likely_unrelated",
+      "source": "CERNCourier2022NovDec-digitaledition_EV_000142",
+      "target": "gw150914_detection::section::B. Binary coalescence search",
+      "reason": "Multi-messenger tomography of Earth versus binary-coalescence detection statistics."
+    }
+  ]
+}

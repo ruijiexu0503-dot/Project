@@ -1,0 +1,11 @@
+{
+  "pipeline_version": "raster-overlay-line-grouping-v1",
+  "line_grouping": {
+    "same_baseline_min_vertical_overlap": 0.55,
+    "same_baseline_max_gap_line_heights": 2.5,
+    "min_vertical_gap_line_heights": -0.2,
+    "max_vertical_gap_line_heights": 1.35,
+    "min_horizontal_overlap": 0.45,
+    "max_left_shift_line_heights": 1.5
+  }
+}

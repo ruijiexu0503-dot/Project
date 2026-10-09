@@ -45,6 +45,8 @@ def render_pdf_pages(
     pages_dir = out_dir / "pages"
     pages_dir.mkdir(parents=True, exist_ok=True)
     extension = image_format.lower().lstrip(".")
+    for old_page in pages_dir.glob(f"page_*.{extension}"):
+        old_page.unlink()
     matrix = fitz.Matrix(render_scale, render_scale)
     rendered_pages: list[dict[str, Any]] = []
 

@@ -1,0 +1,14 @@
+{
+  "version": "background-complexity-gate-v1",
+  "support_grid_width": 512,
+  "alpha_support_threshold": 24,
+  "meaningful_image_overlap_fraction": 0.005,
+  "meaningful_text_line_coverage": 0.5,
+  "dense_text_min_lines": 8,
+  "dense_text_min_area_fraction": 0.08,
+  "irregular_support_min_missing_fraction": 0.02,
+  "boundary_min_side_fraction": 0.02,
+  "source_soft_mask_min_missing_fraction": 0.01,
+  "baseline_irregular_min_missing_fraction": 0.02,
+  "notes": "Fixed before evaluation. Small text-only overlaps keep text metadata without requiring a dual-mask render. No thresholds learned from reference masks."
+}

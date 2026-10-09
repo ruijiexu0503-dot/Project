@@ -1,5 +1,11 @@
 # Document Structure Detection and Segmentation Routing
 
+This describes the deterministic profiler for the legacy Evidence Graph schema,
+not automatic segmentation of hybrid-v2 nodes. Its input requires `document_order`
+and `section_path`; hybrid source atoms must first be adapted to that contract.
+For the separate article/reading-edge shadow stage, see the
+[document article graph README](../../experiments/document_article_graph/README.md).
+
 ## Purpose
 
 EvidenceNet must decide whether a document is:
@@ -27,7 +33,7 @@ Source parsing
       └── MULTI_ITEM_COLLECTION
             → generate document-local embeddings
             → run content-item segmentation
-            → run title and global boundary refinement
+            → write segmentation and boundary diagnostics
   → semantic candidate generation and verification
 ```
 
@@ -196,9 +202,10 @@ operate across internal sections because they belong to the same work.
 
 ### `MULTI_ITEM_COLLECTION`
 
-The routing runner generates document-local embeddings and invokes the page-aware content-item
-separator. The separator may subsequently use title-context validation and global merge
-refinement. Advertisements are treated as ordinary topic-shifting content, not as a special class.
+The standalone routing runner generates document-local embeddings and invokes the
+page-aware content-item separator. It writes assignments, segments and diagnostics;
+it does not call the separate title/global refinement stages. Advertisements are
+treated as ordinary topic-shifting content, not as a special class.
 
 ## Output schema
 
@@ -237,6 +244,9 @@ document is explicitly called a paper, magazine, slide deck, report, or booklet.
 
 ## Commands
 
+Run from `EvidenceNet/` (the paths below are relative to that directory) with
+the project's Python environment. Input graphs and profiles must already exist.
+
 Profile one document:
 
 ```bash
@@ -261,7 +271,7 @@ The batch summary is written to:
 output/structure_routed_segmentation/summary.json
 ```
 
-## Current Qwen 2.5 test result
+## Historical Qwen 2.5 graph sample
 
 Thirteen completed graphs were profiled with the same rules.
 

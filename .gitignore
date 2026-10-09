@@ -2,6 +2,7 @@
 .agents/
 .codex/
 .git-history-backup/
+.aws/
 
 # Paused magazine-separation experiments
 /MagazineSeperation/
@@ -65,3 +66,62 @@ temp/
 # CERN advertisement detection pilot generated outputs
 cern_advertisement_detection_pilot/footer_validation/
 cern_advertisement_detection_pilot/*.jsonl
+
+# Local historical experiments and migration backups (including private sessions)
+/_archive/
+/migration/
+
+# Generated parsing audits; root-level audit scripts remain visible to Git.
+/parsing/audits/*/
+
+# Dolphin run products and staged inputs; keep its drivers/configuration tracked.
+/parsing/experiments/dolphin_v2_pilot/work/
+/parsing/experiments/dolphin_v2_pilot/input/
+/parsing/experiments/dolphin_v2_pilot/vendor/
+
+# Locally installed optional Python runtimes, not project source.
+/EvidenceNet/vendor/adapters_runtime/
+/EvidenceNet/vendor/specter_runtime/
+/EdgeGeneration/.ann_deps/
+
+# Downloaded gated benchmark records and local image-path manifests.
+/EvidenceNet/experiments/vldocir/pilot_*/
+
+# Poster parsing run artifacts; retain README and executable drivers.
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/aligned/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/crops/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/debug_vis/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/decisions/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/deepseek/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/enriched/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/input/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/layout/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/layout_vis/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/md/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/split_pages/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/split_render/
+/parsing/experiments/detr_postergen_qwen35b_full_20261009/staged/
+
+# Local archive execution state and generated historical metric/check reports.
+# Experiment configs and reviewed labels outside current/ stay tracked.
+/current/archive-completed.json
+/current/archive-journal.jsonl
+/current/archive-plan.json
+/current/archive-symlinks.json
+/current/integrity-verification.json
+/current/metrics.json
+/EvidenceNet/evaluation/ground_truth/**/summary.json
+
+# Archive/cleanup manifests are local companion files for the ignored archives.
+# Actual pipeline configs and parser input manifests live outside current/.
+/current/*.json
+/current/*.jsonl
+/current/archives/*.json
+/current/archives/*.jsonl
+/current/json/*.json
+/current/json/*.jsonl
+
+# Local cluster launchers and experiment-specific review/source inputs.
+/current/slurm/**/*.sbatch
+/EvidenceNet/config/sources/*.json
+/EvidenceNet/config/reviews/**/*.json

@@ -144,6 +144,7 @@ def build_provisional_evidence_nodes(doc_id: str, classified, assignments):
                 })
         metadata = {
             "block_type": block.get("block_type"),
+            "original_routed_role": block.get("_original_routed_role"),
             "order_source": block.get("order_source"),
             "bbox_source": block.get("bbox_source"),
             "bbox_granularity": block.get("bbox_granularity"),

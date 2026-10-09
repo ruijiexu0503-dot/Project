@@ -2,6 +2,14 @@
 
 This file documents the code paths that are part of the current executable pipeline and separates them from archived experiments.
 
+2026-10-04 update: start with [`current/README.md`](../../current/README.md).
+Unused experiments, old Slurm files and the previous `EvidenceNet/archive/`
+are consolidated under `_archive/2026-10-04/` at the repository root. The
+local ignored tracked-file map is `current/json/tracked_files_20261004.json`;
+the complete local `current/json/archive-plan.json` is generated and ignored. The historical layout
+notes below explain the original responsibilities; they are not the current
+location of every archived file.
+
 ## Current pipeline entry points
 
 - `evidence_graph/cli.py` – package CLI (`python -m evidence_graph ...`).

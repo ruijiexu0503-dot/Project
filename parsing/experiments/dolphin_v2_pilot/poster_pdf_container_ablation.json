@@ -1,0 +1,14 @@
+{
+  "experiment": "dolphin_v2_image_only_pdf_container_ablation_v1",
+  "title": "Native JPEG versus image-only PDF container ablation",
+  "description": "The PDF contains only the original raster poster and no OCR text layer.",
+  "documents": [
+    {
+      "document_id": "nasa_cosmic_temperatures_image_only_pdf",
+      "document_type": "scientific_infographic_poster",
+      "input_pdf": "data/incoming/non_pdf_posters/nasa_cosmic_temperatures/pdf_container_ablation/Cosmic_Temperatures_image_only.pdf",
+      "source_metadata": "data/incoming/non_pdf_posters/nasa_cosmic_temperatures/source_metadata.json",
+      "audit_pages": [1]
+    }
+  ]
+}
