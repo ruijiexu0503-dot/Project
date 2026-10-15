@@ -90,6 +90,26 @@ def windows(tokens, size=384, stride=320):
     return result
 
 
+def with_special_tokens(tokenizer, ids):
+    """Apply the tokenizer's template to existing IDs without retokenizing windows."""
+    legacy = getattr(tokenizer, 'build_inputs_with_special_tokens', None)
+    if callable(legacy):
+        return legacy(ids)
+    suffix = getattr(tokenizer, '_vldocir_special_suffix', None)
+    if suffix is None:
+        # Qwen3-Embedding appends EOS. Verify the loaded tokenizer's actual
+        # template rather than assuming its EOS ID or decoding token windows.
+        suffix = tokenizer.encode('', add_special_tokens=True)
+        for text in ('Tokenizer template probe', '科学 evidence <|endoftext|>'):
+            plain = tokenizer.encode(text, add_special_tokens=False)
+            if tokenizer.encode(text, add_special_tokens=True) != plain + suffix:
+                raise ValueError('Unsupported tokenizer special-token template')
+        if tokenizer.num_special_tokens_to_add(pair=False) != len(suffix):
+            raise ValueError('Inconsistent tokenizer special-token template')
+        tokenizer._vldocir_special_suffix = suffix
+    return list(ids) + suffix
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--pilot', type=Path, required=True)
@@ -124,7 +144,7 @@ def main():
             context = tokenize(unit['context'])[:64]
             current = []
             for chunk in windows(tokenize(unit['text'])):
-                ids = tuple(tokenizer.build_inputs_with_special_tokens(context + chunk))
+                ids = tuple(with_special_tokens(tokenizer, context + chunk))
                 if ids not in window_index:
                     window_index[ids] = len(sequences)
                     sequences.append(list(ids))
@@ -147,7 +167,7 @@ def main():
         ids = tokenize('Instruct: Retrieve document pages containing evidence to answer the question.\nQuery: ' + q['question'])
         if len(ids) > 512:
             raise ValueError('Query exceeds encoder budget; do not silently truncate it')
-        query_sequences.append(tokenizer.build_inputs_with_special_tokens(ids))
+        query_sequences.append(with_special_tokens(tokenizer, ids))
     query_vectors = encode(query_sequences)
     similarities = query_vectors @ vectors.T
     results = {}

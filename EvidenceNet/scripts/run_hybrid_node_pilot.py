@@ -221,6 +221,14 @@ def decide(out: Path, model: Path, tasks):
                     parsed = trial; errors = []; break
                 errors = [f"chunk_{chunk_index}: {problem}" for problem in problems]
                 request += "\nCORRECTION: return the full JSON with every supplied ID once. Errors: " + json.dumps(problems)
+                if isinstance(trial, dict):
+                    for kind, id_key in (("pairs", "pair_id"), ("roles", "atom_id")):
+                        for row in trial.get(kind, []):
+                            if isinstance(row, dict) and "decision" not in row:
+                                request += ("\nSCHEMA CORRECTION: " + str(row.get(id_key))
+                                            + " is missing the required key \"decision\"."
+                                            + " Use exactly \"decision\", never \"definition\"."
+                                            + " Preserve your judgment and return every supplied ID.")
             if parsed is None:
                 break
             combined["pairs"].extend(parsed["pairs"])

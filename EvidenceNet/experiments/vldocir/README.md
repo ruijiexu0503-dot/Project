@@ -4,7 +4,13 @@ Dataset: https://huggingface.co/datasets/anonymous-8421/VL-DocIR
 
 Pinned revision: `40a1818110c20e9279bbb4a3b6283ceac2d631ba`.
 
-## Current state (2026-10-09)
+## Current state (2026-10-11)
+
+All 518 pages and 130 node batches passed coverage checks. Retrieval job **66352**
+completed all six arms. The no-edge results are frozen as
+`vldocir_no_edge_v1_20261011`; see [baseline contract and scores](BASELINE.md).
+The job table below records the original submission; recovery jobs replaced
+failed or cancelled stages. Later edge runs must preserve the frozen baseline inputs.
 
 Authenticated access succeeded using the existing default Hugging Face credential.
 The project `current/env.sh` changes HF_HOME and enables offline mode, so downloads
@@ -86,4 +92,6 @@ Graph-expansion comparisons require separately integrated real EvidenceNode edge
 unknown queries/pages and missing node-to-page provenance. Eight tests pass across
 metrics, adapter source preservation, coordinates, complete token windows and
 matched retrieval inputs (including title retention and furniture exclusion).
-No retrieval results or improvement claims are available yet.
+Retrieval results are available in the frozen baseline. Hybrid visual nDCG@5 is
+71.76%, versus 71.32% for parser atoms with the same descriptions; the exploratory
+bootstrap interval crosses zero. No full-corpus superiority claim is supported.

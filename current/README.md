@@ -1,6 +1,7 @@
 # 当前保留的结果与运行路线
 
-更新日期：**2026-10-09**。代码目录见 [CODE_MAP.md](CODE_MAP.md)，
+更新日期：**2026-10-15**。[Edge 开发前检查点](PRE_EDGE_CHECKPOINT.md)记录本次提交范围，以及文章分割尚未自动接入 hybrid-v2 主链的实际情况。
+代码目录见 [CODE_MAP.md](CODE_MAP.md)，
 提交前验证见 [COMMIT_CHECKS.md](COMMIT_CHECKS.md)。
 Slurm 脚本已收拢为 27 个保留入口，旧提交器的查找与恢复见 [LAUNCHERS.md](LAUNCHERS.md)。
 
@@ -8,9 +9,9 @@ Slurm 脚本已收拢为 27 个保留入口，旧提交器的查找与恢复见 
 
 | 工作 | 入口与说明 | 状态 |
 |---|---|---|
-| VL-DocIR 检索对照 | [接入说明与任务链](../EvidenceNet/experiments/vldocir/README.md) | Dolphin → 独立 evidence node generation → 六组检索评测；24 查询、518 页 pilot，暂无完整检索成绩 |
+| VL-DocIR 检索对照 | [接入说明与任务链](../EvidenceNet/experiments/vldocir/README.md)、[冻结 baseline](../EvidenceNet/experiments/vldocir/BASELINE.md) | 24 查询、518 页、7,291 个节点的六组无 edge 检索评测已完成并冻结；不是全库结果。 |
 | Hybrid v2 节点 | [验证记录](../EvidenceNet/docs/hybrid_evidence_node_v2_2026-10-08.md)、[通用 VL-DocIR 驱动](../EvidenceNet/scripts/run_vldocir_nodes.py) | 49/49 页结构有效，15 个已知错误合并均阻止，3 个表格恢复；仍是 shadow 分支 |
-| 文章划分、阅读顺序和跨页 | [文章图契约](../EvidenceNet/experiments/document_article_graph/README.md) | 基于 component 的 shadow 图；尚未改接 hybrid EvidenceNode IDs |
+| 文章划分、阅读顺序和跨页 | [文章图契约](../EvidenceNet/experiments/document_article_graph/README.md)、[实际接入检查](PRE_EDGE_CHECKPOINT.md) | 独立 component shadow 图和来源匹配适配已有实现；通用 Dolphin/hybrid-v2 驱动未自动调用文章分割。 |
 | Node 构成与链接查看 | [可视化构建器](../EvidenceNet/scripts/build_evidence_node_graph_viewer.py) | 来源成员、原图、描述、结构标题及文章分组；推定链接与实际边须区分 |
 | 稳定包入口 | [EvidenceNet CLI](../EvidenceNet/README.md) | 确定性节点与结构校验；与新 hybrid 实验入口分开 |
 

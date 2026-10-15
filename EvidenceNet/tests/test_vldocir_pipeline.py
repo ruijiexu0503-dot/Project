@@ -7,10 +7,32 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from prepare_vldocir_nodes import adapt
-from retrieve_vldocir import collect_units, windows
+from retrieve_vldocir import collect_units, windows, with_special_tokens
 
 
 class PipelineTests(unittest.TestCase):
+    def test_special_token_template_preserves_existing_ids(self):
+        class SuffixTokenizer:
+            def encode(self, text, add_special_tokens):
+                ids = [ord(c) for c in text]
+                return ids + [999] if add_special_tokens else ids
+
+            def num_special_tokens_to_add(self, pair):
+                return 1
+
+        tokenizer = SuffixTokenizer()
+        self.assertEqual(with_special_tokens(tokenizer, []), [999])
+        self.assertEqual(with_special_tokens(tokenizer, [42, 17]), [42, 17, 999])
+
+    def test_unsupported_special_token_template_is_rejected(self):
+        class PrefixTokenizer:
+            def encode(self, text, add_special_tokens):
+                ids = [ord(c) for c in text]
+                return [999] + ids if add_special_tokens else ids
+
+        with self.assertRaises(ValueError):
+            with_special_tokens(PrefixTokenizer(), [42])
+
     def test_no_text_loss_and_no_duplicate_figure_markdown(self):
         elements = [
             {'label': 'header', 'bbox': [0, 0, 400, 40], 'text': 'Wikipedia'},
