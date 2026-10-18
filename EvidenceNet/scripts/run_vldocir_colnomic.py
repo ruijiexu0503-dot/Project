@@ -9,7 +9,32 @@ import time
 
 from evaluate_vldocir import rows, page, evaluate
 from evaluate_vldocir_ap import average_precision
-from run_node_context_edges import ROOT, read, write, jsonl, sha
+
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+def write(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + '.tmp')
+    temporary.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+    temporary.replace(path)
+
+
+def jsonl(path, values):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + '.tmp')
+    temporary.write_text(''.join(json.dumps(value, ensure_ascii=False) + '\n' for value in values))
+    temporary.replace(path)
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 BASELINE=ROOT/'EvidenceNet/output/baselines/vldocir_no_edge_v1_20261011'
 OUT=ROOT/'EvidenceNet/output/vldocir_colnomic_7b_20261016'
