@@ -71,7 +71,7 @@ def main(out):
     write(out/'manifest.json',{'source_sha256':fingerprints,'code_sha256':{str(p.resolve()):sha(p) for p in code},
         'prepared_sha256':{str(p.relative_to(out)):sha(p) for p in (out/'prepared').rglob('*') if p.is_file()},
         'pages':len(tasks),'documents':len(counts),'parser':'Dolphin-v2','node_generation':'embedding+geometry+Qwen hybrid-v2',
-        'semantic_text_policy':'dolphin_softwrap_semantic_v1',
+        'semantic_text_policy':'dolphin_softwrap_semantic_v2',
         'group_labels_used_for_inference':False,'evaluation':'document topic groups are not node-pair gold labels'})
     print(json.dumps({'pages':len(tasks),'batches':(len(tasks)+19)//20,'documents':counts}),flush=True)
 

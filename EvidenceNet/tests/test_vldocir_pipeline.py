@@ -8,7 +8,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from prepare_vldocir_nodes import adapt
 from retrieve_vldocir import collect_units, windows, with_special_tokens
-from dolphin_text import normalize_dolphin_text
+from dolphin_text import (JOIN_HYPHEN, JOIN_SPACE, KEEP_LAYOUT, KEEP_LIST,
+                          KEEP_PARAGRAPH, line_break_decisions, normalize_dolphin_text)
 
 
 class PipelineTests(unittest.TestCase):
@@ -68,6 +69,23 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(fragment['text'], raw)
         self.assertEqual(fragment['char_end'], len(raw))
         self.assertNotEqual(fragment['semantic_text'], raw)
+        self.assertEqual([item['decision'] for item in fragment['semantic_text_breaks']],
+                         [JOIN_SPACE, KEEP_PARAGRAPH, KEEP_PARAGRAPH,
+                          KEEP_LIST])
+        self.assertEqual(rep['semantic_text_break_counts'][JOIN_SPACE], 1)
+
+    def test_every_dolphin_newline_gets_an_explicit_source_anchored_decision(self):
+        raw = "soft wrap\ncontinues\n\n1. item\nspatio-\ntemporal"
+        decisions = line_break_decisions(raw, 'para')
+        self.assertEqual([item['decision'] for item in decisions],
+                         [JOIN_SPACE, KEEP_PARAGRAPH, KEEP_PARAGRAPH,
+                          JOIN_SPACE, JOIN_HYPHEN])
+        self.assertEqual([raw[item['char_start']:item['char_end']] for item in decisions],
+                         ['\n'] * 5)
+        self.assertEqual([item['decision'] for item in line_break_decisions("A | B\n1 | 2", 'tab')],
+                         [KEEP_LAYOUT])
+        self.assertEqual([item['decision'] for item in line_break_decisions("1. first\n2. second", 'para')],
+                         [KEEP_LIST])
 
     def test_table_lines_and_lexical_hyphens_are_preserved(self):
         table = "A | B\n1 | 2"

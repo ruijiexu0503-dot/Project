@@ -7,7 +7,7 @@ import shutil
 from collections import Counter
 from pathlib import Path
 
-from dolphin_text import POLICY as SEMANTIC_TEXT_POLICY, normalize_dolphin_text
+from dolphin_text import POLICY as SEMANTIC_TEXT_POLICY, normalize_dolphin_text_with_decisions
 
 
 def rows(path):
@@ -18,6 +18,7 @@ def adapt(elements, row, summary, document):
     width, height = summary['image_size']
     atoms, visuals = [], []
     labels = Counter()
+    break_counts = Counter()
     for index, element in enumerate(elements):
         label = str(element.get('label') or 'unknown')
         labels[label] += 1
@@ -42,7 +43,8 @@ def adapt(elements, row, summary, document):
                 else 'furniture' if label in {'header', 'foot', 'footer', 'page_num', 'page_number'}
                 else 'caption' if label == 'cap' else 'table' if label == 'tab' else 'text')
         text = str(element.get('text') or '')
-        semantic_text = normalize_dolphin_text(text, label)
+        semantic_text, semantic_breaks = normalize_dolphin_text_with_decisions(text, label)
+        break_counts.update(item['decision'] for item in semantic_breaks)
         atoms.append({'atom_id': aid, 'atom_type': kind,
                       'layout_role': 'heading' if wiki_title else label,
                       'text_preview': text, 'semantic_preview': semantic_text,
@@ -51,7 +53,8 @@ def adapt(elements, row, summary, document):
                       'text_fragments': [{'fragment_id': f'{aid}_F001', 'source_atom_id': aid,
                                           'char_start': 0, 'char_end': len(text), 'text': text,
                                           'semantic_text': semantic_text,
-                                          'semantic_text_policy': SEMANTIC_TEXT_POLICY}],
+                                          'semantic_text_policy': SEMANTIC_TEXT_POLICY,
+                                          'semantic_text_breaks': semantic_breaks}],
                       'geometry_members': geometry, 'source_element_index': index})
     return {'document_id': row['document_id'], 'page': int(row['page_number']),
             'atoms': atoms, 'visual_bundles': visuals,
@@ -59,6 +62,7 @@ def adapt(elements, row, summary, document):
             'page_headings': [a['semantic_preview'] for a in atoms if a['atom_type'] == 'heading'],
             'source_parser': 'Dolphin-v2', 'bbox_coordinate_space': 'resized_image_pixels',
             'semantic_text_policy': SEMANTIC_TEXT_POLICY,
+            'semantic_text_break_counts': dict(break_counts),
             'raw_text_is_immutable_source': True,
             'image_size': [width, height], 'scale_to_original': summary['scale_to_original'],
             'official_image_sha256': row['sha256'], 'label_distribution': dict(labels)}

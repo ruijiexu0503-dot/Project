@@ -156,7 +156,7 @@ def prepare(out, source, policy_v2=False):
           'neighbors_per_scope': 4, 'neighbors_per_target_article': 2,
           'visual_policy': 'existing descriptions only; crop content NOT verified by text reranker',
           'node_unit': 'original evidence node; windows never become graph nodes',
-          'semantic_text_policy': 'dolphin_softwrap_semantic_v1 when supplied by source adapter',
+          'semantic_text_policy': 'dolphin_softwrap_semantic_v2 when supplied by source adapter',
           'production_modified': False, 'retrieval_quality_evaluated': False})
     report(out)
 
