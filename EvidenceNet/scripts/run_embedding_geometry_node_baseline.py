@@ -18,6 +18,7 @@ from evidence_graph.llm_client import create_llm
 from bounded_geometry import boxes, pair_hint
 from run_node_embedding_geometry_pilot import SYSTEM, PROMPT, embed
 from run_matched_qwen_node_benchmark import SOURCE, TASKS
+from dolphin_text import atom_text
 
 BASELINE_TASKS = TASKS + ("gw150914_detection/page_0002",)
 REVISION = False
@@ -44,7 +45,10 @@ def structural(atom):
             or role == "overlay_prose_or_caption" and "DLRmaGazine" in text and len(text) < 110)
 
 
-def text_of(atom): return "\n".join(f["text"] for f in atom["text_fragments"])
+def text_of(atom): return atom_text(atom, semantic=True)
+
+
+def raw_text_of(atom): return atom_text(atom, semantic=False)
 
 
 def make_crops(out: Path, tasks):
@@ -155,7 +159,8 @@ def assemble(out: Path, embedding_model: Path, tasks):
                     "source_atom_ids": [a["atom_id"] for a in atoms_for_node],
                     "source_fragment_ids": [f["fragment_id"] for a in atoms_for_node for f in a["text_fragments"]],
                     "source_visual_bundle_ids": [visual["visual_bundle_id"]] if visual else [],
-                    "plain_text": "\n".join(text_of(a) for a in atoms_for_node),
+                    "plain_text": "\n".join(raw_text_of(a) for a in atoms_for_node),
+                    "semantic_text": "\n".join(text_of(a) for a in atoms_for_node),
                     "visual_description": descriptions[(task, visual["visual_bundle_id"])]["description"] if visual else None,
                     "geometry_members": [dict(g, source_atom_id=a["atom_id"])
                                          for a in atoms_for_node for g in a.get("geometry_members", [])]
@@ -202,6 +207,7 @@ def assemble(out: Path, embedding_model: Path, tasks):
                    "caption_assignments": assignments, "text_fragments": len(all_fragments),
                    "scoring_mode": "geometry" if GEOMETRY_ONLY else "embedding_geometry",
                    "node_policy": "bounded-v2" if REVISION else "legacy",
+                   "semantic_text_policy": rep.get("semantic_text_policy", "raw_text_fallback"),
                    "native_component_loss": len(components-node_components),
                    "input_hashes": {"input_representation": sha(source/"input_representation.json"),
                                     "source_image": sha(source/"original.png")},

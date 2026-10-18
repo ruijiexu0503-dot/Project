@@ -7,14 +7,28 @@ from collections import defaultdict
 from pathlib import Path
 
 from evaluate_vldocir import evaluate, page, rows
+from dolphin_text import atom_text
 
 ROOT = Path(__file__).resolve().parents[2]
 ARMS = ('page_mean', 'page_windows', 'parser_atoms', 'parser_atoms_visual',
         'hybrid_text', 'hybrid_visual')
 
 
+def document_model_input(unit):
+    """Allowlisted content only; IDs, geometry and development metadata stay outside."""
+    if not isinstance(unit.get('text'), str) or not isinstance(unit.get('context'), str):
+        raise ValueError('Document model input requires text and context strings')
+    return {'title_context': unit['context'], 'content': unit['text']}
+
+
+def query_model_input(query):
+    if not isinstance(query.get('question'), str):
+        raise ValueError('Query model input requires a question string')
+    return 'Instruct: Retrieve document pages containing evidence to answer the question.\nQuery: ' + query['question']
+
+
 def text_of(atom):
-    return '\n'.join(f['text'] for f in atom['text_fragments'])
+    return atom_text(atom, semantic=True)
 
 
 def collect_units(source, nodes):
@@ -62,8 +76,9 @@ def collect_units(source, nodes):
             for row in rows(target / 'hybrid' / task / 'evidence_nodes.jsonl'):
                 mappings.append({'node_id': row['node_id'], 'source_pages': [
                     {'document_id': pid[0], 'page_number': int(pid[1])}]})
-                add('hybrid_text', pid, row['node_id'], row['plain_text'], context)
-                text = '\n'.join(s for s in (row['plain_text'], row.get('visual_description')) if s)
+                semantic = row.get('semantic_text', row['plain_text'])
+                add('hybrid_text', pid, row['node_id'], semantic, context)
+                text = '\n'.join(s for s in (semantic, row.get('visual_description')) if s)
                 add('hybrid_visual', pid, row['node_id'], text, context)
                 stats['nodes'] += 1
             # Structural headings remain separately addressable for title-only queries.
@@ -141,9 +156,10 @@ def main():
     for arm in ARMS:
         indices[arm] = []
         for unit in units[arm]:
-            context = tokenize(unit['context'])[:64]
+            payload = document_model_input(unit)
+            context = tokenize(payload['title_context'])[:64]
             current = []
-            for chunk in windows(tokenize(unit['text'])):
+            for chunk in windows(tokenize(payload['content'])):
                 ids = tuple(with_special_tokens(tokenizer, context + chunk))
                 if ids not in window_index:
                     window_index[ids] = len(sequences)
@@ -164,7 +180,7 @@ def main():
     vectors = encode(sequences)
     query_sequences = []
     for q in queries:
-        ids = tokenize('Instruct: Retrieve document pages containing evidence to answer the question.\nQuery: ' + q['question'])
+        ids = tokenize(query_model_input(q))
         if len(ids) > 512:
             raise ValueError('Query exceeds encoder budget; do not silently truncate it')
         query_sequences.append(with_special_tokens(tokenizer, ids))

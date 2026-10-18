@@ -1,5 +1,11 @@
 # Document article graph shadow stage
 
+2026-10-15: the hybrid pipeline now has a separate [Qwen clustering stage](HYBRID_QWEN_CLUSTERING.md)
+using exact hybrid EvidenceNode IDs, structural titles and grounded continuation checks.
+`run_vldocir_nodes.py document` executes it after all node batches; `articles` reuses existing nodes.
+Its CPU pilot is pending source review. The component-based commands below remain historical/compatible
+entrypoints and are not the implementation of the new hybrid stage.
+
 Updated 2026-10-09. The commands below consume component-based relation-first
 snapshots. This adapter has not been switched to the hybrid-v2 `evidence_nodes.jsonl`
 IDs, and the VL-DocIR node retrieval experiment does not use these graph edges.
@@ -56,3 +62,9 @@ same-article footnote flow that must not create a `NEXT` edge.
 `single_article` document assigns all non-page-context content, including figures
 and captions, to one document-level article. Cross-page decisions still control
 reading adjacency; the profile never creates cross-page `NEXT` edges by itself.
+
+- [Raw-block article-first pilot](ARTICLE_FIRST_PILOT.md): user-proposed order, isolated CPU smoke job 79759; see [source review](ARTICLE_FIRST_79759_REVIEW.md).
+
+- [Article-first vs reading-first paired comparison](ARTICLE_READING_ORDER_COMPARISON.md): CPU array 79854 failed all 16 conditions at the interface; see [failure review and V2 repairs](ARTICLE_ORDER_79854_FAILURE_REVIEW.md). [GPU smoke 80082 review](ARTICLE_ORDER_GPU_80082.md): all four CLAD conditions passed article membership and reading, then failed composition; no quality winner established.
+
+- [V3 composition repair and independent text–visual relations](ARTICLE_ORDER_V3_MULTIMODAL.md): GPU 80131 completed all four CLAD node conditions; 10/11 visual decisions valid. Updated review retains three scoped ILLUSTRATES edges plus one same-stadium RELATED edge; prior A006 false-edge classification withdrawn. One source-excerpt format failure remains; no stage-order winner established.

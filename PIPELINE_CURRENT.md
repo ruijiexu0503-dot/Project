@@ -1,8 +1,15 @@
 # Current pipeline map
 
-Last reconciled: **2026-10-09**. This document is the operational map for new
+Last reconciled: **2026-10-18**. This document is the operational map for new
 work. [`PIPELINE_STEPS.md`](PIPELINE_STEPS.md) retains detailed contracts and
 [`PIPELINE_DECISIONS.md`](PIPELINE_DECISIONS.md) retains the decision history.
+
+The promoted hybrid document path is summarized in
+[`current/MAIN_PIPELINE.md`](current/MAIN_PIPELINE.md). It adds a lossless Dolphin
+text contract (`text` for provenance, `semantic_text` for inference), hybrid
+EvidenceNode generation, Qwen article membership and separately validated
+within-article reading order. Semantic edge generation starts after this handoff
+and remains on `feature/evidence-edges`.
 
 The current retrieval experiment uses Dolphin official page-image parsing and
 the opt-in hybrid-v2 EvidenceNode branch (embedding + geometry + bounded Qwen).

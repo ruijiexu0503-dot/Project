@@ -17,7 +17,7 @@ sys.path.insert(0, str(ROOT / "EvidenceNet/scripts"))
 from evidence_graph.llm_client import create_llm, extract_json
 from bounded_geometry import boxes, pair_hint
 from run_node_embedding_geometry_pilot import embed
-from run_embedding_geometry_node_baseline import BASELINE_TASKS, SOURCE, structural, text_of
+from run_embedding_geometry_node_baseline import BASELINE_TASKS, SOURCE, structural, text_of, raw_text_of
 
 BASELINE = ROOT / "EvidenceNet/output/matched_node_benchmark_20261006/embedding_geometry"
 SYSTEM = "You are a conservative source-grounded document analyst. Return only JSON."
@@ -301,7 +301,8 @@ def assemble(out: Path, tasks):
                 node = dict(members[0]); node["unit_type"] = "TEXT"; node["source_atom_ids"] = atom_ids
                 node["source_fragment_ids"] = [f["fragment_id"] for aid in atom_ids
                                                for f in atom_by_id[aid]["text_fragments"]]
-                node["plain_text"] = "\n".join(text_of(atom_by_id[aid]) for aid in atom_ids)
+                node["plain_text"] = "\n".join(raw_text_of(atom_by_id[aid]) for aid in atom_ids)
+                node["semantic_text"] = "\n".join(text_of(atom_by_id[aid]) for aid in atom_ids)
                 node["geometry_members"] = [g for m in members for g in m["geometry_members"]]
                 node["status"] = "HYBRID_SHADOW_CANDIDATE"
             node["node_id"] = f"{rep['document_id']}_{rep['page']}_HY_{len(output)+1:03d}"
@@ -329,6 +330,7 @@ def assemble(out: Path, tasks):
                    "native_component_loss": len(native-materialized),
                    "input_hashes": {"input_representation": sha(source/"input_representation.json"),
                                     "source_image": sha(source/"original.png")},
+                   "semantic_text_policy": rep.get("semantic_text_policy", "raw_text_fallback"),
                    "production_modified": False}
         write(target/"run_summary.json", summary); summaries.append(summary)
         print(json.dumps({k:summary[k] for k in ("task","valid_coverage","decision_valid","applied_continuations","moved_to_structural")}),flush=True)

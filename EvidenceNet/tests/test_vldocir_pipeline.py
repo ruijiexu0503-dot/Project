@@ -8,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from prepare_vldocir_nodes import adapt
 from retrieve_vldocir import collect_units, windows, with_special_tokens
+from dolphin_text import normalize_dolphin_text
 
 
 class PipelineTests(unittest.TestCase):
@@ -51,8 +52,28 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(len(rep['visual_bundles']), 1)
         texts = [f['text'] for a in rep['atoms'] for f in a['text_fragments']]
         self.assertEqual(texts, [e['text'] for e in elements if e['label'] != 'fig'])
+        self.assertTrue(all('semantic_text' in f for a in rep['atoms'] for f in a['text_fragments']))
         box = rep['visual_bundles'][0]['bbox']
         self.assertEqual([v * 2 for v in box], [0, 620, 800, 1000])
+
+    def test_dolphin_soft_wrap_is_semantic_only_and_structure_survives(self):
+        raw = "The model captures long-range\ntemporal dependencies.\n\n1. First item\n2. Second item"
+        self.assertEqual(normalize_dolphin_text(raw, 'para'),
+                         "The model captures long-range temporal dependencies.\n\n1. First item\n2. Second item")
+        rep = adapt([{'label': 'para', 'bbox': [0, 0, 500, 200], 'text': raw}],
+                    {'document_id': 'd', 'page_number': 1, 'sha256': 'x'},
+                    {'image_size': [1000, 2000], 'scale_to_original': [1, 1]},
+                    {'data_source': 'arxiv'})
+        fragment = rep['atoms'][0]['text_fragments'][0]
+        self.assertEqual(fragment['text'], raw)
+        self.assertEqual(fragment['char_end'], len(raw))
+        self.assertNotEqual(fragment['semantic_text'], raw)
+
+    def test_table_lines_and_lexical_hyphens_are_preserved(self):
+        table = "A | B\n1 | 2"
+        self.assertEqual(normalize_dolphin_text(table, 'tab'), table)
+        self.assertEqual(normalize_dolphin_text("spatio-\ntemporal model", 'para'),
+                         "spatio-temporal model")
 
     def test_bad_geometry_is_rejected_without_dropping_evidence(self):
         with self.assertRaises(ValueError):
@@ -99,7 +120,8 @@ class PipelineTests(unittest.TestCase):
                 'task': task, 'visual_id': 'V0003', 'crop': str(crop),
                 'crop_sha256': hashlib.sha256(b'crop').hexdigest(), 'description': 'Diagram description'}) + '\n')
             entries = [
-                {'node_id': 'text', 'plain_text': 'Claim', 'source_atom_ids': ['D0002'],
+                {'node_id': 'text', 'plain_text': 'Claim', 'semantic_text': 'Semantic claim',
+                 'source_atom_ids': ['D0002'],
                  'source_fragment_ids': ['D0002_F001'], 'source_visual_bundle_ids': [], 'native_visual_components': []},
                 {'node_id': 'visual', 'plain_text': '', 'visual_description': 'Diagram description',
                  'source_atom_ids': [], 'source_fragment_ids': [], 'source_visual_bundle_ids': ['V0003'],
@@ -119,6 +141,7 @@ class PipelineTests(unittest.TestCase):
                 self.assertTrue(any('Title' in r['text'] for r in values), arm)
             for arm in ('parser_atoms_visual', 'hybrid_visual'):
                 self.assertTrue(any(r['text'] == 'Diagram description' for r in units[arm]))
+            self.assertTrue(any(r['text'] == 'Semantic claim' for r in units['hybrid_text']))
 
 
 if __name__ == '__main__':

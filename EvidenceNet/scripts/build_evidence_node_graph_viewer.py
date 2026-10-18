@@ -135,6 +135,8 @@ def build_page(node_path: Path, output: Path):
             members.append({"kind": "atom", "id": atom_id, "type": atom.get("atom_type"),
                             "role": atom.get("layout_role"), "order": atom.get("deepseek_order"),
                             "text": "\n".join(f.get("text", "") for f in atom.get("text_fragments", [])),
+                            "semantic_text": "\n".join(f.get("semantic_text", f.get("text", ""))
+                                                       for f in atom.get("text_fragments", [])),
                             "boxes": boxes})
         visual_rows = []
         for visual_id in node.get("source_visual_bundle_ids", []):
@@ -162,6 +164,7 @@ def build_page(node_path: Path, output: Path):
         result.append({"id": node["node_id"], "short": node["node_id"].rsplit("_", 1)[-1],
                        "unit_type": node.get("unit_type"), "status": node.get("status"),
                        "text": node.get("plain_text") or "", "members": members,
+                       "semantic_text": node.get("semantic_text", node.get("plain_text") or ""),
                        "bbox": bbox_union(member_boxes), "min_order": min(orders) if orders else None,
                        "merged": len(node.get("source_atom_ids", [])) > 1,
                        "atom_count": len(node.get("source_atom_ids", [])),
@@ -174,12 +177,15 @@ def build_page(node_path: Path, output: Path):
             continue
         boxes = [g['bbox'] for g in atom.get('geometry_members', []) if g.get('bbox')]
         text = '\n'.join(f['text'] for f in atom['text_fragments'])
+        semantic_text = '\n'.join(f.get('semantic_text', f['text']) for f in atom['text_fragments'])
         titles.append({'id': 'TITLE::'+atom['atom_id'], 'short': atom['atom_id'],
-                       'unit_type': 'STRUCTURAL_TITLE', 'text': text, 'bbox': bbox_union(boxes),
+                       'unit_type': 'STRUCTURAL_TITLE', 'text': text, 'semantic_text': semantic_text,
+                       'bbox': bbox_union(boxes),
                        'min_order': atom.get('deepseek_order'), 'atom_count': 1, 'visual_count': 0,
                        'source_fragment_ids': [f['fragment_id'] for f in atom['text_fragments']],
                        'members': [{'id':atom['atom_id'], 'kind':'atom', 'type':'heading',
-                                    'text':text,'role':atom.get('layout_role'), 'boxes':boxes}]})
+                                    'text':text, 'semantic_text':semantic_text,
+                                    'role':atom.get('layout_role'), 'boxes':boxes}]})
     text_nodes = sorted((n for n in result if n["min_order"] is not None), key=lambda n: (n["min_order"], n["id"]))
     candidate_edges = [{"source": a["id"], "target": b["id"], "type": "PROVISIONAL_READING_ORDER",
                         "status": "DERIVED_FOR_VISUALIZATION_NOT_PERSISTED"}

@@ -1,5 +1,9 @@
 # Edge 开发前的检查点
 
+> 历史检查点：下述“文章分割未接入”准确描述 2026-10-15 的提交。
+> 2026-10-18 已由 [MAIN_PIPELINE.md](MAIN_PIPELINE.md) 取代：`run_vldocir_nodes.py`
+> 现提供 `articles` 与 `document` 入口，并把文章归属和阅读顺序分别验证。
+
 2026-10-15。本次主分支提交保存节点生成修复和已经完成的无 edge 检索 baseline；后续连边工作放入 `feature/evidence-edges`。提交不包含本地数据、模型、结果、日志、集群 sbatch 或新的连边实验代码。
 
 ## 文章分割检查结论
