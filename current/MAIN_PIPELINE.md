@@ -54,6 +54,9 @@ Every Dolphin fragment has two representations:
 
 - `text`: immutable parser output used for source quotes, hashes and character offsets;
 - `semantic_text`: joins physical line wraps inside a paragraph for Qwen and embedding.
+- `semantic_text_breaks`: records every source newline, its exact character range,
+  and one of `JOIN_SPACE`, `JOIN_HYPHEN`, `KEEP_LIST`, `KEEP_LAYOUT` or
+  `KEEP_PARAGRAPH`.
 
 Blank paragraphs, list rows, tables and formulas remain structural boundaries.
 Line-end lexical hyphens are retained. Retrieval views may normalize the text,
