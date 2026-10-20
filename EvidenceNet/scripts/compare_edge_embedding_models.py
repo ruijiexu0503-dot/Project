@@ -115,7 +115,10 @@ def embed(texts, model_path, batch_size, max_length, device):
         batch = tokenizer(texts[start:start + batch_size], padding=True, truncation=True,
                           max_length=max_length, return_tensors="pt").to(device)
         with torch.inference_mode():
-            hidden = model(**batch).last_hidden_state
+            # Dense encoding never reuses autoregressive KV state.  Disabling it also
+            # keeps older trust_remote_code encoders (notably gte-Qwen2) compatible
+            # with newer transformers releases whose Cache API has changed.
+            hidden = model(**batch, use_cache=False).last_hidden_state
             vector = torch.nn.functional.normalize(hidden[:, -1].float(), p=2, dim=1)
         result.append(vector.cpu().numpy())
         print("embedded", min(start + batch_size, len(texts)), len(texts), flush=True)
