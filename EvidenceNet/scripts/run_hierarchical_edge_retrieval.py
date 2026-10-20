@@ -15,7 +15,6 @@ import re
 import numpy as np
 
 from run_node_context_edges import ROOT, read, rows, write, jsonl, sha, tokens
-from run_traffic_relevance_cpu import cpu_embed
 from dolphin_text import normalize_dolphin_text
 
 SOURCE=ROOT/'EvidenceNet/output/paper_relevance_urban_traffic_20261013/graph'
@@ -210,6 +209,11 @@ def prepare(out):
 
 
 def run(out):
+    # The CPU encoder pulls in the full graph-building stack; candidate ranking
+    # helpers are also imported by lightweight evaluation scripts that do not
+    # need those dependencies.
+    from run_traffic_relevance_cpu import cpu_embed
+
     manifest=read(out/'manifest.json')
     if manifest['code_sha256']!=sha(__file__):raise ValueError('changed_code')
     for name,h in manifest['source_sha256'].items():
