@@ -2,9 +2,10 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import torch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from compare_edge_embedding_models import evaluate, reference_levels
+from compare_edge_embedding_models import evaluate, pool_hidden, reference_levels
 
 
 def test_six_case_overlay_replaces_old_ordinal_levels_without_changing_ids():
@@ -46,3 +47,14 @@ def test_evaluation_separates_strong_weak_and_no_link_coverage():
     assert metrics["weak_relatedness_1"]["initial_pool"] == 1
     assert metrics["weak_relatedness_1"]["final_candidates"] == 0
     assert metrics["no_link_0"]["final_candidates"] == 0
+
+
+def test_pooling_respects_padding_and_model_profile():
+    hidden = torch.tensor([
+        [[1.0], [2.0], [3.0]],
+        [[4.0], [5.0], [99.0]],
+    ])
+    mask = torch.tensor([[1, 1, 1], [1, 1, 0]])
+    assert pool_hidden(hidden, mask, "cls").flatten().tolist() == [1.0, 4.0]
+    assert pool_hidden(hidden, mask, "last_token").flatten().tolist() == [3.0, 5.0]
+    assert pool_hidden(hidden, mask, "mean").flatten().tolist() == [2.0, 4.5]

@@ -94,7 +94,22 @@ def evaluate(cases, levels, candidates, initial_pool, views, vectors):
     }
 
 
-def embed(texts, model_path, batch_size, max_length, device):
+def pool_hidden(hidden, attention_mask, strategy):
+    if strategy == "cls":
+        return hidden[:, 0]
+    if strategy == "last_token":
+        last = attention_mask.sum(dim=1) - 1
+        if attention_mask[:, -1].all():
+            return hidden[:, -1]
+        index = last[:, None, None].expand(-1, 1, hidden.shape[-1])
+        return hidden.gather(1, index).squeeze(1)
+    if strategy == "mean":
+        mask = attention_mask.unsqueeze(-1).to(hidden.dtype)
+        return (hidden * mask).sum(dim=1) / mask.sum(dim=1).clamp_min(1)
+    raise ValueError("unknown pooling strategy: " + strategy)
+
+
+def embed(texts, model_path, batch_size, max_length, device, pooling, padding_side):
     import torch
     from transformers import AutoModel, AutoTokenizer
 
@@ -102,7 +117,7 @@ def embed(texts, model_path, batch_size, max_length, device):
         raise RuntimeError("CUDA requested but unavailable")
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
     tokenizer = AutoTokenizer.from_pretrained(
-        model_path, local_files_only=True, trust_remote_code=True, padding_side="left")
+        model_path, local_files_only=True, trust_remote_code=True, padding_side=padding_side)
     kwargs = dict(local_files_only=True, trust_remote_code=True, torch_dtype=dtype)
     try:
         model = AutoModel.from_pretrained(model_path, attn_implementation="sdpa", **kwargs)
@@ -118,16 +133,20 @@ def embed(texts, model_path, batch_size, max_length, device):
             # Dense encoding never reuses autoregressive KV state.  Disabling it also
             # keeps older trust_remote_code encoders (notably gte-Qwen2) compatible
             # with newer transformers releases whose Cache API has changed.
-            hidden = model(**batch, use_cache=False).last_hidden_state
-            vector = torch.nn.functional.normalize(hidden[:, -1].float(), p=2, dim=1)
+            forward = dict(batch)
+            if getattr(model.config, "use_cache", None) is not None:
+                forward["use_cache"] = False
+            hidden = model(**forward).last_hidden_state
+            vector = torch.nn.functional.normalize(
+                pool_hidden(hidden, batch["attention_mask"], pooling).float(), p=2, dim=1)
         result.append(vector.cpu().numpy())
         print("embedded", min(start + batch_size, len(texts)), len(texts), flush=True)
     metadata = {
         "elapsed_seconds": time.monotonic() - started,
         "device": torch.cuda.get_device_name(0) if device == "cuda" else "cpu",
         "dtype": "bfloat16" if device == "cuda" else "float32",
-        "pooling": "last_token",
-        "padding_side": "left",
+        "pooling": pooling,
+        "padding_side": padding_side,
         "max_length": max_length,
         "batch_size": batch_size,
     }
@@ -162,7 +181,7 @@ def prepare(out):
         "source_nodes": len(rows(SOURCE / "corpus_nodes.jsonl")),
         "reference_counts": dict(Counter(str(value) for value in levels.values())),
         "embedding_input": "symmetric retrieval view; no query instruction",
-        "pooling": "last token with left padding and L2 normalization",
+        "pooling": "model-specific official pooling, recorded per model; L2 normalization",
         "max_tokens": 512,
         "candidate_policy": "frozen hierarchical dense+BM25+identifier retrieval and fixed budgets",
         "labels_used_for_retrieval": False,
@@ -184,7 +203,7 @@ def check(out):
             raise ValueError("source changed after preparation: " + path)
 
 
-def run_model(out, model_name, model_path, batch_size, max_length, device):
+def run_model(out, model_name, model_path, batch_size, max_length, device, pooling, padding_side):
     check(out)
     destination = out / "models" / model_name
     if (destination / "summary.json").exists():
@@ -196,7 +215,7 @@ def run_model(out, model_name, model_path, batch_size, max_length, device):
     cases = rows(SOURCE / "evaluation/cases.jsonl")
     levels = reference_levels(cases, rows(RELATEDNESS / "evaluation/reference.jsonl"), rows(OVERLAY))
     vectors, execution = embed([item["retrieval_text"] for item in views], model_path,
-                               batch_size, max_length, device)
+                               batch_size, max_length, device, pooling, padding_side)
     np.save(destination / "view_vectors.npy", vectors)
     pool = retrieval.retrieve(views, vectors)
     article_candidates, candidates = retrieval.route_and_select(nodes, pool)
@@ -261,6 +280,8 @@ def main():
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--max-length", type=int, default=512)
     parser.add_argument("--device", choices=("cuda", "cpu"), default="cuda")
+    parser.add_argument("--pooling", choices=("last_token", "cls", "mean"), default="last_token")
+    parser.add_argument("--padding-side", choices=("left", "right"), default="left")
     args = parser.parse_args()
     if args.command == "prepare":
         prepare(args.output.resolve())
@@ -271,7 +292,7 @@ def main():
         if not args.model_name or not args.model_path:
             parser.error("run requires --model-name and --model-path")
         run_model(args.output.resolve(), args.model_name, args.model_path.resolve(),
-                  args.batch_size, args.max_length, args.device)
+                  args.batch_size, args.max_length, args.device, args.pooling, args.padding_side)
 
 
 if __name__ == "__main__":
