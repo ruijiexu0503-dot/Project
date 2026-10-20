@@ -94,25 +94,26 @@ def evaluate(cases, levels, candidates, initial_pool, views, vectors):
     }
 
 
-def embed(texts, model_path, batch_size, max_length):
+def embed(texts, model_path, batch_size, max_length, device):
     import torch
     from transformers import AutoModel, AutoTokenizer
 
-    if not torch.cuda.is_available():
-        raise RuntimeError("CUDA is required for the matched multi-model comparison")
+    if device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA requested but unavailable")
+    dtype = torch.bfloat16 if device == "cuda" else torch.float32
     tokenizer = AutoTokenizer.from_pretrained(
         model_path, local_files_only=True, trust_remote_code=True, padding_side="left")
-    kwargs = dict(local_files_only=True, trust_remote_code=True, torch_dtype=torch.bfloat16)
+    kwargs = dict(local_files_only=True, trust_remote_code=True, torch_dtype=dtype)
     try:
         model = AutoModel.from_pretrained(model_path, attn_implementation="sdpa", **kwargs)
     except (TypeError, ValueError):
         model = AutoModel.from_pretrained(model_path, **kwargs)
-    model = model.cuda().eval()
+    model = model.to(device).eval()
     result = []
     started = time.monotonic()
     for start in range(0, len(texts), batch_size):
         batch = tokenizer(texts[start:start + batch_size], padding=True, truncation=True,
-                          max_length=max_length, return_tensors="pt").to("cuda")
+                          max_length=max_length, return_tensors="pt").to(device)
         with torch.inference_mode():
             hidden = model(**batch).last_hidden_state
             vector = torch.nn.functional.normalize(hidden[:, -1].float(), p=2, dim=1)
@@ -120,8 +121,8 @@ def embed(texts, model_path, batch_size, max_length):
         print("embedded", min(start + batch_size, len(texts)), len(texts), flush=True)
     metadata = {
         "elapsed_seconds": time.monotonic() - started,
-        "device": torch.cuda.get_device_name(0),
-        "dtype": "bfloat16",
+        "device": torch.cuda.get_device_name(0) if device == "cuda" else "cpu",
+        "dtype": "bfloat16" if device == "cuda" else "float32",
         "pooling": "last_token",
         "padding_side": "left",
         "max_length": max_length,
@@ -129,7 +130,8 @@ def embed(texts, model_path, batch_size, max_length):
     }
     del model
     gc.collect()
-    torch.cuda.empty_cache()
+    if device == "cuda":
+        torch.cuda.empty_cache()
     return np.concatenate(result), metadata
 
 
@@ -179,7 +181,7 @@ def check(out):
             raise ValueError("source changed after preparation: " + path)
 
 
-def run_model(out, model_name, model_path, batch_size, max_length):
+def run_model(out, model_name, model_path, batch_size, max_length, device):
     check(out)
     destination = out / "models" / model_name
     if (destination / "summary.json").exists():
@@ -191,7 +193,7 @@ def run_model(out, model_name, model_path, batch_size, max_length):
     cases = rows(SOURCE / "evaluation/cases.jsonl")
     levels = reference_levels(cases, rows(RELATEDNESS / "evaluation/reference.jsonl"), rows(OVERLAY))
     vectors, execution = embed([item["retrieval_text"] for item in views], model_path,
-                               batch_size, max_length)
+                               batch_size, max_length, device)
     np.save(destination / "view_vectors.npy", vectors)
     pool = retrieval.retrieve(views, vectors)
     article_candidates, candidates = retrieval.route_and_select(nodes, pool)
@@ -211,7 +213,6 @@ def run_model(out, model_name, model_path, batch_size, max_length):
         "metrics": metrics,
     }
     write(destination / "summary.json", summary)
-    report(out)
     print(json.dumps(summary, indent=2), flush=True)
 
 
@@ -256,6 +257,7 @@ def main():
     parser.add_argument("--model-path", type=Path)
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--max-length", type=int, default=512)
+    parser.add_argument("--device", choices=("cuda", "cpu"), default="cuda")
     args = parser.parse_args()
     if args.command == "prepare":
         prepare(args.output.resolve())
@@ -266,7 +268,7 @@ def main():
         if not args.model_name or not args.model_path:
             parser.error("run requires --model-name and --model-path")
         run_model(args.output.resolve(), args.model_name, args.model_path.resolve(),
-                  args.batch_size, args.max_length)
+                  args.batch_size, args.max_length, args.device)
 
 
 if __name__ == "__main__":
