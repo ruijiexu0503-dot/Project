@@ -109,15 +109,35 @@ def pool_hidden(hidden, attention_mask, strategy):
     raise ValueError("unknown pooling strategy: " + strategy)
 
 
+def load_tokenizer(model_path, padding_side):
+    from transformers import AutoTokenizer, PreTrainedTokenizerFast
+
+    try:
+        return AutoTokenizer.from_pretrained(
+            model_path, local_files_only=True, trust_remote_code=True,
+            padding_side=padding_side)
+    except ImportError:
+        tokenizer_file = Path(model_path) / "tokenizer.json"
+        config_file = Path(model_path) / "tokenizer_config.json"
+        if not tokenizer_file.exists() or not config_file.exists():
+            raise
+        config = read(config_file)
+        special = {key: config[key] for key in
+                   ("bos_token", "eos_token", "unk_token", "pad_token") if config.get(key)}
+        tokenizer = PreTrainedTokenizerFast(tokenizer_file=str(tokenizer_file), **special)
+        tokenizer.padding_side = padding_side
+        tokenizer.model_max_length = config.get("model_max_length", tokenizer.model_max_length)
+        return tokenizer
+
+
 def embed(texts, model_path, batch_size, max_length, device, pooling, padding_side):
     import torch
-    from transformers import AutoModel, AutoTokenizer
+    from transformers import AutoModel
 
     if device == "cuda" and not torch.cuda.is_available():
         raise RuntimeError("CUDA requested but unavailable")
     dtype = torch.bfloat16 if device == "cuda" else torch.float32
-    tokenizer = AutoTokenizer.from_pretrained(
-        model_path, local_files_only=True, trust_remote_code=True, padding_side=padding_side)
+    tokenizer = load_tokenizer(model_path, padding_side)
     kwargs = dict(local_files_only=True, trust_remote_code=True, torch_dtype=dtype)
     try:
         model = AutoModel.from_pretrained(model_path, attn_implementation="sdpa", **kwargs)
