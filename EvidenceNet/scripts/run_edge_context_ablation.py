@@ -35,6 +35,42 @@ def verify(out: Path) -> None:
             raise ValueError("Changed frozen input/code: " + path)
 
 
+def relocate(out: Path) -> None:
+    """Relocate an already prepared fixed-pair bundle to another cluster checkout."""
+    entries = rows(out / "inputs.jsonl")
+
+    def local_path(value: str) -> str:
+        marker = "/Project/"
+        if marker not in value:
+            return value
+        candidate = ROOT / value.split(marker, 1)[1]
+        return str(candidate.resolve()) if candidate.is_file() else value
+
+    def walk(value):
+        if isinstance(value, dict):
+            return {key: walk(item) for key, item in value.items()}
+        if isinstance(value, list):
+            return [walk(item) for item in value]
+        if isinstance(value, str) and "/Project/" in value:
+            return local_path(value)
+        return value
+
+    entries = [walk(entry) for entry in entries]
+    missing = sorted({image for entry in entries for image in entry["images"]
+                      if not Path(image).is_file()})
+    if missing:
+        raise FileNotFoundError("Missing relocated images: " + ", ".join(missing[:5]))
+    jsonl(out / "inputs.jsonl", entries)
+    files = [Path(__file__), Path(gate.__file__), out / "inputs.jsonl",
+             out / "evaluation/reference.jsonl", out / "protocol.json",
+             ROOT / "EvidenceNet/evidence_graph/llm_client.py", MODEL / "config.json",
+             *sorted({Path(image) for entry in entries for image in entry["images"]})]
+    write(out / "manifest.json", {"portable_bundle": True,
+          "files": {str(path.resolve()): sha(path) for path in files}})
+    print(json.dumps({"relocated": len(entries), "images": len(files) - 7,
+                      "root": str(ROOT)}), flush=True)
+
+
 def atom_excerpt(node: dict, policies: dict, limit: int = 800) -> dict | None:
     allowed = {(m["member_id"], m["kind"]) for m in policies[node["id"]]["members"] if m["eligible"]}
     for member in node.get("members", []):
@@ -213,10 +249,11 @@ def run(out: Path, maximum_minutes: int = 56) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=("prepare", "run", "report"))
+    parser.add_argument("stage", choices=("prepare", "relocate", "run", "report"))
     parser.add_argument("--arm", choices=sorted(ARMS), required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if args.stage == "prepare": prepare(args.output.resolve(), args.arm)
+    elif args.stage == "relocate": relocate(args.output.resolve())
     elif args.stage == "run": run(args.output.resolve())
     else: print(json.dumps(gate.report(args.output.resolve())))

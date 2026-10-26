@@ -2,6 +2,13 @@
 
 Updated: 2026-10-18.
 
+2026-10-21 edge handoff: the feature branch now provides a reusable post-node
+entrypoint, `EvidenceNet/pipeline_steps/step3_b_evidence_edges.py`, documented in
+[EDGE_PIPELINE.md](EDGE_PIPELINE.md). It uses Qwen3-Embedding-8B for edge retrieval,
+without changing the upstream node-generation encoder. It exports isolated RELATED
+proposals/review records, not automatically trusted evidence-propagation edges.
+The main/feature ownership boundary below is unchanged.
+
 This is the code path promoted to `main`. It stops before semantic edge
 generation so experimental candidate allocation and verifier policies can evolve
 on `feature/evidence-edges` without changing node or article identity.

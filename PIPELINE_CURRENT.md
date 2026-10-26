@@ -1,5 +1,12 @@
 # Current pipeline map
 
+Post-node integration update (2026-10-21): see
+[current/EDGE_PIPELINE.md](current/EDGE_PIPELINE.md) for the reusable edge entrypoint,
+Qwen3-Embedding-8B selection from the newer matched comparisons, conservative
+candidate allocation, multimodal verification and isolated proposal/review exports.
+This supersedes the older 0.6B recommendation for NEW edge retrieval runs only;
+upstream node generation and frozen experiments remain unchanged.
+
 Last reconciled: **2026-10-18**. This document is the operational map for new
 work. [`PIPELINE_STEPS.md`](PIPELINE_STEPS.md) retains detailed contracts and
 [`PIPELINE_DECISIONS.md`](PIPELINE_DECISIONS.md) retains the decision history.
