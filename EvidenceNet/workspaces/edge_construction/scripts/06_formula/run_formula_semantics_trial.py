@@ -1,0 +1,1 @@
+../../../../scripts/run_formula_semantics_trial.py

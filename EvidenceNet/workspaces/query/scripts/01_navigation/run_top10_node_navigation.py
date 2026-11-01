@@ -1,0 +1,1 @@
+../../../../scripts/run_top10_node_navigation.py

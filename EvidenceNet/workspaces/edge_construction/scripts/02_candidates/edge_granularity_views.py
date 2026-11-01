@@ -1,0 +1,1 @@
+../../../../scripts/edge_granularity_views.py

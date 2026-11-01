@@ -1,0 +1,1 @@
+../../../../scripts/run_edge_selector_reranker_symmetric.py

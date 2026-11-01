@@ -1,0 +1,1 @@
+../../../../scripts/parse_vldocir_pages.py

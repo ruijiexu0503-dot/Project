@@ -1,0 +1,1 @@
+../../../../scripts/run_query_split_probe.py

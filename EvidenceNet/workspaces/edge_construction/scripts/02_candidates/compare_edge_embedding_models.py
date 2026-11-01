@@ -1,0 +1,1 @@
+../../../../scripts/compare_edge_embedding_models.py

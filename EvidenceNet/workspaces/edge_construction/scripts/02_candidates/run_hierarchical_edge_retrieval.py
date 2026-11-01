@@ -1,0 +1,1 @@
+../../../../scripts/run_hierarchical_edge_retrieval.py

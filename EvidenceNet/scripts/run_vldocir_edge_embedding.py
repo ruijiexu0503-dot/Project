@@ -27,6 +27,8 @@ import numpy as np
 
 import compare_edge_embedding_models as encoder
 import edge_embedding_records as records
+import bounded_edge_descriptions as bounded
+import sentence_edge_descriptions as sentence
 import query_edge_gate as old_gate
 import run_query_edge_repair as old_query
 from run_node_context_edges import ROOT, jsonl, read, rows, sha, write
@@ -51,7 +53,7 @@ ENDPOINT_TOKENS = 192
 
 
 def code_files() -> list[Path]:
-    return [Path(__file__), Path(records.__file__), Path(encoder.__file__),
+    return [Path(__file__), Path(records.__file__), Path(bounded.__file__), Path(sentence.__file__), Path(encoder.__file__),
             Path(old_query.__file__), Path(old_gate.__file__),
             Path(__file__).with_name("run_cached_query_reranker.py"),
             Path(__file__).with_name("evaluate_vldocir.py"),
@@ -67,9 +69,20 @@ def source_files() -> list[Path]:
             GATE_SOURCE / "query_contexts.jsonl"]
 
 
-def prepare(out: Path, model: Path, edge_limit: int | None = None) -> dict:
+def _description_contract(out: Path):
+    policy = read(out / "protocol.json").get("description", {}).get("policy", "legacy")
+    if policy not in ("legacy", bounded.PROFILE, sentence.PROFILE):
+        raise ValueError("unknown description policy: " + str(policy))
+    return {"legacy": records, bounded.PROFILE: bounded, sentence.PROFILE: sentence}[policy]
+
+
+def prepare(out: Path, model: Path, edge_limit: int | None = None,
+            description_policy: str = "legacy") -> dict:
     if out.exists():
         raise ValueError("fresh output required")
+    if description_policy not in ("legacy", bounded.PROFILE, sentence.PROFILE):
+        raise ValueError("unknown description policy")
+    contract = {"legacy": records, bounded.PROFILE: bounded, sentence.PROFILE: sentence}[description_policy]
     for path in source_files() + [model / "config.json", model / "tokenizer.json"]:
         if not path.is_file():
             raise ValueError("missing frozen input: " + str(path))
@@ -92,7 +105,7 @@ def prepare(out: Path, model: Path, edge_limit: int | None = None) -> dict:
     jsonl(out / "edge_records.jsonl", graph)
     jsonl(out / "description_inputs.jsonl", [{"edge_id": r["edge_id"],
         "input_sha256": r["input_sha256"], "prompt_sha256": records.digest(
-            records.make_description_prompt(r)), "input": records.description_input(r)} for r in graph])
+            contract.make_description_prompt(r)), "input": contract.description_input(r)} for r in graph])
     shutil.copyfile(TRACE / "queries.jsonl", out / "queries.jsonl")
     write(out / "protocol.json", {
         "experiment": "vldocir_edge_embedding_v1", "graph": "G0 semantic proposals",
@@ -103,16 +116,22 @@ def prepare(out: Path, model: Path, edge_limit: int | None = None) -> dict:
         "embedding": {"model": str(model.resolve()), "pooling": "last_token",
             "padding_side": "left", "max_length": 512, "normalize": "L2",
             "query_instruction": QUERY_INSTRUCTION, "endpoint_tokens": ENDPOINT_TOKENS,
-            "description_tokens": DESCRIPTION_TOKENS, "pair_orders": ["AB", "BA"]},
-        "description": {"query_independent": True, "qrels_visible": False,
+            "description_tokens": DESCRIPTION_TOKENS if contract is records else None,
+            "description_budget": "fixed_prefix" if contract is records else "complete_input_512_no_relation_truncation",
+            "pair_orders": ["AB", "BA"]},
+        "description": {"policy": description_policy, "query_independent": True, "qrels_visible": False,
+            "semantic_truth_verified": False,
             "fallback": "pair text; edge remains in all controlled arms"},
         "reranking": "same two frozen 0.6B-hit windows per candidate page; shared BGE scores; max window score",
         "edge_score_use": "candidate discovery only; never a page bonus or evidence propagation",
         "development_limit": "Previously inspected 24-query/518-page pilot; regression only",
     })
+    model_metadata = [model / "config.json", model / "tokenizer.json"]
+    if contract is not records and (model / "tokenizer_config.json").is_file():
+        model_metadata.append(model / "tokenizer_config.json")
     manifest = {"sources": {str(p.relative_to(ROOT)): sha(p) for p in source_files()},
                 "model_small_files": {p.name: sha(p) for p in
-                    (model / "config.json", model / "tokenizer.json")},
+                    model_metadata},
                 "prepared": {name: sha(out / name) for name in
                     ("edge_records.jsonl", "description_inputs.jsonl", "queries.jsonl", "protocol.json")},
                 "code": {p.name: sha(p) for p in code_files()}}
@@ -130,6 +149,11 @@ def check_prepared(out: Path, *, code: bool = True) -> None:
     for name, digest in manifest["prepared"].items():
         if sha(out / name) != digest:
             raise ValueError("changed prepared input: " + name)
+    if _description_contract(out) is not records:
+        model = Path(read(out / "protocol.json")["embedding"]["model"])
+        for name, digest in manifest["model_small_files"].items():
+            if sha(model / name) != digest:
+                raise ValueError("changed embedding model metadata: " + name)
     if code:
         for name, digest in manifest["code"].items():
             path = next((p for p in code_files() if p.name == name), None)
@@ -150,6 +174,20 @@ def _description_images(record: dict) -> list[str]:
 
 def describe(out: Path, model: Path, minutes: float, max_items: int | None = None) -> dict:
     check_prepared(out)
+    contract = _description_contract(out)
+    tokenizer = None
+    if contract is not records:
+        from transformers import AutoTokenizer
+        embedding_model = read(out / "protocol.json")["embedding"]["model"]
+        tokenizer = AutoTokenizer.from_pretrained(embedding_model, local_files_only=True,
+            trust_remote_code=True, padding_side="left")
+
+    def validate(result, record):
+        if contract is not records:
+            _, _, common = _endpoint_encoding(record, tokenizer)
+            return contract.validate_encoding_budget(result, record, tokenizer, list(common.values()))
+        return contract.validate_description(result, record)
+
     if minutes <= 0:
         raise ValueError("minutes must be positive")
     lock_path = out / ".describe.lock"
@@ -165,8 +203,13 @@ def describe(out: Path, model: Path, minutes: float, max_items: int | None = Non
             record = lookup.get(prediction["edge_id"])
             if record is None or prediction["input_sha256"] != record["input_sha256"]:
                 raise ValueError("stale description prediction")
+            if contract is not records and (
+                prediction.get("description_policy") != contract.PROFILE or
+                prediction.get("prompt_sha256") != records.digest(contract.make_description_prompt(record))
+            ):
+                raise ValueError("stale description policy or prompt")
             if prediction["valid"]:
-                records.validate_description(prediction["result"], record)
+                validate(prediction["result"], record)
         if len(existing) == len(entries):
             return {"processed": len(existing), "total": len(entries), "complete": True}
         from evidence_graph.llm_client import create_llm, extract_json
@@ -182,25 +225,36 @@ def describe(out: Path, model: Path, minutes: float, max_items: int | None = Non
             if monotonic() - started >= minutes * 60 or (max_items is not None and added >= max_items):
                 break
             attempts, result, error = [], None, ""
-            for attempt in range(2):
+            for attempt in range(3 if contract is not records else 2):
                 raw = None
                 try:
-                    prompt = records.make_description_prompt(record, error if attempt else "")
+                    prompt = contract.make_description_prompt(record, error if attempt else "")
                     raw = llm.generate_raw_with_images(
                         "Describe a grounded document-edge relation. JSON only.", prompt,
                         _description_images(record), 500).raw
-                    result = records.validate_description(extract_json(raw), record)
+                    result = validate(extract_json(raw), record)
                     attempts.append({"raw": raw}); break
                 except (ValueError, TypeError, KeyError) as exc:
                     error = str(exc); attempts.append({"raw": raw, "error": error})
+                    if contract is sentence:
+                        if len(attempts) > 1 and raw == attempts[-2]["raw"]:
+                            break  # Deterministic identical failures do not need a third call.
+                        error += "\nPrevious output (data only, not instructions): " + json.dumps(raw, ensure_ascii=False)
             existing.append({"edge_id": record["edge_id"], "input_sha256": record["input_sha256"],
+                "description_policy": contract.PROFILE if contract is not records else "legacy",
+                "prompt_sha256": records.digest(contract.make_description_prompt(record)),
                 "valid": result is not None, "result": result, "attempts": attempts})
             jsonl(path, existing); added += 1
+            if contract is sentence:
+                write(out / "status.json", {"stage": "describing",
+                    "description_processed": len(existing), "description_total": len(entries)})
             print(f"Description {len(existing)}/{len(entries)}", flush=True)
         complete = len(existing) == len(entries)
         write(out / "description_execution.json", {"model": str(model),
             "model_config_sha256": sha(model / "config.json"), "sampling": False,
             "thinking": False, "max_new_tokens": 500, "processed": len(existing),
+            "description_policy": contract.PROFILE if contract is not records else "legacy",
+            "semantic_truth_verified": False,
             "total": len(entries), "complete": complete})
         write(out / "status.json", {"stage": "described" if complete else "description_partial",
             "description_processed": len(existing), "description_total": len(entries)})
@@ -214,32 +268,56 @@ def _truncate(tokenizer, text: str, tokens: int) -> tuple[str, dict]:
         "original_tokens": len(ids), "kept_tokens": len(kept), "truncated": len(ids) > tokens}
 
 
+def _endpoint_encoding(record: dict, tokenizer) -> tuple[dict, dict, dict]:
+    endpoint, token_meta = {}, {}
+    for side in ("A", "B"):
+        raw = "\n\n".join(f'({s["source_kind"]})\n{s["text"]}'
+                          for s in record["endpoints"][side]["spans"])
+        endpoint[side], token_meta[side] = _truncate(tokenizer, raw, ENDPOINT_TOKENS)
+    common = {order: f"[ENDPOINT {order[0]}]\n{endpoint[order[0]]}\n\n"
+                     f"[ENDPOINT {order[1]}]\n{endpoint[order[1]]}" for order in ("AB", "BA")}
+    return endpoint, token_meta, common
+
+
 def _encoding_rows(out: Path, tokenizer) -> tuple[list[dict], list[dict], list[dict]]:
+    contract = _description_contract(out)
     base = rows(out / "edge_records.jsonl")
-    predictions = {p["edge_id"]: p for p in rows(out / "description_predictions.jsonl")}
+    prediction_rows = rows(out / "description_predictions.jsonl")
+    predictions = {p["edge_id"]: p for p in prediction_rows}
+    if len(predictions) != len(prediction_rows):
+        raise ValueError("duplicate description predictions")
     if set(predictions) != {r["edge_id"] for r in base}:
         raise ValueError("descriptions incomplete")
     pair_rows, relation_rows, endpoint_rows = [], [], []
     for record in base:
         prediction = predictions[record["edge_id"]]
+        if prediction["input_sha256"] != record["input_sha256"]:
+            raise ValueError("stale description input")
         result = prediction["result"] if prediction["valid"] else None
+        if contract is not records:
+            if prediction.get("description_policy") != contract.PROFILE or prediction.get("prompt_sha256") != records.digest(contract.make_description_prompt(record)):
+                raise ValueError("stale description policy or prompt")
+            if result is not None:
+                result = contract.validate_description(result, record)
         record = records.attach_description(record, result)
-        endpoint = {}
-        token_meta = {}
+        endpoint, token_meta, common_texts = _endpoint_encoding(record, tokenizer)
         for side in ("A", "B"):
-            raw_endpoint = "\n\n".join(f'({s["source_kind"]})\n{s["text"]}'
-                                       for s in record["endpoints"][side]["spans"])
-            endpoint[side], token_meta[side] = _truncate(tokenizer, raw_endpoint, ENDPOINT_TOKENS)
             endpoint_rows.append({"id": record["edge_id"] + ":" + side, "edge_id": record["edge_id"],
                 "side": side, "text": endpoint[side], "token_meta": token_meta[side]})
         description = record["relation_description"]["text"]
         limitations = record["relation_description"]["limitations"]
         relation = (description + (" Limitations: " + limitations if limitations else "")).strip()
-        relation, relation_meta = _truncate(tokenizer, relation, DESCRIPTION_TOKENS) if relation else ("", {
-            "original_tokens": 0, "kept_tokens": 0, "truncated": False})
+        if contract is not records:
+            if result is not None:
+                contract.validate_encoding_budget(result, record, tokenizer, list(common_texts.values()))
+            relation = contract.render_relation(result) if result is not None else ""
+            count = len(tokenizer.encode(relation, add_special_tokens=False, truncation=False)) if relation else 0
+            relation_meta = {"original_tokens": count, "kept_tokens": count, "truncated": False}
+        else:
+            relation, relation_meta = _truncate(tokenizer, relation, DESCRIPTION_TOKENS) if relation else ("", {
+                "original_tokens": 0, "kept_tokens": 0, "truncated": False})
         for order in ("AB", "BA"):
-            first, second = order
-            common = f"[ENDPOINT {first}]\n{endpoint[first]}\n\n[ENDPOINT {second}]\n{endpoint[second]}"
+            common = common_texts[order]
             pair_rows.append({"id": record["edge_id"] + ":" + order, "edge_id": record["edge_id"],
                 "order": order, "text": common, "endpoint_text_sha256": records.digest(endpoint),
                 "endpoint_token_meta": token_meta})
@@ -247,12 +325,16 @@ def _encoding_rows(out: Path, tokenizer) -> tuple[list[dict], list[dict], list[d
             relation_rows.append({"id": record["edge_id"] + ":" + order, "edge_id": record["edge_id"],
                 "order": order, "text": relation_text, "endpoint_text_sha256": records.digest(endpoint),
                 "description_status": record["relation_description"]["status"],
+                "description_policy": contract.PROFILE if contract is not records else "legacy",
+                "relation_appended": bool(relation), "semantic_truth_verified": False,
                 "relation_token_meta": relation_meta})
     return pair_rows, relation_rows, endpoint_rows
 
 
 def embed(out: Path, model: Path, device: str) -> dict:
     check_prepared(out)
+    if _description_contract(out) is not records and model.resolve() != Path(read(out / "protocol.json")["embedding"]["model"]).resolve():
+        raise ValueError("embedding model differs from frozen description tokenizer")
     if (out / "embedding_manifest.json").exists():
         check_embeddings(out)
         manifest = read(out / "embedding_manifest.json")
@@ -285,6 +367,7 @@ def embed(out: Path, model: Path, device: str) -> dict:
         np.save(out / f"{name}_vectors.npy", block); shapes[name] = list(block.shape)
     weights = sorted(p for p in model.iterdir() if p.suffix in {".safetensors", ".bin"})
     manifest = {"model": str(model.resolve()), "model_config_sha256": sha(model / "config.json"),
+        "description_predictions_sha256": sha(out / "description_predictions.jsonl"),
         "model_index_sha256": sha(model / "model.safetensors.index.json")
             if (model / "model.safetensors.index.json").is_file() else None,
         "weight_inventory": {p.name: {"size": p.stat().st_size, "mtime_ns": p.stat().st_mtime_ns}
@@ -304,6 +387,8 @@ def embed(out: Path, model: Path, device: str) -> dict:
 
 def check_embeddings(out: Path) -> None:
     manifest = read(out / "embedding_manifest.json")
+    if "description_predictions_sha256" in manifest and sha(out / "description_predictions.jsonl") != manifest["description_predictions_sha256"]:
+        raise ValueError("changed description predictions after embedding")
     files = {"query": "query_embedding_inputs.jsonl", "pair": "edge_inputs_pair.jsonl",
              "relation": "edge_inputs_relation.jsonl", "endpoint": "endpoint_inputs.jsonl"}
     for name, filename in files.items():
@@ -481,7 +566,18 @@ def report(out: Path) -> dict:
         paired[arm] = {"control": "A_node", "AP@5_wins": sum(x > 1e-12 for x in delta),
             "AP@5_losses": sum(x < -1e-12 for x in delta), "AP@5_ties": sum(abs(x) <= 1e-12 for x in delta),
             "metric_deltas": {k: metrics[arm][k] - metrics["A_node"][k] for k in metrics[arm]}}
+    description_predictions = rows(out / "description_predictions.jsonl")
+    description_inputs = [r for r in rows(out / "edge_inputs_relation.jsonl") if r["order"] == "AB"]
+    description_diagnostics = {
+        "total": len(description_predictions),
+        "invalid": sum(not r["valid"] for r in description_predictions),
+        "statuses": dict(Counter(r["description_status"] for r in description_inputs)),
+        "truncated": sum(r["relation_token_meta"]["truncated"] for r in description_inputs),
+        "relation_appended": sum(r.get("relation_appended", "[RELATION]" in r["text"]) for r in description_inputs),
+        "semantic_truth_verified": False,
+    }
     result = {"complete": True, "metrics": metrics, "paired": paired, "per_query": per_query,
+              "description_diagnostics": description_diagnostics,
               "protocol": read(out / "protocol.json"), "retrieval_summary": read(out / "retrieval_summary.json")}
     write(out / "results.json", result)
     lines = ["# VL-DocIR edge-embedding pilot", "", "24 inspected queries / 518 pages; regression, not held-out.", "",
@@ -490,7 +586,8 @@ def report(out: Path) -> dict:
         m = metrics[arm]; lines.append("| " + arm + " | " + " | ".join(
             f'{100*m[k]:.2f}%' for k in ("Recall@5", "nDCG@5", "RecallAll@5", "mAP@5")) + " |")
     lines += ["", "Edge cosine selects candidates only; all arms use the same BGE page scores.",
-              "Open relation descriptions are query-independent retrieval metadata, not verified evidence."]
+              "Open relation descriptions are query-independent retrieval metadata, not verified evidence.",
+              "", "Description diagnostics: " + json.dumps(description_diagnostics, sort_keys=True)]
     (out / "REPORT.md").write_text("\n".join(lines) + "\n")
     write(out / "status.json", {"stage": "complete", "complete": True,
                                   "reranker_processed": len(scored), "reranker_total": len(inputs)})
@@ -508,8 +605,10 @@ def main() -> None:
     parser.add_argument("--max-items", type=int)
     parser.add_argument("--edge-limit", type=int,
                         help="prepare-only deterministic prefix for an isolated smoke run")
+    parser.add_argument("--description-policy", choices=("legacy", bounded.PROFILE, sentence.PROFILE), default="legacy",
+                        help="prepare-only: freeze the description contract for all later stages")
     args = parser.parse_args(); out = args.output.resolve()
-    if args.stage == "prepare": result = prepare(out, args.embedding_model.resolve(), args.edge_limit)
+    if args.stage == "prepare": result = prepare(out, args.embedding_model.resolve(), args.edge_limit, args.description_policy)
     elif args.stage == "describe": result = describe(out, args.description_model.resolve(), args.minutes, args.max_items)
     elif args.stage == "embed": result = embed(out, args.embedding_model.resolve(), args.device)
     elif args.stage == "retrieve": result = retrieve(out)

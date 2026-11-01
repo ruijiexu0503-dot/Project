@@ -1,0 +1,1 @@
+../../../../scripts/run_query_adaptive_evidence_v2.py

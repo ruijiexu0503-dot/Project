@@ -1,0 +1,1 @@
+../../../../scripts/report_query_edge_gate.py

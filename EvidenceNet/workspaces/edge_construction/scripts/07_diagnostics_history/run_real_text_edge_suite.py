@@ -1,0 +1,1 @@
+../../../../scripts/run_real_text_edge_suite.py

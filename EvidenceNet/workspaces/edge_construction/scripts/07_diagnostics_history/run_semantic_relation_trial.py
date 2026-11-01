@@ -1,0 +1,1 @@
+../../../../scripts/run_semantic_relation_trial.py

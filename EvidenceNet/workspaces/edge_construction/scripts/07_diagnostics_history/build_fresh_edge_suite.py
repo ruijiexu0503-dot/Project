@@ -1,0 +1,1 @@
+../../../../scripts/build_fresh_edge_suite.py

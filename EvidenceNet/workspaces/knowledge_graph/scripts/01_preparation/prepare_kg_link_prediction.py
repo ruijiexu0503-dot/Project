@@ -1,0 +1,1 @@
+../../../../scripts/prepare_kg_link_prediction.py

@@ -1,0 +1,1 @@
+../../../../scripts/build_split_taxonomy_benchmark.py

@@ -1,0 +1,1 @@
+../../../../scripts/build_weekly_edge_review.py

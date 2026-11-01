@@ -1,0 +1,1 @@
+../../../../scripts/vldocir_candidate_comparison.py

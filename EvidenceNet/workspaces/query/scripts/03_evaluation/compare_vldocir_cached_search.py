@@ -1,0 +1,1 @@
+../../../../scripts/compare_vldocir_cached_search.py

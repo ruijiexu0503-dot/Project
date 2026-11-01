@@ -1,0 +1,1 @@
+../../../../scripts/edge_text_views.py

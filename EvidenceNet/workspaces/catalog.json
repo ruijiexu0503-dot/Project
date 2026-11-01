@@ -1,0 +1,831 @@
+{
+  "date": "2026-11-01",
+  "layout": "relative_symlinks_to_canonical_sources",
+  "scope": "curated query, edge construction and KG entrypoints; not a standalone deployment bundle",
+  "entries": [
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "01_navigation",
+      "entry": "workspaces/query/scripts/01_navigation/run_query_semantic_edge_v2.py",
+      "source": "EvidenceNet/scripts/run_query_semantic_edge_v2.py",
+      "sha256": "7076f7098d6aede3f5aa5e35d827ce966056bd5af4cd4958402462a7dfa56436"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "01_navigation",
+      "entry": "workspaces/query/scripts/01_navigation/query_semantic_edge_policy_v2.py",
+      "source": "EvidenceNet/scripts/query_semantic_edge_policy_v2.py",
+      "sha256": "04af46b0ce464c18a450e006959081a218cbb040dec9d93d279f27e2d0bcd6b3"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "01_navigation",
+      "entry": "workspaces/query/scripts/01_navigation/query_semantic_edge_core.py",
+      "source": "EvidenceNet/scripts/query_semantic_edge_core.py",
+      "sha256": "7c1ab4419bf8ae20677ed1e668ccd24c6b47264542cc7974b1b1b93d69045402"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "01_navigation",
+      "entry": "workspaces/query/scripts/01_navigation/run_top10_node_navigation.py",
+      "source": "EvidenceNet/scripts/run_top10_node_navigation.py",
+      "sha256": "40dd2104f5030bf8168b21c19bc98896a23ac87f92f47b8c7a01a25c5ccaa1ac"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "01_navigation",
+      "entry": "workspaces/query/scripts/01_navigation/query_edge_gate.py",
+      "source": "EvidenceNet/scripts/query_edge_gate.py",
+      "sha256": "bd21170b8ccd22305f595cc9c4642dd501d585e69760a35ebe01c60712a30922"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "01_navigation",
+      "entry": "workspaces/query/scripts/01_navigation/run_query_edge_repair.py",
+      "source": "EvidenceNet/scripts/run_query_edge_repair.py",
+      "sha256": "7debd0fa7d261d8dc791f6c6c62bba5492ca3fc1cf08ac8bb919761f7b511d2a"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "01_navigation",
+      "entry": "workspaces/query/scripts/01_navigation/report_query_edge_gate.py",
+      "source": "EvidenceNet/scripts/report_query_edge_gate.py",
+      "sha256": "4c322bed5e88452c0bb4f97b2a3e86650632d685315db204ac3e9717e178bc80"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "02_selection",
+      "entry": "workspaces/query/scripts/02_selection/run_query_adaptive_evidence_v2.py",
+      "source": "EvidenceNet/scripts/run_query_adaptive_evidence_v2.py",
+      "sha256": "5257ee534d8d9ccc7673967d25fef76a2f560738ae3db77eeb00a9eb69ca20d9"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "02_selection",
+      "entry": "workspaces/query/scripts/02_selection/query_evidence_policy_v2.py",
+      "source": "EvidenceNet/scripts/query_evidence_policy_v2.py",
+      "sha256": "e7af997ed3b9ed8d4ada0321cec5af49a32cfdd26cf435ec6c0e92c0fcd1e8b3"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "02_selection",
+      "entry": "workspaces/query/scripts/02_selection/run_query_evidence_selection.py",
+      "source": "EvidenceNet/scripts/run_query_evidence_selection.py",
+      "sha256": "34d9c238b3289b6f1823e52b04c1d0728a4bb54ad65a636cebccbf00f98784e7"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "02_selection",
+      "entry": "workspaces/query/scripts/02_selection/run_span_evidence_selection.py",
+      "source": "EvidenceNet/scripts/run_span_evidence_selection.py",
+      "sha256": "23fb50edc3d95bb4ee79e9f5a13f032c78d631bb09582a30010b953e77973e78"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "02_selection",
+      "entry": "workspaces/query/scripts/02_selection/run_query_split_probe.py",
+      "source": "EvidenceNet/scripts/run_query_split_probe.py",
+      "sha256": "d11b74bfad92b31c3d61d79f8d9b96428df19caccd69dd08fa1246beb3f84185"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "02_selection",
+      "entry": "workspaces/query/scripts/02_selection/build_reader_anchor_ablation.py",
+      "source": "EvidenceNet/scripts/build_reader_anchor_ablation.py",
+      "sha256": "9cf3a2911e36c51e926da8a77aeb80ad55eca8feb2a1df39b0ce50078bb58462"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "02_selection",
+      "entry": "workspaces/query/scripts/02_selection/validate_reader_anchor_packets.py",
+      "source": "EvidenceNet/scripts/validate_reader_anchor_packets.py",
+      "sha256": "4ecc29493f6ebfd8e5851d7cf2bcce4075c5e9e6b9f8feecac4962d3172353a4"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/run_hf_evidence_comparison.py",
+      "source": "EvidenceNet/scripts/run_hf_evidence_comparison.py",
+      "sha256": "83b30f1bfc01d07726586a849d526617ca2a92439188759b772fc32a146fd786"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/run_vldocir_evidence_rerank.py",
+      "source": "EvidenceNet/scripts/run_vldocir_evidence_rerank.py",
+      "sha256": "7e1c253cacc2a6a4bbe66ae00a3072f1113b8c5bb4f45d16ce48e71a6e57d177"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/run_vldocir_colnomic.py",
+      "source": "EvidenceNet/scripts/run_vldocir_colnomic.py",
+      "sha256": "eb3f04a1c8d34f6831d2868419e94d1b85de26e30346a1724f4b3a84912cb8df"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/retrieve_vldocir.py",
+      "source": "EvidenceNet/scripts/retrieve_vldocir.py",
+      "sha256": "7652f5de722550fd259efd798b97eb766d1dd30c8132f8d5b3329ab73c89ac95"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/evaluate_vldocir.py",
+      "source": "EvidenceNet/scripts/evaluate_vldocir.py",
+      "sha256": "2b2e386cf72f9c36d7e586f26dc0526cad5b578690876e0a378e415bd3399285"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/evaluate_vldocir_ap.py",
+      "source": "EvidenceNet/scripts/evaluate_vldocir_ap.py",
+      "sha256": "77440a0f4f84c0d0889818691ae1dd5a4a68928e90506c9e4c1fab9a1fb81d0c"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/audit_colnomic_edge_rescue.py",
+      "source": "EvidenceNet/scripts/audit_colnomic_edge_rescue.py",
+      "sha256": "70e8528d39a5b492740d2681df20e482a092d50505ce52b2131b79375a68b861"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/audit_span_edge_results.py",
+      "source": "EvidenceNet/scripts/audit_span_edge_results.py",
+      "sha256": "abcec628299766d480bd18ad9b982f9c6f00eb6ff80d1d132d6c4359dc1205ba"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/compare_vldocir_cached_search.py",
+      "source": "EvidenceNet/scripts/compare_vldocir_cached_search.py",
+      "sha256": "ff840929047f9f94edfbe54c1906889a91a41153f3e9dd92906f996e788fbfb8"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/run_cached_query_reranker.py",
+      "source": "EvidenceNet/scripts/run_cached_query_reranker.py",
+      "sha256": "b44defe125b555eb2638268501ccd095c80abcd22f06412d25cede8ee4b34ecc"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/probe_vldocir_query_graph.py",
+      "source": "EvidenceNet/scripts/probe_vldocir_query_graph.py",
+      "sha256": "6ae1a6fb259fec875fbe4974e8669e64a82a87d7f9f542de5bd5756b467ecbf0"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/trace_vldocir_edges.py",
+      "source": "EvidenceNet/scripts/trace_vldocir_edges.py",
+      "sha256": "140f8bd1d7a0504a977e3522348ab0aae945f8bf34a761e962e8e259c8cbb687"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/verify_retrieval_baseline.py",
+      "source": "EvidenceNet/scripts/verify_retrieval_baseline.py",
+      "sha256": "457f37a557952c5c0e10ff7053384b4178055f036d03f041882664ebf4473487"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "03_evaluation",
+      "entry": "workspaces/query/scripts/03_evaluation/build_retrieval_loss_report.py",
+      "source": "EvidenceNet/scripts/build_retrieval_loss_report.py",
+      "sha256": "a9f15dc676fb3ae8c8b08f502d60d043be2d269870c2ec3d3567910f3985faff"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "04_history_dependencies",
+      "entry": "workspaces/query/scripts/04_history_dependencies/run_query_semantic_edge_v1.py",
+      "source": "EvidenceNet/scripts/run_query_semantic_edge_v1.py",
+      "sha256": "ed57389caed430848471c9d4868dc0a67eedd24bcde78bfc3a0b6f908eb7173b"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "04_history_dependencies",
+      "entry": "workspaces/query/scripts/04_history_dependencies/query_semantic_edge_policy.py",
+      "source": "EvidenceNet/scripts/query_semantic_edge_policy.py",
+      "sha256": "bfa83b281783e2950dc7635432445304916adca3d507e2cb4cd9333419e37ac2"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "04_history_dependencies",
+      "entry": "workspaces/query/scripts/04_history_dependencies/run_query_adaptive_evidence.py",
+      "source": "EvidenceNet/scripts/run_query_adaptive_evidence.py",
+      "sha256": "e66e1439937019aeddef50341634b42710f36c2cd2b4eda5b28878fbd62fd4cd"
+    },
+    {
+      "group": "query",
+      "kind": "script",
+      "category": "04_history_dependencies",
+      "entry": "workspaces/query/scripts/04_history_dependencies/query_evidence_policy.py",
+      "source": "EvidenceNet/scripts/query_evidence_policy.py",
+      "sha256": "6c7476549ddf531e9e2f8cd23c74cce78370a83255bf8e7a6e7214ba62270aa2"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "01_pipeline",
+      "entry": "workspaces/edge_construction/scripts/01_pipeline/run_evidence_edge_pipeline.py",
+      "source": "EvidenceNet/scripts/run_evidence_edge_pipeline.py",
+      "sha256": "fb10ca9ea3c2dc73f804e2ee63282467d148a7b8a47561b813b51432befcb271"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "01_pipeline",
+      "entry": "workspaces/edge_construction/scripts/01_pipeline/run_vldocir_edge_pipeline.py",
+      "source": "EvidenceNet/scripts/run_vldocir_edge_pipeline.py",
+      "sha256": "a15dd5616d971fbb8e60a08fad9ab56d9d60a5d0383c3f47c4a11f2834205a73"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "01_pipeline",
+      "entry": "workspaces/edge_construction/scripts/01_pipeline/prepare_vldocir_edge_adapter.py",
+      "source": "EvidenceNet/scripts/prepare_vldocir_edge_adapter.py",
+      "sha256": "5e59a0bd04aaf68b433d17994cec9f726a5a2a6dd042995e6d7fec204d68fefc"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "01_pipeline",
+      "entry": "workspaces/edge_construction/scripts/01_pipeline/run_vldocir_pipeline_comparison.py",
+      "source": "EvidenceNet/scripts/run_vldocir_pipeline_comparison.py",
+      "sha256": "a98d2de1938e0fc1c1343dd0d8010ad20d1013a1382cb4c3feb2a516449c3dd2"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "01_pipeline",
+      "entry": "workspaces/edge_construction/scripts/01_pipeline/vldocir_candidate_comparison.py",
+      "source": "EvidenceNet/scripts/vldocir_candidate_comparison.py",
+      "sha256": "90ff0858d15c21115de77ffc837b72e423ccf21f3f60df77937abafd36d57dab"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/repair_edge_candidate_allocation.py",
+      "source": "EvidenceNet/scripts/repair_edge_candidate_allocation.py",
+      "sha256": "28f51067e36e2c4a47f2041db44c0b5c170b206213b634409a7da5b2b0648673"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/repair_remaining_edge_candidates.py",
+      "source": "EvidenceNet/scripts/repair_remaining_edge_candidates.py",
+      "sha256": "9bb1a3fd3a37710e9ff318dad9fb82cd0bb2094715ff7c2c75ce3e710bfbd649"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/run_hierarchical_edge_retrieval.py",
+      "source": "EvidenceNet/scripts/run_hierarchical_edge_retrieval.py",
+      "sha256": "1bdde2641539b33e12310b91ca9172f8b23fe1e800dadc21cb60f3abf6ebbeb8"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/run_line_aware_edge_retrieval.py",
+      "source": "EvidenceNet/scripts/run_line_aware_edge_retrieval.py",
+      "sha256": "5b3ae939d5cbbe649d07b284f7dfa2dd8d41aa43ca66ae9d7b1977fce7fa0559"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/edge_text_views.py",
+      "source": "EvidenceNet/scripts/edge_text_views.py",
+      "sha256": "88f942d6212fdb550d552b07363ce402dda69f1602abeda8da8cba2f65f63f93"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/edge_granularity_views.py",
+      "source": "EvidenceNet/scripts/edge_granularity_views.py",
+      "sha256": "e44dd59dbbeb8f20c350c9bf6f66b18a002e05c48da213143bf2f4a3aa3804c6"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/edge_source_roles.py",
+      "source": "EvidenceNet/scripts/edge_source_roles.py",
+      "sha256": "e23ea38a2cd9fcc581775f903b5b5086bee89e3ae5cf8cc84592aa3c35733be6"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/source_grounding.py",
+      "source": "EvidenceNet/scripts/source_grounding.py",
+      "sha256": "9e64dff85fdfe943b6d81dce69f02d57ee7f48855eaba48450fe137a6af3d1fd"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "02_candidates",
+      "entry": "workspaces/edge_construction/scripts/02_candidates/compare_edge_embedding_models.py",
+      "source": "EvidenceNet/scripts/compare_edge_embedding_models.py",
+      "sha256": "d907e8c6bb2a665aaf536bfd07596c0bec8737958a27463784d49cfb5de39afe"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_layered_edge_verifier.py",
+      "source": "EvidenceNet/scripts/run_layered_edge_verifier.py",
+      "sha256": "b8657df8039ec79ce7aac15f68568ed3437fc9b1178dab20b83371ff8da95edb"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_fact_grounded_edges.py",
+      "source": "EvidenceNet/scripts/run_fact_grounded_edges.py",
+      "sha256": "a75c50f962cf09cf34ba5eebd52cd03bbbe1df2c1f11300aaac7bd65ccd16a51"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_named_identity_gate_verifier.py",
+      "source": "EvidenceNet/scripts/run_named_identity_gate_verifier.py",
+      "sha256": "1d65eb0a77f43d5513eea6226bce1a78b666e696d5432d0f9beab4c372b36d11"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/postprocess_named_identity_gate.py",
+      "source": "EvidenceNet/scripts/postprocess_named_identity_gate.py",
+      "sha256": "45c2ed1ee7232913c5663232a04f8aa6324192970a5dbc9668a08e412f6dde15"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_edge_selector_reranker.py",
+      "source": "EvidenceNet/scripts/run_edge_selector_reranker.py",
+      "sha256": "e4bbc1779e2a3fb23c50a8855d6c501396bd0f87d7a1d14389b48b9424e934cb"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_edge_selector_reranker_symmetric.py",
+      "source": "EvidenceNet/scripts/run_edge_selector_reranker_symmetric.py",
+      "sha256": "a262b80a33fdf1d4369de9aae2bbc4b3c22dbe26486a2196587c248ec805f02e"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_routed_edge_context.py",
+      "source": "EvidenceNet/scripts/run_routed_edge_context.py",
+      "sha256": "3d281df62334c27cf50a13dac470a989087ba48df19be7501085723aa8ffd79e"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_node_context_edges.py",
+      "source": "EvidenceNet/scripts/run_node_context_edges.py",
+      "sha256": "39fd1beda33940ce8f4ed195b1ccd06590f043bc40b82191c32df50f3c40d9a9"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "03_verification",
+      "entry": "workspaces/edge_construction/scripts/03_verification/run_edge_context_ablation.py",
+      "source": "EvidenceNet/scripts/run_edge_context_ablation.py",
+      "sha256": "0f235905caed1df4f049b64d3fd5c9d2cb51aad9cc368e8a1c7208331398572d"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "04_descriptions_embeddings",
+      "entry": "workspaces/edge_construction/scripts/04_descriptions_embeddings/bounded_edge_descriptions.py",
+      "source": "EvidenceNet/scripts/bounded_edge_descriptions.py",
+      "sha256": "c24e263ea629f5560ed804214324aa6f58148a1355788cffc23c2df7ec9aaee8"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "04_descriptions_embeddings",
+      "entry": "workspaces/edge_construction/scripts/04_descriptions_embeddings/sentence_edge_descriptions.py",
+      "source": "EvidenceNet/scripts/sentence_edge_descriptions.py",
+      "sha256": "d02ec8b7c8a4d18c2eccd4992c288a3af4e880799dad2d7f31cb00a06df0f9dc"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "04_descriptions_embeddings",
+      "entry": "workspaces/edge_construction/scripts/04_descriptions_embeddings/run_vldocir_edge_embedding.py",
+      "source": "EvidenceNet/scripts/run_vldocir_edge_embedding.py",
+      "sha256": "41ca94a73e2f1e069f28cf71b99e68d27571cde2c19537e79a682210bb7d1fb8"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "04_descriptions_embeddings",
+      "entry": "workspaces/edge_construction/scripts/04_descriptions_embeddings/edge_embedding_records.py",
+      "source": "EvidenceNet/scripts/edge_embedding_records.py",
+      "sha256": "af39fea7e4a764677f1d46a0302f7221183f6beb2dc7ff7821ef0946b57408aa"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/vldocir_reading_backbone.py",
+      "source": "EvidenceNet/scripts/vldocir_reading_backbone.py",
+      "sha256": "1c61932954ea2592d5d4c23042d2068c179cd937c86d3f28238a3aca38890a57"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/repair_vldocir_single_work_reading.py",
+      "source": "EvidenceNet/scripts/repair_vldocir_single_work_reading.py",
+      "sha256": "07485c1691405ad8d8cca98af61acf3dce37f6cd55d91cd4fa62632b1ac082d9"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/dolphin_softwrap.py",
+      "source": "EvidenceNet/scripts/dolphin_softwrap.py",
+      "sha256": "b0fa5c72c2f9e7f647f33e145c842879bd31983f801580aef280dea6d8f2dc88"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/dolphin_text.py",
+      "source": "EvidenceNet/scripts/dolphin_text.py",
+      "sha256": "81726e9710d6fc4eb50aa9a0823a8fde17a9b5d52c08bd34a12f23719b83d1ae"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/repair_line_view_eligibility.py",
+      "source": "EvidenceNet/scripts/repair_line_view_eligibility.py",
+      "sha256": "7436e316457003574145d55963dbc1a516f9d04d25c0bdcddfbe63340623c4f5"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/node_context_coreference.py",
+      "source": "EvidenceNet/scripts/node_context_coreference.py",
+      "sha256": "d520eccfbaec1f2644e6c9171c8cc35d1c71d17316bc7be323436f2c4908602f"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/node_context_policy.py",
+      "source": "EvidenceNet/scripts/node_context_policy.py",
+      "sha256": "5ada49bd01e42cafe64f7ae248bc7446f1ed526f739377f825d020729bcb5903"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/verify_node_context.py",
+      "source": "EvidenceNet/scripts/verify_node_context.py",
+      "sha256": "e045141f21eb88da9e5f34adf307a594b376b1620f77d1d3f11ed29983b19b16"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/verify_node_context_v3.py",
+      "source": "EvidenceNet/scripts/verify_node_context_v3.py",
+      "sha256": "d637be73ad7f4ca2ecd8be2d86a248d8dabee737d337282e340148410b98531b"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/prepare_vldocir_nodes.py",
+      "source": "EvidenceNet/scripts/prepare_vldocir_nodes.py",
+      "sha256": "ff4edd96dff1ee85155c106f922ce8a081124a5363ce2b8aa9f086797eca44c4"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/run_vldocir_nodes.py",
+      "source": "EvidenceNet/scripts/run_vldocir_nodes.py",
+      "sha256": "d95738c9a803c914ce9286a33ff4559cd9d4cd2e260c6d52d3943df678b8a794"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "05_structure_node_context",
+      "entry": "workspaces/edge_construction/scripts/05_structure_node_context/parse_vldocir_pages.py",
+      "source": "EvidenceNet/scripts/parse_vldocir_pages.py",
+      "sha256": "3519ecf343bda245370bf49824fc690f07c24449c83650c5b2b29c6f1a150a7f"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/formula_context_packets.py",
+      "source": "EvidenceNet/scripts/formula_context_packets.py",
+      "sha256": "2bb5ea6260542e216debdd1125c660f6f5864683f9b4c11610517dcb1afc2f56"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/formula_retrieval_views.py",
+      "source": "EvidenceNet/scripts/formula_retrieval_views.py",
+      "sha256": "0207095b9f9a88a21b3ccd4ff484d432a469a16e8103b5a86f0f90d91ec8dd00"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/formula_structure_index.py",
+      "source": "EvidenceNet/scripts/formula_structure_index.py",
+      "sha256": "a7ca43c169a48cff11083a44c6345fd127c91898e6c231625fdd7ba4cbd5ec18"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/formula_semantic_specs_20261027.py",
+      "source": "EvidenceNet/scripts/formula_semantic_specs_20261027.py",
+      "sha256": "fc754d7955d1026f4b97b4529faefc8d9c28e98f80915e173be43c35727c0433"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/run_formula_context_trial.py",
+      "source": "EvidenceNet/scripts/run_formula_context_trial.py",
+      "sha256": "ccbf19a48e69a339ff6cda75ed9fa729c9754e80c1df27962b1024b0cabf7007"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/run_formula_semantics_trial.py",
+      "source": "EvidenceNet/scripts/run_formula_semantics_trial.py",
+      "sha256": "c81aa4bcb2bac38640019d217223b77e4c6f4915615b8f368a045479a64cee2a"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/run_formula_retrieval_comparison.py",
+      "source": "EvidenceNet/scripts/run_formula_retrieval_comparison.py",
+      "sha256": "b574a91a49bb01dc7cb3fe0a0c38f1640ce350386406e0d74ead2a220f93e949"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "06_formula",
+      "entry": "workspaces/edge_construction/scripts/06_formula/build_formula_context_review.py",
+      "source": "EvidenceNet/scripts/build_formula_context_review.py",
+      "sha256": "76bb26535f2e3c7a9becb6c519b29ec44853d5102ec0d8bd7365de75d157de0d"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/audit_edge_context_failures.py",
+      "source": "EvidenceNet/scripts/audit_edge_context_failures.py",
+      "sha256": "bcc14111d4dc1a41bb343c56831706a927a2d870803f2ce18a555700b558c644"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/audit_edge_errors_by_modality.py",
+      "source": "EvidenceNet/scripts/audit_edge_errors_by_modality.py",
+      "sha256": "8823f1dab8a7656f9fc5d08d1e2b7f969e67356b89d2c08e095c779dedd08dd9"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/audit_missed_edge_stages.py",
+      "source": "EvidenceNet/scripts/audit_missed_edge_stages.py",
+      "sha256": "d5967e0899e5608e3eb1f682766678d3f0a0e4b10ead07d5a1d66f06a5fd4fbc"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/build_weekly_edge_review.py",
+      "source": "EvidenceNet/scripts/build_weekly_edge_review.py",
+      "sha256": "057b3211543941e5c15e140f9789e2333a83c8c1e738319b76cd4230bfc08933"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/build_evidence_edge_review_suite.py",
+      "source": "EvidenceNet/scripts/build_evidence_edge_review_suite.py",
+      "sha256": "641ec82afb1ea620b35ba0994cbaca7ffade60ab6193f066f58b71fbdab4a5ef"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/build_edge_repair_review.py",
+      "source": "EvidenceNet/scripts/build_edge_repair_review.py",
+      "sha256": "c82584afcfaf2d7c3bf5d313a5d697f59ecb1fa2fc5100d8e58913f3dcb7782f"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/build_remaining_six_positive_viewer.py",
+      "source": "EvidenceNet/scripts/build_remaining_six_positive_viewer.py",
+      "sha256": "c34c2f46863e8e374fd8b6067dc9cc867416b83a7657b82f9174edc97c434d68"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/run_real_text_edge_suite.py",
+      "source": "EvidenceNet/scripts/run_real_text_edge_suite.py",
+      "sha256": "7c2c44c28a99c6854c1bcaafcbfb0069b8a74baea5aee7869df665a36111c2d5"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/run_synthetic_edge_suite.py",
+      "source": "EvidenceNet/scripts/run_synthetic_edge_suite.py",
+      "sha256": "037855167357d41973714df0092d2bbc04220f4143f7f3b26afa25f9142a401a"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/run_text_multimodal_diagnostic_v2.py",
+      "source": "EvidenceNet/scripts/run_text_multimodal_diagnostic_v2.py",
+      "sha256": "9bcb7cd646f55326476bdcefad4377b6496ca9dd794e939b63590c26610b2937"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/review_text_multimodal_v2_results.py",
+      "source": "EvidenceNet/scripts/review_text_multimodal_v2_results.py",
+      "sha256": "418cae2870ee2379d818b4e753d93d7446096a889c852f71855f88d3054c0294"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/build_fresh_edge_suite.py",
+      "source": "EvidenceNet/scripts/build_fresh_edge_suite.py",
+      "sha256": "c31c6a3d9b174a4e4b3f84a3ac691a7a0871e8dea173a0dc5badd5a463f8324f"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/fresh_edge_specs_20261021.py",
+      "source": "EvidenceNet/scripts/fresh_edge_specs_20261021.py",
+      "sha256": "564052eb5159e73391d4554e12738aa8e6c6d271c65276bf61aa38a054bee2c9"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/synthetic_edge_specs_20261021.py",
+      "source": "EvidenceNet/scripts/synthetic_edge_specs_20261021.py",
+      "sha256": "f3cb6d8f39bced4f259e94fd3251f1f000a55be0e2edd9ef4048f5afb2999ade"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/run_split_taxonomy_suite.py",
+      "source": "EvidenceNet/scripts/run_split_taxonomy_suite.py",
+      "sha256": "06bf0a1330f7e712f6febae8fa75056cdb1bbe2d47c5d73420ef3706dbb1c62e"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/build_split_taxonomy_benchmark.py",
+      "source": "EvidenceNet/scripts/build_split_taxonomy_benchmark.py",
+      "sha256": "a9c944399040e3c1b14880956036b7bd74dcabd27102b4b0e44520a67240eb36"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/run_semantic_relation_trial.py",
+      "source": "EvidenceNet/scripts/run_semantic_relation_trial.py",
+      "sha256": "f4808ba20f7400bdac1d2637d715757f7c6af5b1bd050374ada80d124720fb25"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/run_all_node_multimodal_relatedness.py",
+      "source": "EvidenceNet/scripts/run_all_node_multimodal_relatedness.py",
+      "sha256": "111a075be2af2839d391e70f43870281b9f2f42aac04853f966db26654355559"
+    },
+    {
+      "group": "edge_construction",
+      "kind": "script",
+      "category": "07_diagnostics_history",
+      "entry": "workspaces/edge_construction/scripts/07_diagnostics_history/run_relatedness_pilot.py",
+      "source": "EvidenceNet/scripts/run_relatedness_pilot.py",
+      "sha256": "bd6854f0c058f9dc961f2666c6c6dc432831226d5c7207a0e585b0db8d5b6a58"
+    },
+    {
+      "group": "knowledge_graph",
+      "kind": "script",
+      "category": "01_preparation",
+      "entry": "workspaces/knowledge_graph/scripts/01_preparation/prepare_kg_link_prediction.py",
+      "source": "EvidenceNet/scripts/prepare_kg_link_prediction.py",
+      "sha256": "de69a4e8eee0dd5299be9be580134d63c3c7b32fa2e2bd6e901770aab8cc4d89"
+    },
+    {
+      "group": "knowledge_graph",
+      "kind": "script",
+      "category": "02_entity_overlay",
+      "entry": "workspaces/knowledge_graph/scripts/02_entity_overlay/entity_hub_overlay.py",
+      "source": "EvidenceNet/scripts/entity_hub_overlay.py",
+      "sha256": "a5767bc40b0933728285009f85c9ae1cdab9a94a53038e3780346f417ed0aa6f"
+    },
+    {
+      "group": "query",
+      "kind": "results",
+      "category": "frozen_snapshot",
+      "entry": "workspaces/query/results/hf_evidence_comparison_review_20261101",
+      "source": "migration/hf_evidence_comparison_review_20261101",
+      "sha256": null
+    },
+    {
+      "group": "query",
+      "kind": "results",
+      "category": "frozen_snapshot",
+      "entry": "workspaces/query/results/query_semantic_edge_v2_review_20261031",
+      "source": "migration/query_semantic_edge_v2_review_20261031",
+      "sha256": null
+    },
+    {
+      "group": "knowledge_graph",
+      "kind": "results",
+      "category": "frozen_snapshot",
+      "entry": "workspaces/knowledge_graph/results/kg_link_prediction_pilot_v1_20261101",
+      "source": "EvidenceNet/output/kg_link_prediction_pilot_v1_20261101",
+      "sha256": null
+    }
+  ]
+}

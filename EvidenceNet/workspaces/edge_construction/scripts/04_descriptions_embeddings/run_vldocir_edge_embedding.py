@@ -1,0 +1,1 @@
+../../../../scripts/run_vldocir_edge_embedding.py

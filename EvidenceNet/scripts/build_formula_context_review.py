@@ -67,7 +67,9 @@ def build(out):
         'fresh_reviewed_now_diagnostic': ('routed_edge_context_fresh_v1_20261021', 'horeka-edge-fresh-20261021',
                             ROOT/'data/benchmarks/evidence_edges_fresh_v1_20261021_review/reference.jsonl'),
     }
-    files = [Path(__file__), Path(packets.__file__), corpus/'corpus_nodes.jsonl', corpus/'corpus_policies.json', *reading_paths]
+    files = [Path(__file__), Path(packets.__file__), Path(routed.__file__), Path(gate.__file__),
+             Path(routed.prior.__file__), ROOT/'EvidenceNet/scripts/edge_text_views.py',
+             corpus/'corpus_nodes.jsonl', corpus/'corpus_policies.json', *reading_paths]
     cases, node_packets, planned, metrics = [], {}, {a: [] for a in ARMS}, {}
     for cohort, (input_name, result_name, reference) in cohorts.items():
         base = ROOT/'EvidenceNet/output'/input_name
@@ -91,7 +93,16 @@ def build(out):
                 if nid not in node_packets:
                     node_packets[nid] = packets.build_packet(nid, nodes, policies, reading)
                 # Original source spans remain separately owned supplemental evidence.
-                context[side] = node_packets[nid]['contexts']
+                for span in node_packets[nid]['contexts']:
+                    # Do not relabel or repeat definitions already present in the
+                    # unchanged endpoint anchors as if they were new context.
+                    already_present = any(
+                        a.get('node_id') == span['source_node_id'] and a.get('member_id') == span['member_id']
+                        and a.get('member_sha256') == span['member_sha256']
+                        and a['char_start'] <= span['char_start'] and a['char_end'] >= span['char_end']
+                        for a in control['lookups'][side].values())
+                    if not already_present:
+                        context[side].append(dict(span, context_id=f'C{len(context[side]):02d}'))
             for arm in ARMS:
                 entry = copy.deepcopy(control)
                 if arm == 'legacy_context':

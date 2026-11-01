@@ -1,0 +1,1 @@
+../../../../scripts/run_relatedness_pilot.py

@@ -1,0 +1,1 @@
+../../../../scripts/prepare_vldocir_nodes.py

@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from formula_context_packets import build_packet
+from formula_context_packets import build_packet, literal_symbols
 
 
 def fixture():
@@ -90,3 +90,16 @@ def test_unknown_article_half_paragraph_and_skipped_formula_budget_stop():
     assert any(o["reason"] == "incomplete_member_no_cross_page_repair" for o in packet["omissions"])
     nodes["k"]["article_id"] = "UNRESOLVED_PAGE_BUCKET"
     assert build_packet("k", nodes, policies, reading)["status"] == "unresolved_article"
+
+
+def test_tex_array_alignment_is_not_a_variable():
+    assert literal_symbols(r"$$\begin{array} { r l } & K=X W_k\end{array}$$", formula=True) == ["K", "W", "X", "k"]
+
+
+def test_same_node_definition_remains_endpoint_owned():
+    nodes, policies, reading = fixture()
+    nodes['k']['members'].append(dict(id='definition',kind='atom',role='para',text=r'Here, $W_k$ is the weight matrix for $K$.'))
+    policies['k']['members'].append(dict(member_id='definition',kind='atom',eligible=True))
+    packet=build_packet('k',nodes,policies,reading)
+    own=next(s for s in packet['contexts'] if s['route']=='same_node_definition')
+    assert own['context_is_endpoint_content'] and own['kind']=='ORIGINAL_TEXT'

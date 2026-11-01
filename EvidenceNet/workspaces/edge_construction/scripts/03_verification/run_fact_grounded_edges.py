@@ -1,0 +1,1 @@
+../../../../scripts/run_fact_grounded_edges.py

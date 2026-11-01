@@ -1,0 +1,1 @@
+../../../../scripts/run_text_multimodal_diagnostic_v2.py

@@ -1,0 +1,1 @@
+../../../../scripts/run_cached_query_reranker.py

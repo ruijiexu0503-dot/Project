@@ -1,0 +1,1 @@
+../../../../scripts/run_all_node_multimodal_relatedness.py

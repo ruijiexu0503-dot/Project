@@ -1,0 +1,1 @@
+../../../../scripts/run_span_evidence_selection.py

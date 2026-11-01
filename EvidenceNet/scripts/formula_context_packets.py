@@ -37,7 +37,9 @@ def literal_symbols(text, *, formula=False):
     if not formula:
         # Original prose sometimes writes 'where Y is ...' without math markup.
         pieces.append(_MATH.sub(" ", text))
-    return sorted({match.group() for piece in pieces for match in _SYMBOL.finditer(piece)})
+    # TeX array alignment columns (r/l/c) are layout, not equation variables.
+    layout = re.compile(r"\\(?:begin|end)\s*\{[^}]+\}(?:\s*\{[lcr|\s]+\})?")
+    return sorted({match.group() for piece in pieces for match in _SYMBOL.finditer(layout.sub(" ", piece))})
 
 
 def _span(node, member, lo, hi, route, path, symbols):
@@ -48,7 +50,9 @@ def _span(node, member, lo, hi, route, path, symbols):
         "member_sha256": hashlib.sha256(text.encode()).hexdigest(),
         "char_start": lo, "char_end": hi, "quote": text[lo:hi],
         "route": route, "path": list(path), "matched_literal_symbols": list(symbols),
-        "generated_explanation": False, "context_is_endpoint_content": route == "formula_source",
+        "kind": "ORIGINAL_TEXT" if route in {"formula_source", "same_node_definition"} else "CONTEXT_ORIGINAL_TEXT",
+        "generated_explanation": False,
+        "context_is_endpoint_content": route in {"formula_source", "same_node_definition"},
     }
 
 

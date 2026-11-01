@@ -1,0 +1,1 @@
+../../../../scripts/query_semantic_edge_core.py

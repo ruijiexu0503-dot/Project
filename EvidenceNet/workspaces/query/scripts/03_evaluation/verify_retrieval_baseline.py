@@ -1,0 +1,1 @@
+../../../../scripts/verify_retrieval_baseline.py

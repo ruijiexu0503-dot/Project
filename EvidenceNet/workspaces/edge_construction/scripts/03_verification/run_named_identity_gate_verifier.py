@@ -1,0 +1,1 @@
+../../../../scripts/run_named_identity_gate_verifier.py

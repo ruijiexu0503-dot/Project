@@ -1,0 +1,1 @@
+../../../../scripts/run_synthetic_edge_suite.py

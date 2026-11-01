@@ -1,0 +1,1 @@
+../../../../scripts/run_formula_retrieval_comparison.py

@@ -1,0 +1,1 @@
+../../../../scripts/validate_reader_anchor_packets.py
