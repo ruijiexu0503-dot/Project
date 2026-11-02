@@ -144,3 +144,28 @@ CBLiP 和文本图扩展放在第二轮，避免一次改候选、表示、训�
 6. 若结构模型缺乏有效信号，再实现带文本与关系描述的局部图模型。此时明确标为研究适配，不以论文名称替代复现证据。
 
 最低交付物：配置及输入 hash、候选及拒绝记录、accepted edges、逐题访问路径、最终原文片段与成本、匹配口径的对照报告。验收目标是固定预算下新增可验证证据，而不是增加边数。
+
+
+## 9. 2026-11-02 — 非文本 EvidenceNode 的文本化前提（待代码核实）
+
+用户补充的重要系统前提：**Formula / Table / Figure 等非 text 模态的 EvidenceNode 通常已经有相关上下文或文本描述**。因此对于离线 KG 候选端点预测，可以优先视为 **text-attributed Evidence Graph**，不必在第一轮为每一种模态额外开发专用编码器。原始模态、原始锚点和 provenance **仍必须保留**，最终 verifier 应回看原始证据；文本摘要可能漏掉公式等价性、数值、坐标轴和实验条件。
+
+**待核实的实现问题（不能擅自认定已统一）**：现有不同模态的 `text_representation` 是否都能通过相同读取接口拿到？字段具体在哪里、哪些为空、描述是否携带必要的变量定义、表头/单位、图注及实验条件？请抽样并统计覆盖率；不要重做描述生成，也不要假定这一步需要新的视觉模型。
+
+**对研究顺序的影响**：
+- 将 **text-only candidate proposer** 作为对照，并研究可利用邻域信息的 **text+graph proposer**；衡量结构信息是否带来原文本候选池外、经核验的正确新连接。
+- ULTRA / TRIX 仍保留为已有权重及适配条件允许时的 **结构 KG 基线**；它们不自动利用节点文本，不能因为节点有描述就假设模型已消费描述。
+- FnF-TG 等文本图方法继续作为方法参考，具体代码与 checkpoint 可用性需另查，不要把未验证论文实现当作即插即用。
+- 第一轮应优先预测**端点候选**，而不是强制所有自然语言关系映射到一个细 taxonomy。Verifier 再判定具体关系和目标提供的新证据。
+- 继续区分「有真实关系」「在旧候选池之外」「对 query 检索有帮助」三个不同指标。
+
+### 同日 Article / Reading 修复核查对 KG 输入图的影响
+
+以下为**用户提供的 Codex 本地代码/测试核查结论**，本节并未独立复现 HoreKa 测试：
+1. Worker isolation **fixed**：真实入口 `run_vldocir_pipeline_comparison.py::reading_worker/run_document` 逐文档隔离；已有测试及 v2/v3 运行证据。
+2. Invalid checkpoints **old path unused in fresh workflow**：fresh 入口使用新输出根，恢复由 `RecoveryCalls` 和 `--retry-invalid` 处理；不能混同 `--retry-document`。
+3. Single-article cross-page NEXT **still missing in current VLDocIR v3 execution**：single-article continuation 分支仍被跳过；独立 `run_document_cross_page_qwen.py` 尚未接入 v3；两文档只有 9、2 条页内 NEXT，跨页 0。
+4. Readiness coupling **fixed / strict importer intentional**：逐文档 partial 不使 worker 中断；严格全图导入仍要求完整验证。
+5. Reading graph import→query **unverified end-to-end**：已有各自的单元测试和 collector/retriever 代码，但 v3 尚无 `collect → retrieve` 的已完成整链路运行证据。
+
+**这不阻止研究 KG 候选发现**，但决定 KG 试验输入图的真实可用性：显式标记跨页 NEXT 缺失与 reading import 未验证，不把 v3 page-local 边冒充全阅读图；KG 适配实验可以先使用已校验的局部图并报告限制，不将这些修复议题无条件设为整个 KG 研究的重新启动前提。
