@@ -39,3 +39,18 @@ For `unverified`, state what evidence is missing; do **not** propose broad rerun
 ## Direct instruction to Codex
 
 > Only validate the five previously raised concerns against current executed code and tests **already completed**. Do not assume testing is pending. Do not run new tests, GPU, LLM, Slurm, or change source/output files. Produce the five-row evidence matrix with exact references and correct earlier claims where tests prove them obsolete.
+
+
+## 2026-11-02 — Codex existing-test review result (user supplied)
+
+**This is a record of Codex's reported local review, not an independent reproduction by this document.** No rerun requested.
+
+| Concern | Verdict | Grounded existing evidence / limitation |
+| --- | --- | --- |
+| Worker isolation | **fixed** | Actual `run_vldocir_pipeline_comparison.py::reading_worker()` loops over per-document `run_document()`; existing isolation tests passed; v2 both A/B attempted and v3 job 5223589 both docs complete. |
+| Invalid checkpoints | **old path unused** | Fresh `prepare_reading_replay()` uses new roots; `RecoveryCalls` handles `--retry-invalid` and archives failure history; v3 7 membership + 7 reading decisions valid. Legacy `call()` still returns same-fingerprint invalid cache if invoked directly. |
+| Single-article cross-page NEXT | **still present** | Original single-article mode skips continuation; `run_document_cross_page_qwen.py` not integrated into VLDocIR v3. v3 two documents have 9 and 2 page-local NEXT; `cross_page_reading_edges=0`. |
+| Readiness coupling | **fixed** | Partial affects current document only; collector intentionally fail-closed for full import; v3 two documents `all_documents_ready=true`, cross-page `not_evaluated`. |
+| Reading graph import/query | **unverified** | Unit tests cover edge correctness and reading budget, but no completed v3 `collect → NEXT/PREVIOUS → retrieve` integration execution reported. |
+
+**Actionable residuals:** (a) wire and validate evidence-grounded cross-page NEXT in the VLDocIR single-work path if full reading traversal is a requirement; (b) use existing validated artifacts for a focused importer→retriever integration check when needed. Do not re-open the three fixed concerns without new contradictory evidence.
