@@ -44,6 +44,20 @@ def jsonl(path, values):
     tmp.write_text(''.join(json.dumps(v, ensure_ascii=False) + '\n' for v in values)); tmp.replace(path)
 
 
+def task_selected(args, task):
+    """Reject out-of-scope node pages before touching their prepared inputs.
+
+    A portable replay may contain complete node batches but only the prepared
+    inputs for the requested documents.  Filtering after reading the prepared
+    representation made those unrelated batch neighbours a hidden dependency.
+    """
+    if args.include_task and task not in args.include_task:
+        return False
+    if args.include_document and Path(task).parts[0] not in args.include_document:
+        return False
+    return True
+
+
 def prepare(args):
     out = args.output
     if (out / 'manifest.json').exists():
@@ -55,12 +69,12 @@ def prepare(args):
     selected, seen = set(), set()
     for path in sorted(args.nodes.glob('batch_*/hybrid/**/evidence_nodes.jsonl')):
         task = str(path.parent).split('/hybrid/', 1)[1]
-        if args.include_task and task not in args.include_task:
+        if not task_selected(args, task):
             continue
         rep_path = args.source / task / 'input_representation.json'
         rep = read(rep_path)
-        if args.include_document and rep['document_id'] not in args.include_document:
-            continue
+        if rep['document_id'] != Path(task).parts[0]:
+            raise ValueError('Prepared document/task mismatch: ' + task)
         if task in seen:
             raise ValueError('Duplicate hybrid page; provide one audited node run: ' + task)
         seen.add(task)
@@ -130,6 +144,21 @@ def check(out):
             raise ValueError('Changed article input/code: ' + p)
 
 
+def repair_instruction(error):
+    error = str(error)
+    if 'group node ownership' in error:
+        return ('Every group must own at least one N label. Do not return title-only/empty groups; '
+                'attach section titles to the one article group or retain them in page_context_title_ids.')
+    if 'single work must retain exactly one article group' in error:
+        return ('This is single_article: return exactly one nonempty kind=article group. A table-only, '
+                'figure-only, references, or metadata page is not kind=standalone.')
+    if 'flow kind invalid' in error:
+        return ('Allowed flow kinds are only body, caption, footnote, sidebar. Never output visual/table; '
+                'omit standalone VISUAL/TABLE nodes from flows.')
+    return ('Return the complete corrected JSON. Preserve correct assignments, explicitly place every '
+            'missing ID; never silently drop a paragraph or treat it as page context just to satisfy coverage.')
+
+
 def call(model, path, prompt, images, validator, tokens):
     fingerprint = stable_id('', [prompt, [sha(p) for p in images]])
     if path.exists():
@@ -138,13 +167,13 @@ def call(model, path, prompt, images, validator, tokens):
             raise ValueError('Stale article checkpoint: ' + str(path))
         return record
     attempts = []; value = None
-    for _ in range(2):
+    for _ in range(3):
         raw = None
         try:
             request = prompt if not attempts else (prompt + '\nPREVIOUS_RESPONSE:\n' + str(attempts[-1]['raw']) +
                 '\nVALIDATION_ERROR:\n' + attempts[-1]['error'] +
-                '\nReturn the complete corrected JSON. Preserve correct assignments, explicitly place every missing ID; '
-                'never silently drop a paragraph or treat it as page context just to satisfy coverage.')
+                '\nTARGETED_CORRECTION:\n' + repair_instruction(attempts[-1]['error']) +
+                '\nReturn the complete corrected JSON; do not repeat the invalid structure.')
             raw = model.generate_raw_with_images('Reconstruct document articles from supplied sources. JSON only.', request, images, tokens).raw
             value = validator(extract_json(raw))
             attempts.append(dict(raw=raw, valid=True)); break

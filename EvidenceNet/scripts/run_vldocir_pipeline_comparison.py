@@ -7,12 +7,17 @@ from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
 import copy
+from datetime import datetime, timezone
+import fcntl
 import html
+import hashlib
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 import numpy as np
 from run_node_context_edges import ROOT, rows, read, write, jsonl, sha
 import vldocir_candidate_comparison as candidates
@@ -29,9 +34,189 @@ ARMS=('node','reading','sparse_pipeline','all_node_pipeline','ColNomic_BGE')
 QUERY_PREFIX='Instruct: Retrieve document-edge evidence useful for answering the query\nQuery: '
 
 
+DOCUMENT_STATES = {'pending','running','partial','complete','failed','blocked'}
+
+
+def utc_now():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def stable_digest(value):
+    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+
+
+def atomic_status(path, value):
+    """Write one status with a unique temp file; never expose a partial JSON."""
+    path=Path(path);path.parent.mkdir(parents=True,exist_ok=True)
+    fd,name=tempfile.mkstemp(prefix=path.name+'.',suffix='.tmp',dir=path.parent)
+    try:
+        with os.fdopen(fd,'w') as stream:
+            json.dump(value,stream,ensure_ascii=False,indent=2)
+            stream.write('\n');stream.flush();os.fsync(stream.fileno())
+        os.replace(name,path)
+    finally:
+        if os.path.exists(name):os.unlink(name)
+
+
+def document_spec(out, plan, document):
+    configured=plan.get('document_work',{}).get(document)
+    if configured is None:
+        nodes=[n for n in rows(out/'adapted/nodes.jsonl') if n['document']==document]
+        tasks=[t for t in read(BASE/'prepared/manifest.json')['tasks'] if Path(t).parts[0]==document]
+        configured={'page_tasks':sorted(tasks),'page_count':len(tasks),'node_count':len(nodes)}
+    spec={'document_id':document,**configured,
+          'frozen_inputs':{k:v for k,v in plan['inputs'].items() if k.endswith(('nodes.jsonl','prepared/manifest.json'))}}
+    spec['protocol_sha256']=stable_digest(spec)
+    return spec
+
+
+def initial_document_status(out, plan, document):
+    spec=document_spec(out,plan,document)
+    return {'schema_version':1,'document_id':document,'status':'pending',
+        'membership_state':'pending','reading_state':'pending','cross_page_state':'not_evaluated',
+        'protocol_sha256':spec['protocol_sha256'],'input':spec,'output_root':str((out/'articles'/document).resolve()),
+        'attempt_count':0,'last_attempt':None,'updated_at':utc_now(),'error':None,'artifact':None}
+
+
+def status_path(out, document):
+    return out/'document_status'/(document+'.json')
+
+
+def load_document_status(out, plan, document):
+    path=status_path(out,document);expected=document_spec(out,plan,document)
+    if not path.exists():return initial_document_status(out,plan,document)
+    state=read(path)
+    if state.get('document_id')!=document or state.get('status') not in DOCUMENT_STATES:
+        raise ValueError('invalid document status: '+str(path))
+    if state.get('protocol_sha256')!=expected['protocol_sha256']:
+        raise ValueError('document status/input changed; use a fresh output root: '+document)
+    return state
+
+
+def initialize_document_statuses(out,plan):
+    for document in plan['documents']:
+        path=status_path(out,document)
+        if not path.exists():atomic_status(path,initial_document_status(out,plan,document))
+
+
+def prepare_reading_replay(out,documents,shards=1):
+    """Create a fresh article/reading-only plan over frozen upstream nodes.
+
+    This deliberately imports no historical article decisions or result roots.
+    """
+    documents=list(dict.fromkeys(documents or []))
+    if not documents or shards<1:raise ValueError('prepare-reading needs documents and positive shards')
+    if (out/'plan.json').exists():
+        plan=validate_plan(out)
+        if plan.get('run_kind')!='fresh_article_reading_replay' or plan['documents']!=documents:
+            raise ValueError('existing output is not the requested reading replay')
+        initialize_document_statuses(out,plan);return plan
+    if out.exists() and any(out.iterdir()):raise ValueError('fresh reading replay output required')
+    prepared_manifest=read(BASE/'prepared/manifest.json');tasks=prepared_manifest['tasks']
+    known={Path(task).parts[0] for task in tasks};unknown=set(documents)-known
+    if unknown:raise ValueError('unknown replay documents: '+','.join(sorted(unknown)))
+    document_work={};input_files=[BASE/'prepared/manifest.json']
+    for document in documents:
+        page_tasks=sorted(task for task in tasks if Path(task).parts[0]==document)
+        prepared_files=[path for task in page_tasks for path in (BASE/'prepared'/task).rglob('*') if path.is_file()]
+        node_files=[path for path in BASE.glob('nodes/batch_*/**/*') if path.is_file() and document in path.parts]
+        evidence=[path for path in node_files if path.name=='evidence_nodes.jsonl' and 'hybrid' in path.parts]
+        if len(evidence)!=len(page_tasks):raise ValueError('missing/duplicate frozen hybrid pages for '+document)
+        node_count=sum(len(rows(path)) for path in evidence)
+        document_work[document]={'page_tasks':page_tasks,'page_count':len(page_tasks),'node_count':node_count}
+        input_files.extend(prepared_files);input_files.extend(node_files)
+    code_files=[Path(__file__),ROOT/'EvidenceNet/scripts/run_hybrid_article_clustering.py',
+        ROOT/'EvidenceNet/evidence_graph/hybrid_article_clustering.py',ROOT/'EvidenceNet/evidence_graph/llm_client.py',
+        ROOT/'EvidenceNet/scripts/build_evidence_node_graph_viewer.py',ROOT/'EvidenceNet/scripts/run_hybrid_node_v2.py']
+    plan={'run_kind':'fresh_article_reading_replay','shards':shards,'documents':documents,
+        'worker_documents':{str(i):documents[i::shards] for i in range(shards)},'document_work':document_work,
+        'scope':'fresh article/reading rerun; no historical article checkpoints or outputs',
+        'code':{str(path.relative_to(ROOT)):sha(path) for path in code_files},
+        'inputs':{str(path.relative_to(ROOT)):sha(path) for path in sorted(set(input_files))}}
+    write(out/'plan.json',plan);initialize_document_statuses(out,plan);return plan
+
+
+def inspect_article_artifact(root):
+    manifest_path=root/'article_graph_manifest.json'
+    if not manifest_path.exists():return None
+    manifest=read(manifest_path)
+    for name,digest in manifest.get('files',{}).items():
+        path=root/name
+        if not path.exists() or sha(path)!=digest:raise ValueError('changed article artifact '+str(path))
+    assignments=rows(root/'article_assignments.jsonl') if (root/'article_assignments.jsonl').exists() else []
+    edges=rows(root/'reading_edges.jsonl') if (root/'reading_edges.jsonl').exists() else []
+    issues=rows(root/'issues.jsonl') if (root/'issues.jsonl').exists() else []
+    reading_issues=rows(root/'reading_issues.jsonl') if (root/'reading_issues.jsonl').exists() else []
+    membership_ready=bool(manifest.get('ready_for_downstream'))
+    reading_ready=bool(manifest.get('reading_ready'))
+    return {'manifest_sha256':sha(manifest_path),'ready_for_downstream':membership_ready,
+        'reading_ready':reading_ready,'assignments':len(assignments),'next_edges':len(edges),
+        'membership_failures':len(issues),'reading_failures':len(reading_issues),
+        'membership_state':'complete' if membership_ready else ('partial' if assignments else 'failed'),
+        'reading_state':'complete' if reading_ready else ('partial' if edges or reading_issues else 'failed')}
+
+
+def _finalize_document_state(state, artifact, error=None):
+    state=copy.deepcopy(state);state['artifact']=artifact;state['updated_at']=utc_now()
+    if artifact:
+        state['membership_state']=artifact['membership_state'];state['reading_state']=artifact['reading_state']
+        state['status']='complete' if artifact['ready_for_downstream'] and artifact['reading_ready'] else 'partial'
+    else:
+        state['membership_state']='failed';state['reading_state']='blocked';state['status']='failed'
+    state['error']=error
+    return state
+
+
+def run_document(out,model,plan,document,explicit_retry=False):
+    """Run/reconcile one document while holding a process lock.
+
+    Incomplete historical checkpoints are retained.  They are not automatically
+    retried because the article caller deliberately reuses valid=false records.
+    """
+    lock_path=out/'document_status'/'locks'/(document+'.lock')
+    lock_path.parent.mkdir(parents=True,exist_ok=True)
+    with lock_path.open('a+') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX)
+        state=load_document_status(out,plan,document);root=out/'articles'/document
+        try:
+            artifact=inspect_article_artifact(root)
+            if artifact and artifact['ready_for_downstream'] and artifact['reading_ready']:
+                state=_finalize_document_state(state,artifact)
+                state['reused']=True;atomic_status(status_path(out,document),state);return state
+            if artifact and state['status']=='pending' and not explicit_retry:
+                state=_finalize_document_state(state,artifact,'existing incomplete checkpoint; explicit versioned recovery required')
+                state['reused']=True;atomic_status(status_path(out,document),state);return state
+            if state['status'] in {'partial','failed','blocked'} and not explicit_retry:
+                return state
+            if state['status']=='running':
+                state['status']='failed';state['error']='previous attempt interrupted before terminal status'
+                state['updated_at']=utc_now();atomic_status(status_path(out,document),state)
+                if not explicit_retry:return state
+            state.update(status='running',membership_state='running',reading_state='pending',
+                         attempt_count=int(state.get('attempt_count',0))+1,last_attempt=utc_now(),updated_at=utc_now(),error=None)
+            atomic_status(status_path(out,document),state)
+            command=[sys.executable,str(Path(__file__)),'reading','--output',str(out),'--model',str(model),'--document',document]
+            result=subprocess.run(command,check=False)
+            artifact=inspect_article_artifact(root)
+            error=None if result.returncode==0 else 'reading subprocess exit '+str(result.returncode)
+            state=_finalize_document_state(state,artifact,error)
+            atomic_status(status_path(out,document),state);return state
+        except MemoryError:
+            state.update(status='blocked',error='process-fatal MemoryError',updated_at=utc_now())
+            atomic_status(status_path(out,document),state);raise
+        except Exception as exc:
+            artifact=None
+            try:artifact=inspect_article_artifact(root)
+            except Exception:pass
+            state=_finalize_document_state(state,artifact,type(exc).__name__+': '+str(exc))
+            atomic_status(status_path(out,document),state);return state
+        finally:
+            fcntl.flock(lock,fcntl.LOCK_UN)
+
+
 def prepare(out, model, encoder, shards=16):
     if (out/'plan.json').exists():
-        validate_plan(out); return read(out/'plan.json')
+        plan=validate_plan(out);initialize_document_statuses(out,plan);return plan
     adapted=out/'adapted'
     if not adapted.exists():
         subprocess.run([sys.executable,str(Path(__file__).with_name('prepare_vldocir_edge_adapter.py')),
@@ -54,8 +239,13 @@ def prepare(out, model, encoder, shards=16):
         protocol=read(union/'verifier/protocol.json')
         protocol.update(pairs=len(entries[i::shards]),shard=i,shards=shards)
         write(dest/'protocol.json',protocol); verifier.freeze(dest)
-    docs=sorted({n['document'] for n in rows(adapted/'nodes.jsonl')})
+    adapted_nodes=rows(adapted/'nodes.jsonl');docs=sorted({n['document'] for n in adapted_nodes})
+    prepared_tasks=read(BASE/'prepared/manifest.json')['tasks']
+    document_work={doc:{'page_tasks':sorted(t for t in prepared_tasks if Path(t).parts[0]==doc),
+        'page_count':sum(Path(t).parts[0]==doc for t in prepared_tasks),
+        'node_count':sum(n['document']==doc for n in adapted_nodes)} for doc in docs}
     plan={'shards':shards,'documents':docs,'worker_documents':{str(i):docs[i::shards] for i in range(shards)},
+        'document_work':document_work,
         'pairs':len(entries),'per_node_k':1,'scope':'inspected 24-query/518-page pilot',
         'upstream':'frozen source-audited Dolphin + hybrid-v2 node generation cache',
         'reading':'current Qwen article membership and reading flows, single-document profile',
@@ -67,7 +257,7 @@ def prepare(out, model, encoder, shards=16):
              *adapter.edge.CODE]},
         'inputs':{str(p.relative_to(ROOT)):sha(p) for p in [adapted/'nodes.jsonl',adapted/'policies.json',out/'candidates/manifest.json',
              BASE/'prepared/manifest.json',SOURCE/'embedding_manifest.json']}}
-    write(out/'plan.json',plan); return plan
+    write(out/'plan.json',plan);initialize_document_statuses(out,plan);return plan
 
 
 def validate_plan(out):
@@ -101,7 +291,7 @@ def reading_run(out, model, document, task=None):
     return result
 
 
-def worker(out, model, index, minutes=420):
+def worker(out, model, index, minutes=420, retry_documents=()):
     plan=validate_plan(out)
     if not 0<=index<plan['shards']: raise ValueError('invalid worker index')
     shard=out/'verifier_shards'/str(index)
@@ -114,14 +304,26 @@ def worker(out, model, index, minutes=420):
         raise RuntimeError('incomplete verifier shard; resume same worker, no partial metrics')
     import gc, torch
     gc.collect(); torch.cuda.empty_cache()
-    # Each document has its own checkpoints; independent workers cannot collide.
-    for doc in plan['worker_documents'][str(index)]:
-        command=[sys.executable,str(Path(__file__)),'reading',
-            '--output',str(out),'--model',str(model),'--document',doc]
-        subprocess.run(command,check=True)
-        if not read(out/'articles'/doc/'article_graph_manifest.json')['reading_ready']:
-            raise RuntimeError('reading flow unresolved for '+doc)
-    write(out/'workers'/f'{index}.json',{'complete':True,'shard':index,'documents':plan['worker_documents'][str(index)]})
+    return reading_worker(out,model,index,retry_documents,plan=plan)
+
+
+def reading_worker(out,model,index,retry_documents=(),plan=None):
+    plan=plan or validate_plan(out)
+    if not 0<=index<plan['shards']:raise ValueError('invalid worker index')
+    initialize_document_statuses(out,plan)
+    assigned=plan['worker_documents'][str(index)];requested=set(retry_documents)
+    unknown=requested-set(assigned)
+    if unknown:raise ValueError('retry document not assigned to worker: '+','.join(sorted(unknown)))
+    outcomes=[]
+    # A recoverable document failure is recorded and never prevents later docs.
+    for doc in assigned:
+        outcomes.append(run_document(out,model,plan,doc,doc in requested))
+    summary={'complete':True,'shard':index,'documents':assigned,
+        'document_statuses':{state['document_id']:state['status'] for state in outcomes},
+        'all_documents_ready':all(state['status']=='complete' for state in outcomes),
+        'failed_or_partial_documents':[state['document_id'] for state in outcomes if state['status']!='complete'],
+        'updated_at':utc_now()}
+    write(out/'workers'/f'{index}.json',summary);return summary
 
 
 def smoke(out,model):
@@ -162,6 +364,11 @@ def collect(out):
         if len(inputs)!=len(pp): raise ValueError('missing verifier predictions')
         if set(pp)&set(cache): raise ValueError('overlapping verifier shards')
         cache.update(pp)
+    incomplete=[]
+    for document in plan['documents']:
+        state=load_document_status(out,plan,document)
+        if state['status']!='complete':incomplete.append((document,state['status']))
+    if incomplete:raise ValueError('strict collect requires complete document reading states: '+json.dumps(incomplete))
     union=out/'union_pipeline'; entries=rows(union/'verifier/control/inputs.jsonl')
     if len(cache)!=len(entries): raise ValueError('union cache incomplete')
     jsonl(union/'verifier/cache.jsonl',[cache[e['inference_key']] for e in entries])
@@ -391,14 +598,16 @@ def report(out):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('stage',choices=['prepare','smoke','worker','reading','collect','encode-edges','retrieve','report'])
+    p.add_argument('stage',choices=['prepare','prepare-reading','smoke','worker','reading-worker','reading','collect','encode-edges','retrieve','report'])
     p.add_argument('--output',type=Path,required=True);p.add_argument('--model',type=Path);p.add_argument('--encoder',type=Path)
     p.add_argument('--shards',type=int,default=16);p.add_argument('--index',type=int,default=0);p.add_argument('--minutes',type=int,default=420)
-    p.add_argument('--document');p.add_argument('--task')
+    p.add_argument('--document');p.add_argument('--documents',nargs='+');p.add_argument('--task');p.add_argument('--retry-document',action='append',default=[])
     a=p.parse_args();out=a.output.resolve()
     if a.stage=='prepare':r=prepare(out,a.model,a.encoder,a.shards)
+    elif a.stage=='prepare-reading':r=prepare_reading_replay(out,a.documents,a.shards)
     elif a.stage=='smoke':r=smoke(out,a.model)
-    elif a.stage=='worker':r=worker(out,a.model,a.index,a.minutes)
+    elif a.stage=='worker':r=worker(out,a.model,a.index,a.minutes,a.retry_document)
+    elif a.stage=='reading-worker':r=reading_worker(out,a.model,a.index,a.retry_document)
     elif a.stage=='reading':r=reading_run(out,a.model,a.document,a.task)
     elif a.stage=='collect':r=collect(out)
     elif a.stage=='encode-edges':r=encode_edges(out,a.encoder)

@@ -9,9 +9,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 from evidence_graph.hybrid_article_clustering import (
-    validate_page, validate_membership, validate_reading, validate_continuations, stable_id,
+    page_prompt, reading_prompt, validate_page, validate_membership, validate_reading,
+    validate_continuations, stable_id,
 )
-from run_hybrid_article_clustering import materialize, jsonl, rows, call
+from run_hybrid_article_clustering import materialize, jsonl, rows, call, repair_instruction
 
 
 def page_fixture():
@@ -24,6 +25,25 @@ def page_fixture():
                                flows=[dict(kind='body', nodes=['N002'])])],
                   page_context_title_ids=['T003'], conflicted_nodes=[])
     return page, result
+
+
+def test_single_work_uses_dedicated_contract_and_reading_kinds_match_validator():
+    page, membership = page_fixture(); page['document_mode'] = 'single_article'
+    prompt = page_prompt(page)
+    assert prompt.startswith('Assign membership on this page of ONE KNOWN WORK')
+    assert 'NOT "standalone"' in prompt and 'never make\nan empty-node group' in prompt
+    flow = reading_prompt(page, membership)
+    assert 'Never emit kind=visual or kind=table' in flow
+    assert 'body|caption|footnote|sidebar' in flow
+
+
+@pytest.mark.parametrize(('error','instruction'), [
+    ('group node ownership', 'title-only/empty groups'),
+    ('single work must retain exactly one article group', 'table-only'),
+    ('flow kind invalid', 'Never output visual/table'),
+])
+def test_retry_instruction_targets_observed_contract_failure(error, instruction):
+    assert instruction in repair_instruction(error)
 
 
 def test_page_clustering_retains_titles_visuals_and_separate_stories():

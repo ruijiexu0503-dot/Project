@@ -1,8 +1,10 @@
 import sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
+import json
 import numpy as np
 import pytest
+from types import SimpleNamespace
 import vldocir_candidate_comparison as candidates
 import vldocir_reading_backbone as reading
 from run_vldocir_pipeline_comparison import select_pages
@@ -91,6 +93,16 @@ def test_candidate_outside_frozen_corpus_fails():
         select_pages([('doc','1')],[(('evil','2'),{})],[],budget=1,core=1)
 
 
+def test_article_prepare_filters_unselected_batch_neighbour_before_input_read():
+    import run_hybrid_article_clustering as article
+    args=SimpleNamespace(include_task=[],include_document=['wanted-document'])
+    assert article.task_selected(args,'wanted-document/page_0001')
+    assert not article.task_selected(args,'unpackaged-neighbour/page_0025')
+    args.include_task=['wanted-document/page_0002']
+    assert not article.task_selected(args,'wanted-document/page_0001')
+    assert article.task_selected(args,'wanted-document/page_0002')
+
+
 def test_complete_matched_report_scores_same_query_pages_and_rejects_partial(tmp_path,monkeypatch):
     import json
     import run_vldocir_pipeline_comparison as driver
@@ -126,3 +138,115 @@ def test_complete_matched_report_scores_same_query_pages_and_rejects_partial(tmp
     assert result['paired_AP5']['all_node_pipeline_vs_sparse_pipeline']==dict(wins=0,losses=0,ties=6)
     jsonl(out/'reranker_scores.jsonl',scores[:-1])
     with pytest.raises(ValueError,match='Incomplete scores'):driver.report(out)
+
+
+def _worker_plan(documents=('a','b')):
+    return {'shards':1,'documents':list(documents),'worker_documents':{'0':list(documents)},'inputs':{},
+            'document_work':{doc:{'page_tasks':[doc+'/page_0001'],'page_count':1,'node_count':1}
+                             for doc in documents}}
+
+
+def _article_artifact(driver,root,*,membership,reading_ready,reading_failure=False):
+    from run_node_context_edges import jsonl,write,sha
+    jsonl(root/'article_assignments.jsonl',[{'node_id':root.name+'_node'}] if membership else [])
+    jsonl(root/'reading_edges.jsonl',[])
+    jsonl(root/'issues.jsonl',[] if membership else [{'type':'PAGE_CLUSTER_FAILED'}])
+    jsonl(root/'reading_issues.jsonl',[{'type':'PAGE_READING_UNRESOLVED'}] if reading_failure else [])
+    files={name:sha(root/name) for name in ('article_assignments.jsonl','reading_edges.jsonl','issues.jsonl','reading_issues.jsonl')}
+    write(root/'article_graph_manifest.json',{'ready_for_downstream':membership,
+          'reading_ready':reading_ready,'files':files})
+
+
+def _patch_cpu_worker(monkeypatch,driver,out,plan):
+    from run_node_context_edges import write
+    write(out/'verifier_shards/0/summary.json',{'complete':True})
+    monkeypatch.setattr(driver,'validate_plan',lambda _:plan)
+    monkeypatch.setattr(driver.verifier,'run',lambda *a,**k:None)
+    monkeypatch.setitem(sys.modules,'torch',SimpleNamespace(cuda=SimpleNamespace(empty_cache=lambda:None)))
+
+
+@pytest.mark.parametrize('first_artifact',[
+    {'membership':False,'reading_ready':False,'reading_failure':False},
+    {'membership':True,'reading_ready':False,'reading_failure':True},
+])
+def test_first_incomplete_document_never_skips_second(tmp_path,monkeypatch,first_artifact):
+    import run_vldocir_pipeline_comparison as driver
+    out=tmp_path/'out';plan=_worker_plan();_patch_cpu_worker(monkeypatch,driver,out,plan)
+    calls=[]
+    def run(command,check=False):
+        doc=command[command.index('--document')+1];calls.append(doc)
+        root=out/'articles'/doc
+        if doc=='a':
+            _article_artifact(driver,root,**first_artifact);return SimpleNamespace(returncode=1)
+        _article_artifact(driver,root,membership=True,reading_ready=True);return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(driver.subprocess,'run',run)
+    result=driver.worker(out,Path('/model'),0)
+    assert calls==['a','b']
+    assert result['document_statuses']=={'a':'partial','b':'complete'}
+    assert json.loads((out/'document_status/a.json').read_text())['error']=='reading subprocess exit 1'
+
+
+def test_document_scoped_exception_is_persisted_and_next_runs(tmp_path,monkeypatch):
+    import run_vldocir_pipeline_comparison as driver
+    out=tmp_path/'out';plan=_worker_plan();_patch_cpu_worker(monkeypatch,driver,out,plan);calls=[]
+    def run(command,check=False):
+        doc=command[command.index('--document')+1];calls.append(doc)
+        if doc=='a':raise RuntimeError('broken document payload')
+        _article_artifact(driver,out/'articles'/doc,membership=True,reading_ready=True)
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(driver.subprocess,'run',run)
+    result=driver.worker(out,Path('/model'),0)
+    assert calls==['a','b'] and result['document_statuses']=={'a':'failed','b':'complete'}
+    assert 'broken document payload' in json.loads((out/'document_status/a.json').read_text())['error']
+
+
+def test_interrupted_status_remains_visible_and_does_not_fake_success(tmp_path,monkeypatch):
+    import run_vldocir_pipeline_comparison as driver
+    out=tmp_path/'out';plan=_worker_plan();_patch_cpu_worker(monkeypatch,driver,out,plan)
+    driver.initialize_document_statuses(out,plan)
+    state=driver.load_document_status(out,plan,'a');state['status']='running'
+    driver.atomic_status(driver.status_path(out,'a'),state);calls=[]
+    def run(command,check=False):
+        doc=command[command.index('--document')+1];calls.append(doc)
+        _article_artifact(driver,out/'articles'/doc,membership=True,reading_ready=True)
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(driver.subprocess,'run',run)
+    result=driver.worker(out,Path('/model'),0)
+    assert calls==['b']
+    assert result['document_statuses']['a']=='failed'
+    assert 'interrupted' in json.loads((out/'document_status/a.json').read_text())['error']
+
+
+def test_good_artifact_reused_and_bad_artifact_requires_explicit_recovery(tmp_path,monkeypatch):
+    import run_vldocir_pipeline_comparison as driver
+    out=tmp_path/'out';plan=_worker_plan(('good','bad'))
+    driver.initialize_document_statuses(out,plan)
+    _article_artifact(driver,out/'articles/good',membership=True,reading_ready=True)
+    _article_artifact(driver,out/'articles/bad',membership=False,reading_ready=False)
+    monkeypatch.setattr(driver.subprocess,'run',lambda *a,**k:pytest.fail('existing checkpoint must not call model'))
+    good=driver.run_document(out,Path('/model'),plan,'good')
+    bad=driver.run_document(out,Path('/model'),plan,'bad')
+    assert good['status']=='complete' and good['reused'] is True
+    assert bad['status']=='partial' and bad['reused'] is True
+    assert 'explicit versioned recovery required' in bad['error']
+
+
+def test_duplicate_document_workers_lock_and_reuse_one_valid_result(tmp_path,monkeypatch):
+    import multiprocessing
+    import run_vldocir_pipeline_comparison as driver
+    out=tmp_path/'out';plan=_worker_plan(('only',));driver.initialize_document_statuses(out,plan)
+    context=multiprocessing.get_context('fork');calls=context.Value('i',0)
+    def run(command,check=False):
+        with calls.get_lock():calls.value+=1
+        _article_artifact(driver,out/'articles/only',membership=True,reading_ready=True)
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(driver.subprocess,'run',run)
+    def target():
+        state=driver.run_document(out,Path('/model'),plan,'only')
+        assert state['status']=='complete'
+    processes=[context.Process(target=target) for _ in range(2)]
+    for process in processes:process.start()
+    for process in processes:
+        process.join(10);assert process.exitcode==0
+    assert calls.value==1
+    assert json.loads((out/'document_status/only.json').read_text())['status']=='complete'
