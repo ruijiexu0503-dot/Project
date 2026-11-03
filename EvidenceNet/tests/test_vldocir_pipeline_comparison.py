@@ -292,3 +292,41 @@ def test_query_scope_gate_rejects_invalid_labels():
     with pytest.raises(ValueError,match='invalid query-scope decision'):
         select_pages(direct,[],[(direct[4],{'edge_id':'edge'})],budget=4,core=2,
                      scope_decisions={'edge':'maybe'})
+
+
+
+def test_load_scope_decisions_requires_query_edge_reason_and_valid_labels(tmp_path):
+    import run_vldocir_pipeline_comparison as driver
+    scope=tmp_path/'scope.jsonl'
+    scope.write_text(
+        json.dumps({'question_id':'q1','edge_id':'e1','decision':'mismatch',
+                    'reason':'different decision object'})+'\\n'+
+        json.dumps({'question_id':'q1','edge_id':'e2','decision':'match',
+                    'reason':'target supports requested decision'})+'\\n'
+    )
+    decisions,reasons=driver.load_query_scope_decisions(scope,['q1'],['e1','e2'])
+    assert decisions=={'q1':{'e1':'mismatch','e2':'match'}}
+    assert reasons['q1']['e1']=='different decision object'
+
+
+@pytest.mark.parametrize('entry,expected',[
+    ({'question_id':'q2','edge_id':'e1','decision':'match','reason':'x'},'unknown query'),
+    ({'question_id':'q1','edge_id':'e2','decision':'match','reason':'x'},'unknown edge'),
+    ({'question_id':'q1','edge_id':'e1','decision':'unclear','reason':'x'},'invalid scope decision'),
+    ({'question_id':'q1','edge_id':'e1','decision':'match','reason':' '},'missing scope reason'),
+])
+def test_load_scope_decisions_rejects_untrusted_rows(tmp_path,entry,expected):
+    import run_vldocir_pipeline_comparison as driver
+    scope=tmp_path/'scope.jsonl'
+    scope.write_text(json.dumps(entry)+'\\n')
+    with pytest.raises(ValueError,match=expected):
+        driver.load_query_scope_decisions(scope,['q1'],['e1'])
+
+
+def test_load_scope_decisions_rejects_duplicate_query_edge(tmp_path):
+    import run_vldocir_pipeline_comparison as driver
+    entry={'question_id':'q1','edge_id':'e1','decision':'match','reason':'grounded'}
+    scope=tmp_path/'scope.jsonl'
+    scope.write_text(json.dumps(entry)+'\\n'+json.dumps(entry)+'\\n')
+    with pytest.raises(ValueError,match='duplicate query-edge'):
+        driver.load_query_scope_decisions(scope,['q1'],['e1'])
