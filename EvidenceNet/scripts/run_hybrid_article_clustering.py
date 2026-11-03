@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Qwen page clustering and grounded cross-page article identity for hybrid nodes."""
 import argparse
-from collections import Counter
+from collections import Counter, defaultdict
 import hashlib
 import json
 from pathlib import Path
@@ -15,6 +15,7 @@ from evidence_graph.hybrid_article_clustering import (
 from evidence_graph.llm_client import create_llm, extract_json
 from run_hybrid_node_v2 import audit
 import build_evidence_node_graph_viewer as viewer
+import run_document_cross_page_qwen as cross_page
 
 MODEL = ROOT / 'external/models/Qwen3.5-35B-A3B'
 METADATA = {'header', 'foot', 'footer', 'page_num', 'page_number', 'watermark', 'reference', 'catalogue'}
@@ -129,7 +130,8 @@ def prepare(args):
         membership_and_reading_validated_independently=True,
         semantic_edges_generated=False, legacy_segmentation_reused=False,
         caveat='Model proposals and structural coverage checks are not independently measured segmentation accuracy. Sparse pages cannot establish missing reading adjacency.'))
-    files = [Path(__file__), ROOT / 'EvidenceNet/evidence_graph/hybrid_article_clustering.py',
+    files = [Path(__file__), Path(cross_page.__file__),
+             ROOT / 'EvidenceNet/evidence_graph/hybrid_article_clustering.py',
              Path(viewer.__file__), ROOT / 'EvidenceNet/evidence_graph/llm_client.py',
              args.source / 'manifest.json', out / 'pages.jsonl', out / 'page_inputs.jsonl', out / 'protocol.json']
     files += [Path(i['image']) for i in inputs]
@@ -155,6 +157,10 @@ def repair_instruction(error):
     if 'flow kind invalid' in error:
         return ('Allowed flow kinds are only body, caption, footnote, sidebar. Never output visual/table; '
                 'omit standalone VISUAL/TABLE nodes from flows.')
+    if 'fragmented body reading' in error:
+        return ('Return at most one maximal body flow per fixed article group. Chain directly consecutive '
+                'prose, an introduced equation, and its following explanation in reading order. Omit nodes '
+                'whose reading position is genuinely unresolved; never use singleton flows as placeholders.')
     return ('Return the complete corrected JSON. Preserve correct assignments, explicitly place every '
             'missing ID; never silently drop a paragraph or treat it as page context just to satisfy coverage.')
 
@@ -187,7 +193,114 @@ def call(model, path, prompt, images, validator, tokens):
 def compact_node(n):
     allowed = {(m['kind'], m['member_id']) for m in n['eligible_members'] if m['eligible']}
     text = '\n'.join(m.get('text', '') for m in n['members'] if (m['kind'], m['id']) in allowed)
-    return dict(id=n['id'], text=text if len(text) <= 1800 else text[:900] + '\n[...omitted middle...]\n' + text[-900:])
+    return dict(id=n['id'], text=text if len(text) <= 1800 else text[:900] + '\n[...omitted middle...]\n' + text[-900:],
+                bbox=n.get('bbox'), unit_type=n.get('unit_type'))
+
+
+def compact_page_flow_context(groups):
+    """Expose competing page flows so a pair judge cannot overlook an intervening unit."""
+    context=[]
+    for group in groups:
+        nodes={node['id']:node for node in group['nodes']}
+        for flow in group['flows']:
+            context.append({'flow_id':flow['flow_id'],'kind':flow['kind'],'nodes':[{
+                'node_id':node_id,'bbox':nodes[node_id].get('bbox'),
+                'text':nodes[node_id].get('text','')[:320]} for node_id in flow['nodes']]})
+    return context
+
+
+def validate_cross_page_boundary(value):
+    result = cross_page.normalise_boundary(value)
+    if result['source_boundary_status'] not in {'SYNTACTICALLY_INCOMPLETE', 'COMPLETE', 'UNCERTAIN'}:
+        raise ValueError('invalid cross-page source boundary')
+    if not isinstance(result.get('reason'), str) or not result['reason'].strip():
+        raise ValueError('cross-page source boundary reason required')
+    return result
+
+
+def validate_cross_page_pair(value, source_boundary_status):
+    result = cross_page.normalise(value, source_boundary_status)
+    if result['label'] not in cross_page.LABELS:
+        raise ValueError('invalid cross-page decision label')
+    if not isinstance(result.get('reason'), str) or not result['reason'].strip():
+        raise ValueError('cross-page decision reason required')
+    if result['label'] in {'SAME_SENTENCE', 'SAME_ARTICLE_NEW_NODE'}:
+        if result.get('same_article') is not True or result.get('direct_reading_successor') is not True:
+            raise ValueError('positive cross-page decision contract')
+    return result
+
+
+def infer_single_work_cross_page(out, model, groups, assignments):
+    """Judge adjacent-page flow endpoints without inferring NEXT from page IDs alone."""
+    by_document = defaultdict(list)
+    for group in groups:
+        if group.get('assignment_status') == 'KNOWN_PAPER_DOCUMENT_PROFILE':
+            by_document[group['document']].append(group)
+    candidates = []
+    for document, document_groups in by_document.items():
+        by_page = defaultdict(list)
+        for group in document_groups:
+            by_page[group['page_number']].append(group)
+        for left_page, right_page in zip(sorted(by_page), sorted(by_page)[1:]):
+            if right_page != left_page + 1:
+                continue
+            source_flows = [flow for group in by_page[left_page] for flow in group['flows'] if flow['nodes']]
+            target_flows = [flow for group in by_page[right_page] for flow in group['flows'] if flow['nodes']]
+            source_page_flows = compact_page_flow_context(by_page[left_page])
+            target_page_flows = compact_page_flow_context(by_page[right_page])
+            for source in source_flows:
+                for target in target_flows:
+                    source_node, target_node = source['nodes'][-1], target['nodes'][0]
+                    source_group = next(g for g in by_page[left_page] if source in g['flows'])
+                    target_group = next(g for g in by_page[right_page] if target in g['flows'])
+                    source_text = next(n['text'] for n in source_group['nodes'] if n['id'] == source_node)
+                    target_text = next(n['text'] for n in target_group['nodes'] if n['id'] == target_node)
+                    candidates.append(dict(candidate_id=stable_id('XPG_', [source['flow_id'], target['flow_id']]),
+                        document_id=document, document_mode='single_article', source_page=left_page,
+                        target_page=right_page, source_flow_id=source['flow_id'], target_flow_id=target['flow_id'],
+                        source_flow_kind=source['kind'], target_flow_kind=target['kind'], source_node_id=source_node,
+                        target_node_id=target_node, source_text_tail=source_text[-800:], target_text_head=target_text[:800],
+                        source_page_flows=source_page_flows, target_page_flows=target_page_flows,
+                        allowed_labels=sorted(cross_page.LABELS), status='UNREVIEWED'))
+    decisions = []
+    for candidate in candidates:
+        boundary_path = out / 'cross_page_boundaries' / (stable_id('', candidate['source_flow_id']) + '.json')
+        boundary_record = call(model, boundary_path, cross_page.boundary_prompt(candidate), [],
+                               validate_cross_page_boundary, 512)
+        if not boundary_record['valid']:
+            decisions.append({**candidate, 'label':'UNCERTAIN', 'confidence':0.0,
+                              'reason':'source_boundary_unresolved', 'boundary_valid':False})
+            continue
+        boundary = boundary_record['value']
+        decision_record = call(model, out / 'cross_page_decisions' / (candidate['candidate_id'] + '.json'),
+            cross_page.prompt(candidate, boundary['source_boundary_status']), [],
+            lambda value: validate_cross_page_pair(value, boundary['source_boundary_status']), 768)
+        if decision_record['valid']:
+            decisions.append({**candidate, **decision_record['value'], 'boundary_valid':True,
+                              'source_boundary_decision':boundary})
+        else:
+            decisions.append({**candidate, 'label':'UNCERTAIN', 'confidence':0.0,
+                              'reason':'pair_decision_unresolved', 'boundary_valid':True,
+                              'source_boundary_decision':boundary})
+    positive = [row for row in decisions if row['label'] in {'SAME_SENTENCE', 'SAME_ARTICLE_NEW_NODE'}]
+    sources = Counter(row['source_node_id'] for row in positive)
+    targets = Counter(row['target_node_id'] for row in positive)
+    issues = []
+    assignment = {row['node_id']:row for row in assignments}
+    edges = []
+    for row in positive:
+        if sources[row['source_node_id']] != 1 or targets[row['target_node_id']] != 1:
+            issues.append({'candidate_id':row['candidate_id'], 'type':'AMBIGUOUS_CROSS_PAGE_SUCCESSOR'})
+            continue
+        aid = assignment[row['source_node_id']].get('article_id')
+        if not aid or assignment[row['target_node_id']].get('article_id') != aid:
+            issues.append({'candidate_id':row['candidate_id'], 'type':'CROSS_PAGE_ARTICLE_BOUNDARY'})
+            continue
+        edges.append(dict(source=row['source_node_id'], target=row['target_node_id'], type='NEXT', article_id=aid,
+            flow_kind=row['source_flow_kind'], cross_page=True, continuation_kind='same_sentence'
+            if row['label']=='SAME_SENTENCE' else 'same_article_new_node', decision_id=row['candidate_id'],
+            confidence=row.get('confidence'), status='EXPLICIT_TWO_STAGE_CROSS_PAGE_DECISION'))
+    return decisions, edges, issues
 
 
 def materialize(out, model):
@@ -218,7 +331,9 @@ def materialize(out, model):
             for g in local['value']['groups']:
                 cid = stable_id('CLUSTER_', [page['document'], page['page'], g['id']])
                 ids = [by_label[n] for n in g['nodes']]
-                flows = [dict(kind=f['kind'], nodes=[by_label[n] for n in f['nodes']]) for f in g['flows']]
+                flows = [dict(flow_id=stable_id('FLOW_', [cid, index]), kind=f['kind'],
+                              nodes=[by_label[n] for n in f['nodes']])
+                         for index, f in enumerate(g['flows'], 1)]
                 page_groups.append(dict(cluster_id=cid, document=page['document'], page_number=page['page_number'],
                     kind=g['kind'], node_ids=ids, nodes=[compact_node(original_nodes[nid]) for nid in ids],
                     titles=[title_lookup[t] for t in g['title_ids']], flows=flows,
@@ -287,6 +402,9 @@ def materialize(out, model):
                 text=t['text'], bbox=t['bbox'], article_id=assigned_titles.get(t['label']),
                 status='ASSIGNED_STRUCTURAL_TITLE' if assigned_titles.get(t['label']) else 'PAGE_CONTEXT_OR_UNRESOLVED'))
         print(json.dumps(dict(page=page['task'], clusters=len(page_groups), valid=local['valid'])), flush=True)
+    cross_page_decisions, cross_page_edges, cross_page_issues = infer_single_work_cross_page(
+        out, model, groups, assignments)
+    reading.extend(cross_page_edges)
     amap = {a['node_id']: a for a in assignments}
     for n in nodes:
         n.update({k: amap[n['id']].get(k) for k in ('article_id', 'assignment_status', 'cluster_id')})
@@ -301,6 +419,8 @@ def materialize(out, model):
     jsonl(out / 'article_clusters.jsonl', groups); jsonl(out / 'title_assignments.jsonl', title_assignments)
     jsonl(out / 'reading_edges.jsonl', reading); jsonl(out / 'issues.jsonl', issues)
     jsonl(out / 'reading_issues.jsonl', reading_issues)
+    jsonl(out / 'cross_page_decisions.jsonl', cross_page_decisions)
+    jsonl(out / 'cross_page_issues.jsonl', cross_page_issues)
     jsonl(out / 'excluded_non_evidence_units.jsonl', [n for n in nodes
           if n['assignment_status'] in {'MODEL_PAGE_CONTEXT', 'EXCLUDED_METADATA'}])
     articles = {}
@@ -326,15 +446,19 @@ def materialize(out, model):
         unresolved_nodes=sum(a['assignment_status'] == 'UNRESOLVED' for a in assignments),
         model_page_context_nodes=sum(a['assignment_status'] == 'MODEL_PAGE_CONTEXT' for a in assignments),
         reading_edges=len(reading), cross_page_reading_edges=sum(e['cross_page'] for e in reading),
+        cross_page_candidates=len(cross_page_decisions), cross_page_issues=cross_page_issues,
+        cross_page_ready=not cross_page_issues,
         failures=issues, complete=not issues, article_membership_complete=not issues,
         reading_failures=reading_issues, reading_complete=not issues and not reading_issues, semantic_edges_generated=False,
         quality='Source coverage validated; article ownership and reading flows are model proposals pending source review.')
     write(out / 'summary.json', summary)
     outputs = ['units.jsonl', 'article_assignments.jsonl', 'article_clusters.jsonl', 'articles.jsonl',
                'title_assignments.jsonl', 'reading_edges.jsonl', 'eligibility.json', 'issues.jsonl', 'summary.json',
-               'excluded_non_evidence_units.jsonl', 'reading_issues.jsonl']
+               'excluded_non_evidence_units.jsonl', 'reading_issues.jsonl',
+               'cross_page_decisions.jsonl', 'cross_page_issues.jsonl']
     write(out / 'article_graph_manifest.json', dict(ready_for_downstream=not issues,
           reading_ready=not issues and not reading_issues,
+          cross_page_evaluated=True, cross_page_ready=not cross_page_issues,
           input_manifest_sha256=sha(out / 'manifest.json'),
           files={name: sha(out / name) for name in outputs},
           graph_contract='Exact hybrid EvidenceNode IDs; structural titles separate; reading NEXT separate from semantic edges.'))

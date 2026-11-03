@@ -139,14 +139,19 @@ membership, titles, group kinds, or unassigned nodes. Every group must appear on
 Use only nodes owned by that group; a node may occur in at most one flow. The ONLY allowed flow
 kinds are body, caption, footnote and sidebar. Never emit kind=visual or kind=table. Standalone
 VISUAL and TABLE nodes need no flow and must be omitted rather than assigned a made-up flow kind.
-Preserve body, caption, footnote and sidebar as separate flows.
+Preserve body, caption, footnote and sidebar as separate flows. Return MAXIMAL reading chains:
+each fixed article group may have at most one body flow, and directly consecutive prose, an
+introduced display equation, and the prose explaining that equation belong in that same body
+flow. Do not emit one singleton body flow per node to avoid deciding order. A singleton body flow
+asserts that no other owned body node can be placed directly before or after it; omit genuinely
+unresolved nodes from flows instead of creating singleton placeholders.
 Running headers, subject rubrics and publication chrome do not belong in body reading flows.
 Do not chain independent captions. Use the page image, geometry and sentence continuity, not parser
 order. Do not invent missing text. When a hybrid node combines body and caption/visual content,
 leave its reading position unresolved if no single flow role fits; never split the evidence node.
 For page_context or uncertain groups return flows=[]. Empty flows are allowed when order is unclear.
 Return JSON only: {"groups":[{"id":"actual fixed group ID", "flows":[
-{"kind":"body|caption|footnote|sidebar", "nodes":["owned N label"]}]}]}.
+{"kind":"body|caption|footnote|sidebar", "nodes":["N001","N002"]}]}]}.
 Before returning, verify every flow kind is exactly one of body/caption/footnote/sidebar.
 SOURCE_PAGE:\n''' + json.dumps(page, ensure_ascii=False) + '\nFIXED_MEMBERSHIP:\n' + json.dumps(membership, ensure_ascii=False)
 
@@ -171,6 +176,9 @@ def validate_reading(value, page, membership):
         raise ValueError('cover every fixed group once in reading output')
     for group in merged['groups']:
         group['flows'] = flows[group['id']]
+        body_flows = [flow for flow in group['flows'] if flow.get('kind') == 'body']
+        if len(body_flows) > 1:
+            raise ValueError('fragmented body reading: one article group may have at most one body flow')
     return validate_page(merged, page)
 
 def continuation_prompt(payload):

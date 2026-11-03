@@ -126,6 +126,7 @@ def prepare_reading_replay(out,documents,shards=1):
         document_work[document]={'page_tasks':page_tasks,'page_count':len(page_tasks),'node_count':node_count}
         input_files.extend(prepared_files);input_files.extend(node_files)
     code_files=[Path(__file__),ROOT/'EvidenceNet/scripts/run_hybrid_article_clustering.py',
+        ROOT/'EvidenceNet/scripts/run_document_cross_page_qwen.py',
         ROOT/'EvidenceNet/evidence_graph/hybrid_article_clustering.py',ROOT/'EvidenceNet/evidence_graph/llm_client.py',
         ROOT/'EvidenceNet/scripts/build_evidence_node_graph_viewer.py',ROOT/'EvidenceNet/scripts/run_hybrid_node_v2.py']
     plan={'run_kind':'fresh_article_reading_replay','shards':shards,'documents':documents,
@@ -149,18 +150,23 @@ def inspect_article_artifact(root):
     reading_issues=rows(root/'reading_issues.jsonl') if (root/'reading_issues.jsonl').exists() else []
     membership_ready=bool(manifest.get('ready_for_downstream'))
     reading_ready=bool(manifest.get('reading_ready'))
+    cross_page_evaluated=bool(manifest.get('cross_page_evaluated'))
+    cross_page_ready=bool(manifest.get('cross_page_ready')) if cross_page_evaluated else False
     return {'manifest_sha256':sha(manifest_path),'ready_for_downstream':membership_ready,
         'reading_ready':reading_ready,'assignments':len(assignments),'next_edges':len(edges),
         'membership_failures':len(issues),'reading_failures':len(reading_issues),
         'membership_state':'complete' if membership_ready else ('partial' if assignments else 'failed'),
-        'reading_state':'complete' if reading_ready else ('partial' if edges or reading_issues else 'failed')}
+        'reading_state':'complete' if reading_ready else ('partial' if edges or reading_issues else 'failed'),
+        'cross_page_state':'complete' if cross_page_ready else ('partial' if cross_page_evaluated else 'not_evaluated')}
 
 
 def _finalize_document_state(state, artifact, error=None):
     state=copy.deepcopy(state);state['artifact']=artifact;state['updated_at']=utc_now()
     if artifact:
         state['membership_state']=artifact['membership_state'];state['reading_state']=artifact['reading_state']
-        state['status']='complete' if artifact['ready_for_downstream'] and artifact['reading_ready'] else 'partial'
+        state['cross_page_state']=artifact['cross_page_state']
+        state['status']='complete' if (artifact['ready_for_downstream'] and artifact['reading_ready']
+            and artifact['cross_page_state']!='partial') else 'partial'
     else:
         state['membership_state']='failed';state['reading_state']='blocked';state['status']='failed'
     state['error']=error
@@ -180,7 +186,8 @@ def run_document(out,model,plan,document,explicit_retry=False):
         state=load_document_status(out,plan,document);root=out/'articles'/document
         try:
             artifact=inspect_article_artifact(root)
-            if artifact and artifact['ready_for_downstream'] and artifact['reading_ready']:
+            if (artifact and artifact['ready_for_downstream'] and artifact['reading_ready']
+                    and artifact['cross_page_state']!='partial'):
                 state=_finalize_document_state(state,artifact)
                 state['reused']=True;atomic_status(status_path(out,document),state);return state
             if artifact and state['status']=='pending' and not explicit_retry:
@@ -465,8 +472,7 @@ def retrieve(out,model):
     graph={};arm_ids={}
     for arm in ('current_sparse','all_node'):
         es=rows(out/'graphs'/arm/'related.jsonl');arm_ids[arm]={e['task_id'] for e in es};graph.update({e['task_id']:e for e in es})
-    adjacency=defaultdict(list)
-    for e in rows(out/'graphs/reading_edges.jsonl'):adjacency[e['source']].append(e)
+    directed_reading=rows(out/'graphs/reading_edges.jsonl')
     col=defaultdict(dict)
     for r in rows(COL/'scores.jsonl'):
         p=(r['document_id'],str(r['page_number']));qid=r['question_id']
@@ -488,10 +494,9 @@ def retrieve(out,model):
             if nid in nodes and p in direct[:10] and count[p]<2:
                 seeds.append(nid);count[p]+=1
         reading=[]
-        for nid in seeds:
-            for e in sorted(adjacency[nid],key=lambda e:(e['type'],e['target'])):
-                t=nodes[e['target']];p=(t['document'],str(t['page']))
-                reading.append((p,{'seed_node':nid,'target_node':e['target'],'edge_type':e['type'],'source_page':hits[nid][2]}))
+        for path in backbone.navigate(nodes,directed_reading,seeds):
+            source_page=hits[path['seed_node']][2]
+            reading.append((path.pop('target_page'),dict(path,source_page=source_page)))
         reading.sort(key=lambda x:(direct.index(x[0]),x[1]['seed_node'],x[1]['target_node']))
         scores=np.maximum(pair[::2]@qvec[qi],pair[1::2]@qvec[qi]) if edge_ids else []
         arms={'node':(direct[:20],[]),'reading':select_pages(direct,reading,[])}

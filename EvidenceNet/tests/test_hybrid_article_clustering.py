@@ -12,7 +12,9 @@ from evidence_graph.hybrid_article_clustering import (
     page_prompt, reading_prompt, validate_page, validate_membership, validate_reading,
     validate_continuations, stable_id,
 )
-from run_hybrid_article_clustering import materialize, jsonl, rows, call, repair_instruction
+from run_hybrid_article_clustering import (materialize, jsonl, rows, call, repair_instruction,
+    validate_cross_page_pair)
+import run_document_cross_page_qwen as cross_page
 
 
 def page_fixture():
@@ -35,6 +37,7 @@ def test_single_work_uses_dedicated_contract_and_reading_kinds_match_validator()
     flow = reading_prompt(page, membership)
     assert 'Never emit kind=visual or kind=table' in flow
     assert 'body|caption|footnote|sidebar' in flow
+    assert 'MAXIMAL reading chains' in flow and 'at most one body flow' in flow
 
 
 @pytest.mark.parametrize(('error','instruction'), [
@@ -146,6 +149,53 @@ def test_materialized_articles_keep_node_members_and_titles_without_cross_page_n
         assert n['members'] == original['nodes'][0]['members']
 
 
+def test_single_work_two_stage_judge_creates_only_explicit_cross_page_next(tmp_path):
+    pages,inputs=[],[]
+    for number,nid,text in [(1,'tail','The experiment continues with'),(2,'head','the calibrated second stage.')]:
+        member={'id':'m'+str(number),'kind':'atom','role':'para','type':'text','text':text}
+        node={'id':nid,'members':[member],
+              'eligible_members':[{'kind':'atom','member_id':member['id'],'eligible':True}]}
+        page={'page_id':'p'+str(number),'document':'doc','page':'page_000'+str(number),
+              'page_number':number,'task':'doc/page_000'+str(number),
+              'document_mode':'single_article','nodes':[node]}
+        payload={'document':'doc','page':page['page'],'document_mode':'single_article',
+                 'nodes':[{'label':'N001','id':nid,'type':'TEXT'}],'titles':[]}
+        image=tmp_path/('p'+str(number)+'.png');image.write_bytes(b'stubbed image')
+        pages.append(page);inputs.append({'page_id':page['page_id'],'payload':payload,'task':page['task'],
+            'prompt':'MEMBERSHIP '+str(number),'image':str(image),'excluded_node_ids':[]})
+    jsonl(tmp_path/'pages.jsonl',pages);jsonl(tmp_path/'page_inputs.jsonl',inputs)
+    (tmp_path/'manifest.json').write_text(json.dumps({'files':{}}))
+    class Model:
+        def generate_raw_with_images(self,system,prompt,images,tokens):
+            if prompt.startswith('MEMBERSHIP'):
+                value={'groups':[{'id':'G1','kind':'article','nodes':['N001'],'title_ids':[],'flows':[]}],
+                       'page_context_title_ids':[],'unassigned_nodes':[],'conflicted_nodes':[]}
+            elif prompt.startswith('Build reading flows'):
+                value={'groups':[{'id':'G1','flows':[{'kind':'body','nodes':['N001']}]}]}
+            elif prompt.startswith('Judge only whether the SOURCE'):
+                value={'source_boundary_status':'SYNTACTICALLY_INCOMPLETE','confidence':1.0,
+                       'reason':'Source ends inside a grammatical construction.'}
+            elif prompt.startswith('Judge one proposed cross-page pair'):
+                value={'same_article':True,'direct_reading_successor':True,
+                       'source_boundary_status':'SYNTACTICALLY_INCOMPLETE','label':'SAME_SENTENCE',
+                       'confidence':0.99,'reason':'Target directly completes the source grammar.'}
+            else:raise AssertionError(prompt[:80])
+            return SimpleNamespace(raw=json.dumps(value))
+    result=materialize(tmp_path,Model())
+    edges=rows(tmp_path/'reading_edges.jsonl')
+    assert result['cross_page_ready'] and result['cross_page_reading_edges']==1
+    assert [(edge['source'],edge['target'],edge['cross_page']) for edge in edges]==[('tail','head',True)]
+    manifest=json.loads((tmp_path/'article_graph_manifest.json').read_text())
+    assert manifest['cross_page_evaluated'] and manifest['cross_page_ready']
+
+
+def test_same_sentence_is_rejected_when_independent_boundary_is_complete():
+    value={'label':'SAME_SENTENCE','confidence':.9,'reason':'unsupported',
+           'same_article':True,'direct_reading_successor':True}
+    result=validate_cross_page_pair(value,'COMPLETE')
+    assert result['label']=='UNCERTAIN' and result['confidence']==0.0
+
+
 def test_integrated_document_entrypoint_runs_articles_after_all_node_batches(tmp_path, monkeypatch):
     import run_vldocir_nodes as driver
     import run_hybrid_article_clustering as articles
@@ -192,6 +242,32 @@ def test_reading_cannot_reassign_nodes_or_mutate_fixed_membership():
     bad = copy.deepcopy(output); bad['groups'][0]['nodes'] = ['N002']
     with pytest.raises(ValueError, match='membership is immutable'):
         validate_reading(bad, page, membership)
+
+
+def test_reading_rejects_fragmented_singleton_body_flows():
+    page={'document_mode':'single_article','nodes':[{'label':'N001','type':'TEXT'},
+          {'label':'N002','type':'TEXT'}],'titles':[]}
+    membership={'groups':[{'id':'G1','kind':'article','nodes':['N001','N002'],
+        'title_ids':[],'flows':[]}],'page_context_title_ids':[],
+        'unassigned_nodes':[],'conflicted_nodes':[]}
+    fragmented={'groups':[{'id':'G1','flows':[{'kind':'body','nodes':['N001']},
+        {'kind':'body','nodes':['N002']}]}]}
+    with pytest.raises(ValueError,match='fragmented body reading'):
+        validate_reading(fragmented,page,membership)
+    fixed={'groups':[{'id':'G1','flows':[{'kind':'body','nodes':['N001','N002']}]}]}
+    assert validate_reading(fixed,page,membership)['groups'][0]['flows']==fixed['groups'][0]['flows']
+
+
+def test_cross_page_pair_prompt_exposes_intervening_page_flows():
+    row={'document_id':'doc','document_mode':'single_article','source_page':1,'target_page':2,
+         'source_flow_kind':'body','target_flow_kind':'body','source_node_id':'n1','target_node_id':'n3',
+         'source_text_tail':'we can write the signal as','target_text_head':'where h is the channel',
+         'source_page_flows':[{'flow_id':'f1','kind':'body','nodes':[{'node_id':'n1','text':'intro'}]},
+                              {'flow_id':'f2','kind':'body','nodes':[{'node_id':'n2','text':'equation (1)'}]}],
+         'target_page_flows':[{'flow_id':'f3','kind':'body','nodes':[{'node_id':'n3','text':'where'}]}]}
+    value=cross_page.prompt(row,'SYNTACTICALLY_INCOMPLETE')
+    assert 'source_page_flows' in value and 'equation (1)' in value
+    assert 'belongs between this SOURCE and TARGET' in value
 
 
 def test_retry_sees_previous_response_and_exact_missing_labels(tmp_path):

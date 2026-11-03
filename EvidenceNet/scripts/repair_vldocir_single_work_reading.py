@@ -84,6 +84,7 @@ def _validate_cached_value(path, record, validator):
 
 def _code_files():
     return [Path(__file__), Path(article.__file__), Path(schema.__file__),
+            ROOT / 'EvidenceNet/scripts/run_document_cross_page_qwen.py',
             ROOT / 'EvidenceNet/evidence_graph/llm_client.py']
 
 

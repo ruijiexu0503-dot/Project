@@ -1,6 +1,6 @@
 # 将知识图谱链接预测接入 EvidenceNet：研究与实验计划
 
-日期：2026-11-01。状态：文献与代码可用性核查、实验设计；尚未实现适配器或提交新任务。
+日期：2026-11-01，更新：2026-11-02。状态：v2、P1/P2、20-pair bounded model verifier 与条件式 query reachability smoke 已完成；没有独立人工标签或 retrieval gain 结论，ULTRA 官方 smoke 因依赖/checkpoint 未缓存而暂停。
 
 本文补充 [基于 HF 对照结果的建边调整计划](EDGE_CONSTRUCTION_PLAN_AFTER_HF_20261101.md)。下文涉及 EvidenceNet 的改造均为我们的设计，不是论文已经验证的结论。
 
@@ -169,3 +169,53 @@ CBLiP 和文本图扩展放在第二轮，避免一次改候选、表示、训�
 5. Reading graph import→query **unverified end-to-end**：已有各自的单元测试和 collector/retriever 代码，但 v3 尚无 `collect → retrieve` 的已完成整链路运行证据。
 
 **这不阻止研究 KG 候选发现**，但决定 KG 试验输入图的真实可用性：显式标记跨页 NEXT 缺失与 reading import 未验证，不把 v3 page-local 边冒充全阅读图；KG 适配实验可以先使用已校验的局部图并报告限制，不将这些修复议题无条件设为整个 KG 研究的重新启动前提。
+
+### 2026-11-02 后续实测更新：v5 reading 与 KG pilot v2 preparation
+
+上述 v3 限制中的第 3、5 项已由全新 v5 smoke 实测更新：两篇文档的 58 个 EvidenceNode 完成严格 article/reading 验证，导出 21 条 `NEXT` 及其 21 条 `PREVIOUS`；其中 1 条是显式两阶段判定的跨页 `NEXT`。Importer/navigation 检查覆盖 42/42 条 directed edge，Slurm job 以 exit code 0 完成。该结果只验证这 58 个节点，不外推到其余 corpus。
+
+`kg_link_prediction_pilot_v2_20261102` preparation 继续冻结完整 VL-DocIR 范围：32 documents、518 pages、7291 EvidenceNodes。v5 的 58 个节点只是完整图中的 validated reading subset；其余节点不推断 reading edge，缺边不作负例。213 条 `RELATED_OPEN` 保持 noisy observed context，绝不作为 gold。
+
+统一文本直接来自既有 `members[].text`：7288/7291 节点非空，不重新 Parsing、Node Generation 或 OCR。原冻结 embedding views 覆盖 6520 个节点，因此不重新编码时，Text-only、Text+Graph、ULTRA 的主公平比较 universe 固定为这 6520 个共同可见节点；其余 768 个有文本但无冻结 view 的节点和 3 个空文本节点仍保留在完整实体图中，但不进入主比较候选空间。若以后扩到 7288 个文本节点，必须对缺失节点按同一冻结协议补编码并作为单独实验版本。
+
+原 1088 个 `node_candidates.jsonl` pair 被固定为 baseline membership set。后续所谓“新端点”严格指 canonical pair 不在这 1088 个固定预算候选中，并不声称它不在任何可能的 ANN 邻居中。v2 preparation 没有运行候选生成、KG model、embedding 或 verifier；72 个 blind review pair 仍未标注，因此当前不能报告 candidate recall 或 verified precision。
+
+### 2026-11-02 P1/P2 第一轮 Candidate Generation
+
+已在不修改 v2 preparation 和 production Edge Pipeline 的条件下完成 CPU candidate generation。P1 将同一 EvidenceNode 的既有 frozen views 取均值并 L2 normalize，以 node cosine 生成 Text-only 排名。P2 使用完全相同的 6520 source/target universe、document-split filtering、self/observed-`RELATED_OPEN` 排除规则及 TopK=20；仅对具有观测邻域的 source 加入类型化邻居传播分数（`RELATED_OPEN` weight 1.0，`NEXT/PREVIOUS` weight 0.75，最终 graph blend 0.20）。noisy semantic edge 只作 context，不作 gold；无边也不作负例。
+
+CPU smoke 覆盖三类关系并通过接口、过滤和 isolated fallback 检查。完整运行每个 proposer 保存 130400 条定向 Top20 ranking，再使用同一 deterministic canonical-pair 去重规则截取 1088 pair。P1 与 baseline 重合 112，baseline 外 976；P2 与 baseline 重合 111，baseline 外 977。两臂全局预算共享 1086 pair，各有 2 pair 独有。这只是 candidate composition 差异，不是质量提升。
+
+图覆盖必须单独解释：6520 个 source 中只有 386 个在过滤后的 frozen universe 内具有图邻域，6134 个完全孤立。connected sources 中 373 个 Top20 发生变化，共有 502 个 P2 Top20 entrants，平均 P1/P2 Top20 集合重合 18.70/20；isolated sources 的 P2 ranking 被断言逐项等于 P1。全局 P2 budget 中只有 30 个记录以 connected node 为定向 source，因此不能用总体 2-pair 变化掩盖或否定局部图行为，也不能据此声称 retrieval improvement。
+
+完整 rankings、raw scores、逐候选 graph provenance、逐 source graph decisions、时间与输入 hash 位于 `EvidenceNet/output/kg_link_prediction_p1_p2_20261102/`。本轮未运行 Parsing、OCR、Node Generation、Embedding、ULTRA、GPU training 或 verifier。没有独立人工审核标签，故不报告 precision、recall 或 Retrieval improvement。
+
+### 2026-11-02 P1/P2 bounded follow-up
+
+按照 `KG_LINK_PREDICTION_P1_P2_VERIFICATION_QUERY_SMOKE_ULTRA_HANDOFF_20261102.md`，已验证 P1=1088、P2=1088、shared=1086、P1-only=2、P2-only=2、union=1090。373 个 connected changed sources 的 P2 local Top20 共引入 502 个 source→target incidence、450 个不同 target ID、499 个 canonical pair；这些 local entrants 全部进入候选 union，但最高 P2 score 0.799447，低于全局 budget cutoff 0.875060，因此 0 个进入全局 1088 budget。两个 P2-only 全局 pair 原本已在各自 source 的 P1 Top20 中，是 graph reranking 越过全局 cutoff，不是 local Top20 新 entrant。allocator 没有 source quota，瓶颈是全局分数阈值，不是 observed-edge exclusion、candidate union 或 canonical dedupe。
+
+已冻结 20-pair bounded verification selection：4 个 P1/P2 disjoint、4 个 stratified shared control、6 个 locally changed but globally excluded P2 candidate，以及同 source 的 6 个 P1 local-exit control。每项保存原文 excerpt/location、proposer membership、baseline novelty、graph provenance 和空白 verdict/direction/contribution 字段；当前全部为 `unreviewed`，没有自动用相似度或图分数打标签。
+
+因为 `accepted_edges.jsonl` 仍为空，query integration smoke 正确状态为 `BLOCKED_NO_ACCEPTED_VERSIONED_EDGE_SUBGRAPH`；不能为了展示路径而凭空接受边或用 query gold 选边。ULTRA 官方接口已固定到 commit `427966ad8ed60420eef034063d44f3153addff90`，导出 6520-node entity map 与按 split 隔离的 observed context triples，但未 clone、下载 checkpoint、编译 `rspmm`、运行 inference 或训练。ULTRA 是 structure-only，不读取 `members[].text`，当前 eligible context 只覆盖 387/6520 个 endpoint nodes，因此适配在接口上可行、证据上仍受 sparse/noisy graph 限制。
+
+follow-up 的人类可读报告、输入 hash、四个 disjoint pair、source-level budget diagnosis、verification selection、query blocker 和 ULTRA readiness 位于 `EvidenceNet/output/kg_link_prediction_p1_p2_followup_v1_20261102/`。仍不报告 precision、recall 或 retrieval improvement。
+
+### 2026-11-02 Bounded verifier execution preparation
+
+按照 `KG_LINK_PREDICTION_BOUNDED_VERIFIER_ULTRA_SMOKE_HANDOFF_20261102.md`，已为冻结的恰好 20 pair 生成 source-grounded verifier snapshot：54 个覆盖完整 eligible member text 的窗口、40 个 endpoint node crop、16 个仅来自 validated v5 NEXT/PREVIOUS 的 reading-context 条目。推理不使用 diagnostic 中的截断预览；reading context 不能替代 endpoint anchor。输出 schema 强制保存 direction、`target_B_adds`、complementarity、entity/condition constraints、两端 anchors 和 model/human review status。
+
+本地节点没有 GPU；Qwen3.5-35B-A3B 权重约 72GB，沿用现有 4-GPU Horeka verifier 路径。任务上限固定为 20 pair，每 pair 最多 2 次尝试、全任务最多 24 次生成；不允许扩大 selection。部署包位于 `migration/horeka-kg-bounded-verifier-v1-20261102/`，目标输出是 `EvidenceNet/output/kg_link_prediction_bounded_verification_ultra_smoke_v1_20261102/`。当前 `verifier_results.jsonl` 和 model-only accepted subgraph 为空，不能提前陈述 verdict。
+
+若产生 source-anchored model-accepted edges，任务只运行 frozen seed reachability CPU smoke，最多保存 5 条路径；不执行完整 reranker 或 24-query benchmark，也不报告 retrieval metric。若没有 accepted edge 或没有 reachable seed，则显式报告对应状态。
+
+本机已有 PyTorch，但没有 `torch_geometric` 或 ULTRA checkpoint。根据 handoff，不自动安装、下载、编译 `rspmm` 或运行官方数据集；`ultra_smoke_report.json` 记录 pinned commit、官方命令、环境差异和独立授权需求。MIT 仅确认为 repository license，不外推 checkpoint redistribution terms。
+
+### 2026-11-02 Bounded verifier 运行结果
+
+Horeka Job `5223949` 在 `dev_accelerated` 上以 exit code 0 完成，20/20 pair 全部处理，实际 21 次生成调用，未超过 24 次上限。模型 verdict 为 8 `EVIDENCE_LINK`、12 `NO_LINK`、0 invalid/error；其中 7 个 model-accepted pair 位于原冻结 1088 baseline 外。所有 verdict 仍是 `model_reviewed`，独立人工核验数为 0，production graph 未修改。
+
+按 selection group：P1-only 为 2/2 accepted；P2-only 为 0/2 accepted，跨公司 SEC householding 与 clawback 两例均为 `NO_LINK`；shared control 为 3/4 accepted；P2 local entrant 为 2/6 accepted；matched P1 local-exit control 为 1/6 accepted。该小样本不能当 precision/recall，也不足以证明 P2 优于 P1。
+
+条件式 query smoke 找到 1 条 frozen-seed route：director-election voting query 从 seed 通过 model-only edge 到达初始 rank 211 的 target。代码导入和 traversal 成功，但未运行 reranker/selector，`target_selected_by_reranker=null`。该 target 原文讨论 auditor-ratification voting，与 director-election query 存在明显 scope mismatch；这说明 smoke 只证明可遍历，也暴露 model-only edge 可能过宽，不能据此声称 retrieval gain 或自动 promotion。
+
+完整结果、source anchors、model-only subgraph、query trace、execution metadata 和 verifier manifest 位于 `EvidenceNet/output/kg_link_prediction_bounded_verification_ultra_smoke_v1_20261102/`。

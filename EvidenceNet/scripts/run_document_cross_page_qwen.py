@@ -48,6 +48,7 @@ def prompt(row: dict[str, Any], source_boundary_status: str) -> str:
     payload = {key: row.get(key) for key in (
         "document_id", "document_mode", "source_page", "target_page", "source_flow_kind", "target_flow_kind",
         "source_node_id", "target_node_id", "source_text_tail", "target_text_head",
+        "source_page_flows", "target_page_flows",
     )}
     payload["source_boundary_status"] = source_boundary_status
     return """Judge one proposed cross-page pair along two separate axes: article membership and direct reading adjacency.
@@ -55,10 +56,16 @@ def prompt(row: dict[str, Any], source_boundary_status: str) -> str:
 Decision order:
 1. Read document_mode first. For single_article, all supplied non-page-context flows, including figures and captions, already belong to the same article; do not relitigate membership. For multi_article, decide membership conservatively and do not use topical similarity alone.
 2. If they are in the same article, decide whether this exact TARGET is the direct next reading unit after this exact SOURCE.
+   Inspect source_page_flows and target_page_flows before deciding. If another supplied source-page
+   node or flow belongs between this SOURCE and TARGET (for example, prose introduces a displayed
+   equation and TARGET explains that equation), this candidate is not a direct successor.
 3. source_boundary_status was decided independently from SOURCE alone. Treat it as fixed. Use SAME_SENTENCE only when it is SYNTACTICALLY_INCOMPLETE and TARGET directly completes its grammar.
 4. Use SAME_ARTICLE_NEW_NODE when the exact pair is directly adjacent but starts a new sentence/paragraph/node.
 5. Use SAME_ARTICLE_NO_EDGE when they belong to the same article but another flow or unit intervenes, so this pair must not receive NEXT.
 6. Use NEW_CONTENT for another article, advertisement, or page furniture in multi_article mode. A caption or figure is not NEW_CONTENT merely because it uses a separate flow. Use UNCERTAIN when evidence is insufficient.
+
+The page-flow context lists competing units; it is not permission to invent links. A positive label
+asserts this exact pair remains adjacent after considering every supplied competing flow.
 
 Flow kinds matter. Do not connect every source flow to every target flow merely because one main-flow pair continues. Captions, sidebars, footnotes, and main text may share an article while requiring separate reading chains.
 

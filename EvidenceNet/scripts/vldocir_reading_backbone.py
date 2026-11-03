@@ -29,12 +29,36 @@ def validate_edges(nodes, edges, assignments):
         'cross_page_next':sum(int(nodes[e['source']]['page'])!=int(nodes[e['target']]['page']) for e in edges)}
 
 
+def navigate(nodes, directed_edges, seeds):
+    """Traverse one validated reading hop for query-selected seed nodes."""
+    unknown=set(seeds)-set(nodes)
+    if unknown:raise ValueError('unknown reading seed: '+','.join(sorted(unknown)))
+    adjacency=defaultdict(list)
+    for edge in directed_edges:
+        if edge.get('edge_type',edge.get('type')) not in {'NEXT','PREVIOUS'}:
+            raise ValueError('non-reading edge in reading navigation')
+        if edge.get('source') not in nodes or edge.get('target') not in nodes:
+            raise ValueError('reading navigation endpoint outside nodes')
+        adjacency[edge['source']].append(edge)
+    paths=[]
+    for seed in seeds:
+        for edge in sorted(adjacency[seed],key=lambda row:(row.get('edge_type',row.get('type')),row['target'])):
+            target=nodes[edge['target']]
+            paths.append({'seed_node':seed,'target_node':edge['target'],
+                'edge_type':edge.get('edge_type',edge.get('type')),
+                'target_page':(target['document'],str(target['page'])),
+                'cross_page':bool(edge.get('cross_page'))})
+    return paths
+
+
 def build(nodes_path: Path, article_roots: list[Path], output: Path):
     nodes={n['id']:n for n in rows(nodes_path)}; edges=[]; assignments={}; sources={str(nodes_path.resolve()):sha(nodes_path)}
     for root in article_roots:
         manifest=read(root/'article_graph_manifest.json')
         if not manifest.get('ready_for_downstream') or not manifest.get('reading_ready'):
             raise ValueError('incomplete current reading stage: '+str(root))
+        if manifest.get('cross_page_evaluated') and not manifest.get('cross_page_ready'):
+            raise ValueError('incomplete cross-page reading stage: '+str(root))
         for name,h in manifest['files'].items():
             if sha(root/name)!=h: raise ValueError('changed article artifact '+name)
         for a in rows(root/'article_assignments.jsonl'):
@@ -53,7 +77,7 @@ def build(nodes_path: Path, article_roots: list[Path], output: Path):
     jsonl(output/'reading_edges.jsonl',directed)
     result.update(nodes=len(nodes),previous_edges=len(edges),method='current_Qwen_membership_and_reading_flows',
         assignment_statuses=dict(Counter(a.get('assignment_status') for a in assignments.values())),
-        limitation='Current single-document profile only emits page-local flows; no synthetic cross-page or singleton links.')
+        limitation='Cross-page links require explicit validated two-stage decisions; no links are inferred from page IDs or singleton proximity.')
     write(output/'reading_summary.json',result)
     write(output/'reading_manifest.json',{'sources':sources,'files':{n:sha(output/n) for n in ('reading_edges.jsonl','reading_summary.json')},'code_sha256':sha(Path(__file__))})
     return result
