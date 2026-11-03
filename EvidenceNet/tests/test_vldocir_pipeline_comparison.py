@@ -250,3 +250,45 @@ def test_duplicate_document_workers_lock_and_reuse_one_valid_result(tmp_path,mon
         process.join(10);assert process.exitcode==0
     assert calls.value==1
     assert json.loads((out/'document_status/only.json').read_text())['status']=='complete'
+
+
+
+def test_scope_gate_is_opt_in_and_keeps_legacy_selection_unchanged():
+    direct=[('doc',str(i)) for i in range(6)]
+    semantic=[(direct[4],{'edge_id':'edge-wrong'}),(direct[5],{'edge_id':'edge-right'})]
+    legacy,legacy_trace=select_pages(direct,[],semantic,budget=4,core=2)
+    assert legacy==[direct[0],direct[1],direct[4],direct[5]]
+    assert [r['decision'] for r in legacy_trace]==['added','added']
+    assert all('scope_decision' not in r for r in legacy_trace)
+
+
+def test_query_scope_gate_rejects_mismatched_decision_object_and_backfills_budget():
+    # Mismatch stands for director-election query vs auditor-ratification target.
+    direct=[('doc',str(i)) for i in range(7)]
+    semantic=[(direct[4],{'edge_id':'auditor-ratification'}),
+              (direct[5],{'edge_id':'director-election'})]
+    pages,trace=select_pages(direct,[],semantic,budget=4,core=2,
+                            scope_decisions={'auditor-ratification':'mismatch',
+                                             'director-election':'match'})
+    assert pages==[direct[0],direct[1],direct[5],direct[2]]
+    assert [row['decision'] for row in trace]==['scope_mismatch','added']
+    assert [row['scope_decision'] for row in trace]==['mismatch','match']
+    assert len(pages)==len(set(pages))==4
+
+
+def test_query_scope_gate_abstains_on_missing_edge_and_does_not_touch_reading():
+    direct=[('doc',str(i)) for i in range(8)]
+    reading=[(direct[4],{'edge_type':'NEXT'})]
+    semantic=[(direct[5],{'edge_id':'unknown'})]
+    pages,trace=select_pages(direct,reading,semantic,budget=5,core=2,scope_decisions={})
+    assert pages==[direct[0],direct[1],direct[4],direct[2],direct[3]]
+    assert trace[0]['decision']=='added' and trace[0]['lane']=='reading'
+    assert trace[1]['decision']=='scope_abstain'
+    assert trace[1]['scope_decision']=='abstain'
+
+
+def test_query_scope_gate_rejects_invalid_labels():
+    direct=[('doc',str(i)) for i in range(5)]
+    with pytest.raises(ValueError,match='invalid query-scope decision'):
+        select_pages(direct,[],[(direct[4],{'edge_id':'edge'})],budget=4,core=2,
+                     scope_decisions={'edge':'maybe'})
