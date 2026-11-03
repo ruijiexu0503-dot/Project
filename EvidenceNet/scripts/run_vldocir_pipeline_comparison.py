@@ -429,14 +429,33 @@ def encode_edges(out,model):
         'vectors_sha256':sha(out/'pair_vectors.npy'),'execution':execution})
 
 
-def select_pages(direct, reading_pages, edge_pages, budget=20, core=10):
+def select_pages(direct, reading_pages, edge_pages, budget=20, core=10, scope_decisions=None):
+    """Select fixed-budget pages; optional per-edge query scope gate is opt-in.
+
+    scope_decisions maps semantic edge_id to 'match', 'mismatch', or 'abstain'.
+    Unknown edge IDs abstain (fail closed) when a gate is provided. No gate
+    preserves the historical selection and trace output exactly. These labels
+    must come from query-time evidence checks, not evaluation gold.
+    """
     selected=list(direct[:core]);seen=set(selected); decisions=[]
     for lane,items,limit in [('reading',reading_pages,core+3),('semantic',edge_pages,budget)]:
         for page,path in items:
             if page not in direct: raise ValueError('page outside corpus')
+            scope=None
+            if lane=='semantic' and scope_decisions is not None:
+                scope=scope_decisions.get(path.get('edge_id'), 'abstain')
+                if scope not in ('match','mismatch','abstain'):
+                    raise ValueError('invalid query-scope decision')
+                if scope!='match':
+                    decisions.append(dict(path,lane=lane,target_page=page,
+                                          decision='scope_mismatch' if scope=='mismatch' else 'scope_abstain',
+                                          scope_decision=scope))
+                    continue
             reason='already_selected' if page in seen else 'budget_full' if len(selected)>=limit else 'added'
             if reason=='added':selected.append(page);seen.add(page)
-            decisions.append(dict(path,lane=lane,target_page=page,decision=reason))
+            entry=dict(path,lane=lane,target_page=page,decision=reason)
+            if scope is not None:entry['scope_decision']=scope
+            decisions.append(entry)
     for p in direct:
         if len(selected)>=budget:break
         if p not in seen:selected.append(p);seen.add(p)
