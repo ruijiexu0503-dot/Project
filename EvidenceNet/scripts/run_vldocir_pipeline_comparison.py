@@ -463,7 +463,31 @@ def select_pages(direct, reading_pages, edge_pages, budget=20, core=10, scope_de
     return selected,decisions
 
 
-def retrieve(out,model):
+def load_query_scope_decisions(path, query_ids, edge_ids):
+    """Load an optional, externally produced query-to-edge judgement file.
+
+    JSONL schema: question_id, edge_id, decision in match/mismatch/abstain,
+    and a nonempty source-grounded reason. This loader does NOT infer judgements,
+    inspect gold, or promote candidate edges into the graph.
+    """
+    allowed_queries=set(query_ids);allowed_edges=set(edge_ids)
+    decisions=defaultdict(dict);reasons=defaultdict(dict)
+    for line_number,row in enumerate(rows(path),1):
+        qid=row.get('question_id');eid=row.get('edge_id');decision=row.get('decision')
+        if qid not in allowed_queries:raise ValueError(f'unknown query in scope input line {line_number}')
+        if eid not in allowed_edges:raise ValueError(f'unknown edge in scope input line {line_number}')
+        if decision not in ('match','mismatch','abstain'):
+            raise ValueError(f'invalid scope decision at line {line_number}')
+        reason=row.get('reason')
+        if not isinstance(reason,str) or not reason.strip():
+            raise ValueError(f'missing scope reason at line {line_number}')
+        if eid in decisions[qid]:raise ValueError(f'duplicate query-edge scope decision at line {line_number}')
+        decisions[qid][eid]=decision
+        reasons[qid][eid]=reason.strip()
+    return dict(decisions),dict(reasons)
+
+
+def retrieve(out,model,scope_decisions_path=None):
     check_graph(out)
     from compare_edge_embedding_models import embed
     from tokenizers import Tokenizer
@@ -477,9 +501,13 @@ def retrieve(out,model):
     if pm['graph_manifest_sha256']!=sha(out/'graph_manifest.json') or pm['inputs_sha256']!=sha(out/'pair_inputs.jsonl') or pm['vectors_sha256']!=sha(out/'pair_vectors.npy'):
         raise ValueError('pair cache mismatch')
     if pm['model_files']!={p.name:sha(p) for p in model.glob('*.json')}: raise ValueError('query/edge encoder mismatch')
+    pair_rows=rows(out/'pair_inputs.jsonl');edge_ids=[r['edge_id'] for r in pair_rows[::2]]
+    scope_by_query,scope_reasons=({}, {})
+    if scope_decisions_path is not None:
+        scope_by_query,scope_reasons=load_query_scope_decisions(
+            scope_decisions_path,[q['question_id'] for q in queries],edge_ids)
     qvec,execution=embed([QUERY_PREFIX+q['question'] for q in queries],model,6,512,'cuda','last_token','left')
     np.save(out/'query_vectors.npy',qvec);write(out/'query_encoding.json',execution)
-    pair_rows=rows(out/'pair_inputs.jsonl');edge_ids=[r['edge_id'] for r in pair_rows[::2]]
     pair=np.load(out/'pair_vectors.npy',allow_pickle=False)
     sims=np.load(SOURCE/'search/query_window_scores.npy',allow_pickle=False)
     encoding=read(SOURCE/'search/encoding.json')
@@ -528,6 +556,14 @@ def retrieve(out,model):
                 for p in sorted(ep,key=lambda p:(direct.index(p),p)):
                     extra.append((p,{'edge_id':edge_ids[i],'edge_rank':rank,'edge_score':float(scores[i]),'edge_type':'RELATED','source_node':e['source'],'target_node':e['target']}))
             arms[target]=select_pages(direct,reading,extra)
+            if scope_decisions_path is not None:
+                scoped_pages,scoped_trace=select_pages(
+                    direct,reading,extra,scope_decisions=scope_by_query.get(qid,{}))
+                for event in scoped_trace:
+                    if event['lane']=='semantic':
+                        event['scope_reason']=scope_reasons.get(qid,{}).get(
+                            event.get('edge_id'),'no query-specific judgement supplied')
+                arms[target+'_scope']=(scoped_pages,scoped_trace)
         colrank=sorted(col[qid],key=lambda p:(-col[qid][p],p));arms['ColNomic_BGE']=(colrank[:20],[])
         union=set()
         for arm,(pp,trace) in arms.items():
@@ -545,10 +581,16 @@ def retrieve(out,model):
     jsonl(out/'query_candidates.jsonl',selections);jsonl(out/'search_paths.jsonl',paths)
     jsonl(out/'reranker_inputs.jsonl',tasks.values());jsonl(out/'page_reranker_ids.jsonl',page_ids);jsonl(out/'ranking_contexts.jsonl',contexts)
     files=[out/n for n in ('query_candidates.jsonl','search_paths.jsonl','reranker_inputs.jsonl','page_reranker_ids.jsonl','ranking_contexts.jsonl')]
-    write(out/'retrieval_manifest.json',{'files':{p.name:sha(p) for p in files},'queries_sha256':sha(TRACE/'queries.jsonl'),
+    retrieval_manifest={'files':{p.name:sha(p) for p in files},'queries_sha256':sha(TRACE/'queries.jsonl'),
         'ColNomic_scores_sha256':sha(COL/'scores.jsonl'),'corpus_images_equal':True,'query_text_equal':True,
         'budget':20,'core':10,'reading_extra_max':3,'semantic_edges_scanned':100,'reranker_tasks':len(tasks),
-        'same_page_reading_limitation':'NEXT traces are retained even when page deduplication adds no page; shared page text is held fixed.'})
+        'same_page_reading_limitation':'NEXT traces are retained even when page deduplication adds no page; shared page text is held fixed.'}
+    if scope_decisions_path is not None:
+        retrieval_manifest['scope_input']={'path':str(Path(scope_decisions_path).resolve()),
+            'sha256':sha(scope_decisions_path),
+            'decision_count':sum(map(len,scope_by_query.values())),
+            'status':'externally supplied; NOT model-derived by this pipeline; NOT gold'}
+    write(out/'retrieval_manifest.json',retrieval_manifest)
 
 
 def report(out):
@@ -595,7 +637,12 @@ def report(out):
         per_query[arm]=result.pop('per_query');metrics[arm]=result
         jsonl(out/'runs'/(arm+'.jsonl'),runs[arm])
     paired={}
-    for arm,control in [('reading','node'),('sparse_pipeline','reading'),('all_node_pipeline','sparse_pipeline'),('sparse_pipeline','ColNomic_BGE'),('all_node_pipeline','ColNomic_BGE')]:
+    comparisons=[('reading','node'),('sparse_pipeline','reading'),
+                 ('all_node_pipeline','sparse_pipeline'),('sparse_pipeline','ColNomic_BGE'),
+                 ('all_node_pipeline','ColNomic_BGE')]
+    for arm in ('sparse_pipeline','all_node_pipeline'):
+        if arm+'_scope' in per_query:comparisons.append((arm+'_scope',arm))
+    for arm,control in comparisons:
         delta=[per_query[arm][q['question_id']]['AP@5']-per_query[control][q['question_id']]['AP@5'] for q in queries]
         paired[arm+'_vs_'+control]={'wins':sum(v>1e-12 for v in delta),'losses':sum(v< -1e-12 for v in delta),'ties':sum(abs(v)<=1e-12 for v in delta)}
     result={'complete':True,'scope':'24-query/518-page inspected pilot; not official full corpus',
@@ -626,6 +673,7 @@ def main():
     p.add_argument('--output',type=Path,required=True);p.add_argument('--model',type=Path);p.add_argument('--encoder',type=Path)
     p.add_argument('--shards',type=int,default=16);p.add_argument('--index',type=int,default=0);p.add_argument('--minutes',type=int,default=420)
     p.add_argument('--document');p.add_argument('--documents',nargs='+');p.add_argument('--task');p.add_argument('--retry-document',action='append',default=[])
+    p.add_argument('--scope-decisions',type=Path,help='Optional query-edge scope JSONL; for retrieve only; provenance required')
     a=p.parse_args();out=a.output.resolve()
     if a.stage=='prepare':r=prepare(out,a.model,a.encoder,a.shards)
     elif a.stage=='prepare-reading':r=prepare_reading_replay(out,a.documents,a.shards)
@@ -635,7 +683,7 @@ def main():
     elif a.stage=='reading':r=reading_run(out,a.model,a.document,a.task)
     elif a.stage=='collect':r=collect(out)
     elif a.stage=='encode-edges':r=encode_edges(out,a.encoder)
-    elif a.stage=='retrieve':r=retrieve(out,a.encoder)
+    elif a.stage=='retrieve':r=retrieve(out,a.encoder,a.scope_decisions)
     else:r=report(out)
     print(json.dumps(r,ensure_ascii=False),flush=True)
 
