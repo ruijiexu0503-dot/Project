@@ -92,3 +92,17 @@ def test_duplicate_ids_rejected_and_score_output_is_loader_compatible(tmp_path):
     assert json.loads(path.read_text().strip())["decision"] == "match"
     with pytest.raises(FileExistsError):
         scorer.write_jsonl(path, scored)
+
+
+
+def test_missing_named_entity_on_edge_does_not_pass():
+    result = scorer.score_pair(query(), edge(entity=None))
+    assert result["decision"] == "abstain"
+    assert result["reason"] == "missing_entity_identity"
+
+
+def test_missing_required_query_condition_does_not_pass():
+    q = {**query(), "conditions": {"year": "2025"}}
+    result = scorer.score_pair(q, edge(conditions={}))
+    assert result["decision"] == "abstain"
+    assert result["reason"] == "missing_required_condition"
