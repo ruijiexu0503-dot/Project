@@ -128,6 +128,16 @@ def score_pair(query: dict[str, Any], edge: dict[str, Any],
     if not qobj or not eobj:
         result["reason"] = "missing_decision_object"
         return result
+    if (query.get("entity") or edge.get("entity")) and (
+            not normalize(query.get("entity")) or not normalize(edge.get("entity"))):
+        result["reason"] = "missing_entity_identity"
+        return result
+    qconditions = query.get("conditions") or {}
+    econditions = edge.get("conditions") or {}
+    if any(normalize(value) and not normalize(econditions.get(key))
+           for key, value in qconditions.items()):
+        result["reason"] = "missing_required_condition"
+        return result
 
     space_q, space_e = query.get("embedding_space"), edge.get("embedding_space")
     if not space_q or not space_e:
