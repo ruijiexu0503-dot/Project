@@ -18,12 +18,12 @@ import time
 from typing import Any, Iterable
 
 
-VERSION = "kg-link-prediction-bounded-verification-ultra-smoke-v1-20261102"
+VERSION = "kg-link-prediction-bounded-verification-identity-consistency-v2-20261104"
 ROOT = Path(__file__).resolve().parents[2]
 FOLLOWUP = ROOT / "EvidenceNet/output/kg_link_prediction_p1_p2_followup_v1_20261102"
 PREP = ROOT / "EvidenceNet/output/kg_link_prediction_pilot_v2_20261102"
 SOURCE = ROOT / "migration/vldocir-edge-20261022/results"
-OUT = ROOT / "EvidenceNet/output/kg_link_prediction_bounded_verification_ultra_smoke_v1_20261102"
+OUT = ROOT / "EvidenceNet/output/kg_link_prediction_bounded_verification_identity_v2_20261104"
 MODEL = ROOT / "external/models/Qwen3.5-35B-A3B"
 MAX_PAIRS = 20
 MAX_TOTAL_ATTEMPTS = 24
@@ -188,9 +188,23 @@ def prompt(task: dict[str, Any], contexts: dict[str, list[dict[str, Any]]]) -> s
 
 First decide whether their original evidence supports a specific relationship. Similar wording,
 shared industry, generic policy language, or visual resemblance alone is not mutual factual support.
-For cross-document pairs, preserve company/entity/condition identity. Repeated SEC householding or
-clawback boilerplate across different companies is not automatically an evidence link; accept only
-an explicitly supported comparison/correspondence and state the identity limitation.
+For cross-document pairs, explicitly separate SAME verified subject from DIFFERENT subjects
+being compared. A shared topic, proposal number, job title, formula or event label does not
+establish company/event identity. If original anchored evidence does not prove common
+identity, report identity_status=UNRESOLVED or DISTINCT_COMPARISON, not SAME_VERIFIED.
+DISTINCT_COMPARISON is allowable only for explicitly described comparative claims;
+it MUST NOT be reported as the same event or be navigated as one.
+First compare actual propositions, including subject, vote/measurement target, year,
+population, experimental conditions and outcome. Statements with conflicting effects
+under claimed-identical conditions are not complementary evidence. For example,
+"No effect" versus "counts against" about the same abstention claim signals conflict,
+not a richer explanation. Do not infer a contradiction if conditions/entities differ;
+report the condition mismatch instead.
+If an identity/condition/claim issue is unresolved, return UNCERTAIN (basis=null),
+not EVIDENCE_LINK or NAVIGATION_LINK. If contradicted under aligned conditions,
+return NO_LINK or UNCERTAIN, with a quoted rationale. For explicitly distinct
+subjects, a comparison may be a CLAIM_CORRESPONDENCE only when both endpoint
+anchors actually describe the comparison; do not invent a correspondence.
 
 discovery_level: 0 none, 1 broad/redundant topic, 2 specific relation, 3 direct complement.
 decision: EVIDENCE_LINK, NAVIGATION_LINK, NO_LINK, or UNCERTAIN.
@@ -213,7 +227,15 @@ Return exactly one JSON object:
 "direction":"UNDIRECTED|A_TO_B|B_TO_A|BIDIRECTIONAL",
 "target_B_adds":"what B contributes beyond A, or empty",
 "complementarity":"COMPLEMENTARY|PARTIAL_OVERLAP|REDUNDANT|NONE|UNCERTAIN",
-"entity_condition_constraints":"explicit identity/condition constraint"}.
+"entity_condition_constraints":"explicit identity/condition constraint",
+"identity_status":"SAME_VERIFIED|DISTINCT_COMPARISON|UNRESOLVED",
+"claim_consistency":"CONSISTENT|CONTRADICTORY|NOT_COMPARABLE|UNCERTAIN",
+"condition_alignment":"ALIGNED|DISTINCT_STATED|UNRESOLVED",
+"consistency_evidence":{"A_evidence_id":"A:E..." or null,
+"B_evidence_id":"B:E..." or null,"explanation":"state exact compatible or conflicting propositions"}}.
+Only use original endpoint evidence IDs in consistency_evidence.
+If one or both endpoints lack relevant original claims, set evidence IDs null
+and consistency=UNCERTAIN. Do not treat model output as human validation.
 
 TASK:\n''' + json.dumps(task, ensure_ascii=False) + "\nVALIDATED_READING_CONTEXT:\n" + json.dumps(contexts, ensure_ascii=False)
 
@@ -230,9 +252,49 @@ def validate(value: dict[str, Any], entry: dict[str, Any]) -> dict[str, Any]:
             raise ValueError(field)
     if core["decision"] in {"NO_LINK", "UNCERTAIN"} and value["complementarity"] == "COMPLEMENTARY":
         raise ValueError("unsupported complementarity")
+    identity = value.get("identity_status")
+    consistency = value.get("claim_consistency")
+    condition = value.get("condition_alignment")
+    if identity not in {"SAME_VERIFIED", "DISTINCT_COMPARISON", "UNRESOLVED"}:
+        raise ValueError("identity_status")
+    if consistency not in {"CONSISTENT", "CONTRADICTORY", "NOT_COMPARABLE", "UNCERTAIN"}:
+        raise ValueError("claim_consistency")
+    if condition not in {"ALIGNED", "DISTINCT_STATED", "UNRESOLVED"}:
+        raise ValueError("condition_alignment")
+    proof = value.get("consistency_evidence")
+    if not isinstance(proof, dict) or set(proof) != {"A_evidence_id", "B_evidence_id", "explanation"}:
+        raise ValueError("consistency_evidence schema")
+    if not isinstance(proof["explanation"], str) or not proof["explanation"].strip():
+        raise ValueError("consistency_evidence explanation")
+    for side in ("A", "B"):
+        key = side + "_evidence_id"
+        if proof[key] is not None and proof[key] not in entry["lookups"][side]:
+            raise ValueError("consistency evidence ownership " + side)
+    is_link = core["decision"] in {"EVIDENCE_LINK", "NAVIGATION_LINK"}
+    if is_link:
+        if identity == "UNRESOLVED" or consistency != "CONSISTENT" or condition == "UNRESOLVED":
+            raise ValueError("unresolved or contradictory evidence cannot form a link")
+        if any(proof[side + "_evidence_id"] is None for side in ("A", "B")):
+            raise ValueError("link needs original claim anchors")
+        if core["identity_conflicts"]:
+            raise ValueError("unresolved identity conflicts cannot form a link")
+        # Cross-document event/name equality alone is not independent proof of
+        # entity identity. Explicit comparison remains possible without asserting
+        # the events are the SAME.
+        a_doc = {str(a.get("document")) for a in core["anchors"]["A"] if a.get("document")}
+        b_doc = {str(b.get("document")) for b in core["anchors"]["B"] if b.get("document")}
+        cross_document = bool(a_doc and b_doc and a_doc.isdisjoint(b_doc))
+        if cross_document and identity == "SAME_VERIFIED":
+            raise ValueError("cross-document same identity requires independent confirmation")
+        if identity == "DISTINCT_COMPARISON" and core["basis"] != "CLAIM_CORRESPONDENCE":
+            raise ValueError("distinct subjects need explicit claim correspondence")
+        if condition == "DISTINCT_STATED" and identity != "DISTINCT_COMPARISON":
+            raise ValueError("distinct conditions cannot support same-subject link")
     return {**core, "direction": value["direction"], "target_B_adds": value["target_B_adds"],
             "complementarity": value["complementarity"],
-            "entity_condition_constraints": value["entity_condition_constraints"]}
+            "entity_condition_constraints": value["entity_condition_constraints"],
+            "identity_status": identity, "claim_consistency": consistency,
+            "condition_alignment": condition, "consistency_evidence": proof}
 
 
 def prepare(out: Path, followup: Path, prep: Path, source: Path, model: Path) -> dict[str, Any]:
@@ -307,7 +369,7 @@ def prepare(out: Path, followup: Path, prep: Path, source: Path, model: Path) ->
         "model": str(model), "model_config_sha256": sha(model / "config.json"),
         "system": SYSTEM, "max_pairs": MAX_PAIRS, "max_attempts_per_pair": MAX_ATTEMPTS_PER_PAIR,
         "max_total_attempts": MAX_TOTAL_ATTEMPTS, "thinking": False, "sampling": False,
-        "max_new_tokens": 900, "review_level": "model_only_not_human_gold",
+        "max_new_tokens": 1200, "review_level": "model_only_not_human_gold",
         "context_policy": "full eligible endpoint evidence; optional node crops; validated reading context only",
         "production_graph_modified": False,
     }
@@ -370,7 +432,7 @@ def run(out: Path, model: Path, minutes: int) -> dict[str, Any]:
     memory["cpu"] = "0GiB"
     llm = create_llm({"provider": "transformers", "model": str(model), "dtype": "bfloat16",
                       "device_map": "balanced", "max_memory": memory, "require_cuda": True,
-                      "enable_thinking": False, "max_new_tokens": 900})
+                      "enable_thinking": False, "max_new_tokens": 1200})
     execution = {
         "job_id": os.environ.get("SLURM_JOB_ID"), "partition": os.environ.get("SLURM_JOB_PARTITION"),
         "started_unix": time.time(), "gpu_names": [torch.cuda.get_device_name(i) for i in range(4)],
@@ -391,7 +453,7 @@ def run(out: Path, model: Path, minutes: int) -> dict[str, Any]:
             try:
                 retry = "" if not attempts else "\nVALIDATION_ERROR: " + attempts[-1]["error"][:500]
                 raw = llm.generate_raw_with_images(SYSTEM, entry["prompt"] + retry,
-                                                    [str(out / path) for path in entry["images"]], 900).raw
+                                                    [str(out / path) for path in entry["images"]], 1200).raw
                 calls += 1
                 checked = validate(extract_json(raw), entry)
                 attempts.append({"attempt": attempt_index + 1, "valid": True, "raw": raw})
@@ -444,6 +506,10 @@ def finalize(out: Path) -> dict[str, Any]:
             "source_id": row["source_id"], "target_id": row["target_id"],
             "direction": result["direction"], "edge_type": result["decision"],
             "relation_description": result["matched_claim"] or result["reason"],
+            "identity_status": result["identity_status"],
+            "claim_consistency": result["claim_consistency"],
+            "condition_alignment": result["condition_alignment"],
+            "consistency_evidence": result["consistency_evidence"],
             "target_B_adds": result["target_B_adds"], "complementarity": result["complementarity"],
             "entity_condition_constraints": result["entity_condition_constraints"],
             "anchors": result["anchors"], "identity_conflicts": result["identity_conflicts"],
