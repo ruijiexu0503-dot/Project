@@ -34,6 +34,10 @@ def test_extended_validator_keeps_no_link_unpromoted():
              "B_evidence_ids": [], "matched_claim": "", "reason": "only broad overlap",
              "limitation": "different entities", "direction": "UNDIRECTED",
              "target_B_adds": "", "complementarity": "NONE",
-             "entity_condition_constraints": "company identity differs"}
+             "entity_condition_constraints": "company identity differs",
+             "identity_status": "UNRESOLVED", "claim_consistency": "UNCERTAIN",
+             "condition_alignment": "UNRESOLVED",
+             "consistency_evidence": {"A_evidence_id": None, "B_evidence_id": None,
+                                      "explanation": "Cannot establish same corporate event"}}
     result = bounded.validate(value, entry)
     assert result["decision"] == "NO_LINK" and result["complementarity"] == "NONE"
