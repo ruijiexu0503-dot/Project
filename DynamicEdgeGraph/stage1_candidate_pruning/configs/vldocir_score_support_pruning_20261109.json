@@ -1,0 +1,24 @@
+{
+  "run_id": "vldocir-score-support-pruning-20261109",
+  "input_top_k": 100,
+  "structural_graph_included": false,
+  "bge_en_icl_dense": {
+    "effective_for_pruning": false,
+    "reason": "Frozen vectors are collapsed because the pipeline used cls pooling while the model's SentenceTransformers pooling configuration requires last-token pooling."
+  },
+  "reliable_routes": [
+    "qwen3_0_6b_dense",
+    "gte_qwen2_1_5b_dense",
+    "mxbai_dense",
+    "gte_large_dense",
+    "bm25"
+  ],
+  "policies": [
+    {"id": "A_conservative", "strategy": "support_dependent", "gates": {"support_1": 0.95, "support_2": 0.85, "support_3plus": 0.65}},
+    {"id": "A_balanced", "strategy": "support_dependent", "gates": {"support_1": 0.90, "support_2": 0.75, "support_3plus": 0.50}},
+    {"id": "A_broad", "strategy": "support_dependent", "gates": {"support_1": 0.85, "support_2": 0.65, "support_3plus": 0.35}},
+    {"id": "B_route_specific", "strategy": "route_specific", "gates": {"support_1": {"qwen3_0_6b_dense": 0.94, "gte_qwen2_1_5b_dense": 0.94, "mxbai_dense": 0.94, "gte_large_dense": 0.94, "bm25": 0.92}, "support_2": {"qwen3_0_6b_dense": 0.80, "gte_qwen2_1_5b_dense": 0.80, "mxbai_dense": 0.80, "gte_large_dense": 0.80, "bm25": 0.75}, "support_3plus": {"qwen3_0_6b_dense": 0.60, "gte_qwen2_1_5b_dense": 0.60, "mxbai_dense": 0.60, "gte_large_dense": 0.60, "bm25": 0.50}}},
+    {"id": "C_mutual_assisted", "strategy": "support_mutual", "gates_non_mutual": {"support_1": 0.90, "support_2": 0.75, "support_3plus": 0.50}, "gates_any_mutual": {"support_1": 0.85, "support_2": 0.65, "support_3plus": 0.40}},
+    {"id": "C_mutual_conservative", "strategy": "support_mutual", "gates_non_mutual": {"support_1": 0.95, "support_2": 0.85, "support_3plus": 0.65}, "gates_any_mutual": {"support_1": 0.90, "support_2": 0.75, "support_3plus": 0.55}}
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "run_id": "vldocir-abc-score-support-pruning-20261109",
+  "candidate_universe": "union_of_the_five_reliable_Top100_routes_only",
+  "reliable_dense_routes": ["qwen3_0_6b_dense", "gte_qwen2_1_5b_dense", "mxbai_dense", "gte_large_dense"],
+  "lexical_route": "bm25",
+  "bge_en_icl_dense": {"effective_for_A_B_C": false, "diagnostic_only": true},
+  "rule_A": {"definition": "effective_support == 5", "always_keep": true},
+  "rule_B_grid": [
+    {"id": "B_dense_2xP90", "dense_models_at_or_above": 2, "tail_percentile": 0.90},
+    {"id": "B_dense_2xP95", "dense_models_at_or_above": 2, "tail_percentile": 0.95},
+    {"id": "B_dense_3xP80", "dense_models_at_or_above": 3, "tail_percentile": 0.80},
+    {"id": "B_dense_3xP90", "dense_models_at_or_above": 3, "tail_percentile": 0.90}
+  ],
+  "rule_C_grid": [
+    {"id": "C_dense_or_bm25_P99", "dense_tail_percentile": 0.99, "bm25_tail_percentile": 0.99},
+    {"id": "C_dense_or_bm25_P995", "dense_tail_percentile": 0.995, "bm25_tail_percentile": 0.995},
+    {"id": "C_dense_or_bm25_P999", "dense_tail_percentile": 0.999, "bm25_tail_percentile": 0.999}
+  ],
+  "final_combinations": [
+    {"id": "ABC_2xP90_C99", "B": "B_dense_2xP90", "C": "C_dense_or_bm25_P99"},
+    {"id": "ABC_2xP95_C995", "B": "B_dense_2xP95", "C": "C_dense_or_bm25_P995"},
+    {"id": "ABC_3xP80_C995", "B": "B_dense_3xP80", "C": "C_dense_or_bm25_P995"},
+    {"id": "ABC_3xP90_C999", "B": "B_dense_3xP90", "C": "C_dense_or_bm25_P999"}
+  ]
+}

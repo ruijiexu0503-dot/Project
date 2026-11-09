@@ -1,0 +1,12 @@
+outputs/
+.cache/
+.ann_deps/
+__pycache__/
+*.sqlite
+*.npy
+*.npz
+*.pt
+*.safetensors
+*.bin
+*.parquet
+*.jsonl

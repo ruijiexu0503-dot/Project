@@ -1,0 +1,14 @@
+run_id: audit-20261106-canonical
+output_root: DynamicEdgeGraph/stage1_candidate_pruning/outputs
+node_path: EvidenceNet/output/previous_edge_schemes_current_suite_v1_20261015/corpus_nodes.jsonl
+text_view_path: EvidenceNet/output/previous_edge_schemes_current_suite_v1_20261015/views.jsonl
+vector_routes:
+  qwen3_0_6b_dense: {}
+  gte_qwen2_1_5b_dense: {}
+  bge_en_icl_dense: {}
+  mxbai_dense: {}
+  gte_large_dense: {}
+  formula_context: {}
+dense_thresholds: [0.0, 0.3, 0.5, 0.7]
+bm25_thresholds: [0.0, 1.0, 5.0, 10.0]
+candidate_budgets: [10000, 25000, 50000]
