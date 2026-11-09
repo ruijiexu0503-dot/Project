@@ -71,6 +71,9 @@ cern_advertisement_detection_pilot/*.jsonl
 /_archive/
 /migration/
 
+# Local-only generated reports, figures, and other non-source artifacts.
+/_local_artifacts/
+
 # Generated parsing audits; root-level audit scripts remain visible to Git.
 /parsing/audits/*/
 
