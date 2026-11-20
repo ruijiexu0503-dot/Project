@@ -1,0 +1,14 @@
+{
+  "status": "combined_review_candidates_only",
+  "total_queries": 268,
+  "real_document_queries": 64,
+  "legacy_document_queries": 23,
+  "source_bound_expansion_queries": 69,
+  "dense_magazine_queries": 112,
+  "real_document_multi_evidence": 29,
+  "legacy_visual_only_not_annotated": [
+    "nasa_cosmic_temperatures_image_only_pdf",
+    "nasa_cosmic_temperatures_jpeg"
+  ],
+  "note": "No candidate becomes a formal gold answer until human review. Legacy source PDFs are not uniformly verified; their evidence binds to preserved node/page assets."
+}

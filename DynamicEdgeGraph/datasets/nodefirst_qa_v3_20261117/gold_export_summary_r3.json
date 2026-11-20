@@ -1,0 +1,12 @@
+{
+  "r2_audited_gold_count": 20,
+  "r3_candidate_count": 17,
+  "r3_gold_count": 17,
+  "r3_gold_by_category": {
+    "single_node": 4,
+    "cross_page": 4,
+    "cross_document": 9
+  },
+  "excluded_or_blocked_count": 3,
+  "manual_approval_required": false
+}

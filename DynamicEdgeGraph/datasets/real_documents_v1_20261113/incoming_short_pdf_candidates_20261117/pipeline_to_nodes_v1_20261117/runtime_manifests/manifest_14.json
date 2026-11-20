@@ -1,0 +1,14 @@
+{
+  "experiment": "short_public_documents_v1_20261117",
+  "documents": [
+    {
+      "document_id": "short_015_economics_of_climate_adaptation_arxiv_2024",
+      "title": "The Economics of Climate Adaptation: An Assessment",
+      "document_type": "open-access research paper",
+      "input_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/economics_of_climate_adaptation_arxiv_2024.pdf",
+      "source_url": "https://arxiv.org/pdf/2411.16893",
+      "source_sha256": "48c9d6ae9b37d5f3df6af6f837c6030b799ed9ca6ba63ecc30e2d52015334d1b",
+      "audit_pages": []
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "pr4_input_count": 20,
+  "pr4_content_verdicts": {
+    "PASS": 16,
+    "REVISE": 4
+  },
+  "claim_span_fix_required": 14,
+  "r3_candidates": 17,
+  "excluded_resample": 3,
+  "candidate_categories": {
+    "single_node": 4,
+    "cross_page": 4,
+    "cross_document": 9
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "document_id": "real_016_batch_16_basic_version_07",
+  "target_total": 120,
+  "existing_manual_or_expansion": 8,
+  "new_dense_candidates": 112,
+  "note": "Dense candidates are source-bound and require question/answer quality review before formal gold approval."
+}

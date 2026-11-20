@@ -1,0 +1,4 @@
+# Public-source downloads and derived manifests are reproducible but not repository code.
+raw/
+manifests/*.json
+logs/

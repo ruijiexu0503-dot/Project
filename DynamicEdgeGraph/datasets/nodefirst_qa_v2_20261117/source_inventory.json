@@ -1,0 +1,43 @@
+{
+  "snapshot": "2026-11-17",
+  "eligibility_manifest": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/annotation_eligibility_v1_20261117.json",
+  "sampling_seed": 20261117,
+  "eligibility_counts": {
+    "REVIEW_REQUIRED": 64,
+    "PILOT_ONLY_BLOCKED": 60,
+    "EXCLUDE_OR_PARK": 144
+  },
+  "real_document_status_counts": {
+    "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING": 17,
+    "EXCLUDE_OR_PARK_INCOMPLETE_PARSE": 1
+  },
+  "legacy": {
+    "documents": 25,
+    "pages": 49,
+    "nodes": 550,
+    "canonical_non_null": 550,
+    "canonical_unique": 550,
+    "node_statuses": {
+      "HYBRID_SHADOW_CANDIDATE": 550
+    },
+    "node_types": {
+      "TEXT": 474,
+      "COMPOSITE": 27,
+      "VISUAL": 45,
+      "TABLE": 3,
+      "CAPTION": 1
+    },
+    "heuristic_eligible": 451,
+    "eligibility": "PILOT_ONLY_BLOCKED",
+    "warning": "Original PDFs are not uniformly verified; all nodes remain HYBRID_SHADOW_CANDIDATE."
+  },
+  "real": {
+    "eligible_review_pending_mapping": 17,
+    "excluded_or_parked": [
+      "real_015_batch_15_spinoff2008"
+    ],
+    "canonical_node_mapping": "ABSENT",
+    "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+  },
+  "historical_qa_usage": "Dedup and QC only; historical questions/answers are not read by this builder."
+}

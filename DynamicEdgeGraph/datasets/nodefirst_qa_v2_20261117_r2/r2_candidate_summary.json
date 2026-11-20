@@ -1,0 +1,14 @@
+{
+  "pr3_input": 38,
+  "keep": 22,
+  "revise": 13,
+  "remove": 3,
+  "r2_candidates": 30,
+  "candidate_categories": {
+    "single_node": 9,
+    "cross_page": 11,
+    "cross_document": 10
+  },
+  "revised_retained": 8,
+  "remove_or_resample": 8
+}

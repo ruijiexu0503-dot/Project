@@ -1,0 +1,42 @@
+{
+  "input_files": {
+    "actions": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_v2_20261117_r2/pr3_audit_actions.jsonl",
+    "candidates": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_v2_20261117_r2/qa_candidates_r2.jsonl",
+    "reviews": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_v2_20261117_r2/qa_independent_reviews_r2.jsonl",
+    "repair_proposals": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_v2_20261117_r2/r2_repair_proposals.jsonl",
+    "canonical_mapping_audit": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_v2_20261117_r1/canonical_mapping_audit.jsonl",
+    "source_integrity_audit": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_v2_20261117_r1/source_integrity_audit.jsonl",
+    "duplicate_audit": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_v2_20261117_r2/duplicate_audit_r2.jsonl",
+    "shortcut_audit": "embedded_in_reviews"
+  },
+  "join_key": "complete draft_id",
+  "pr3_verdict_counts": {
+    "KEEP": 22,
+    "REVISE": 13,
+    "REMOVE": 3
+  },
+  "result_status_counts": {
+    "GOLD_ELIGIBLE_AUTOMATIC": 28,
+    "EXCLUDED_AFTER_REVISION": 5,
+    "BLOCKED": 2,
+    "EXCLUDED_BY_PR3_REMOVE": 3
+  },
+  "blocking_reason_counts": {
+    "INDEPENDENT_SEMANTIC_REVIEW_FAIL_OR_INCOMPLETE": 2
+  },
+  "gold_eligible_count": 28,
+  "gold_eligible_by_category": {
+    "cross_page": 9,
+    "cross_document": 10,
+    "single_node": 9
+  },
+  "target_distribution": {
+    "single_node": 0.2,
+    "cross_page": 0.3,
+    "cross_document": 0.5
+  },
+  "target_distribution_exact": false,
+  "manifest_or_global_errors": [],
+  "blocked_candidate_count": 2,
+  "automatic_gold_export_allowed": true
+}

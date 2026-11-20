@@ -1,0 +1,18 @@
+{
+  "r1_pr3_audited_count": 38,
+  "r2_candidate_count": 30,
+  "r2_gold_eligible_count": 28,
+  "r2_gold_by_category": {
+    "single_node": 9,
+    "cross_page": 9,
+    "cross_document": 10
+  },
+  "balanced_gold_count": 20,
+  "balanced_gold_by_category": {
+    "single_node": 4,
+    "cross_page": 6,
+    "cross_document": 10
+  },
+  "balanced_distribution_exact": true,
+  "manual_approval_required": false
+}

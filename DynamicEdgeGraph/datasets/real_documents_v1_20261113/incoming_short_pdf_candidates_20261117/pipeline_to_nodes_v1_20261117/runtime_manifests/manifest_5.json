@@ -1,0 +1,14 @@
+{
+  "experiment": "short_public_documents_v1_20261117",
+  "documents": [
+    {
+      "document_id": "short_006_tcfd_reporting_guide_2024_25_uk_treasury",
+      "title": "Good Practice Guide for TCFD Reporting 2024-25",
+      "document_type": "climate disclosure guidance",
+      "input_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/tcfd_reporting_guide_2024_25_uk_treasury.pdf",
+      "source_url": "https://assets.publishing.service.gov.uk/media/6a1d690e59fb7a60f827f57f/Good_Practice_Guide_for_TCFD_Reporting_2024-25.pdf",
+      "source_sha256": "e79fc2fe7ff5d9f0e1eb0fbb4a6829d1c5cea8268e35995090308293aa8b9902",
+      "audit_pages": []
+    }
+  ]
+}

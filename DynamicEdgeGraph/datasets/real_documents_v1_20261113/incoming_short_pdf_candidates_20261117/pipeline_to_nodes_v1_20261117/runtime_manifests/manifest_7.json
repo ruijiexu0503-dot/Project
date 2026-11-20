@@ -1,0 +1,14 @@
+{
+  "experiment": "short_public_documents_v1_20261117",
+  "documents": [
+    {
+      "document_id": "short_008_library_of_congress_magazine_mar_apr_2024",
+      "title": "Library of Congress Magazine, March/April 2024",
+      "document_type": "public-interest magazine",
+      "input_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/library_of_congress_magazine_mar_apr_2024.pdf",
+      "source_url": "https://www.loc.gov/lcm/pdf/LCM_2024_0304.pdf",
+      "source_sha256": "1d59e089cd05aed560f686ad5c436a65db228c496dd40c3c3089d771b17c5bc5",
+      "audit_pages": []
+    }
+  ]
+}

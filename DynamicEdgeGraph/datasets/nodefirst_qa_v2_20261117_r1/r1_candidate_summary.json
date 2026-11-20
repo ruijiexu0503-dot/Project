@@ -1,0 +1,23 @@
+{
+  "candidate_count": 41,
+  "category_counts": {
+    "single_node": 10,
+    "cross_page": 15,
+    "cross_document": 16
+  },
+  "new_canonical_nodes": 10,
+  "mapping_pass": 77,
+  "mapping_total": 77,
+  "exact_duplicate_blocks": 0,
+  "rejected_cross_document_parent_ids": [
+    "nodefirst_v2_pilot::033",
+    "nodefirst_v2_pilot::035",
+    "nodefirst_v2_pilot::037",
+    "nodefirst_v2_pilot::040",
+    "nodefirst_v2_pilot::042",
+    "nodefirst_v2_pilot::046",
+    "nodefirst_v2_pilot::047",
+    "nodefirst_v2_pilot::048",
+    "nodefirst_v2_pilot::049"
+  ]
+}

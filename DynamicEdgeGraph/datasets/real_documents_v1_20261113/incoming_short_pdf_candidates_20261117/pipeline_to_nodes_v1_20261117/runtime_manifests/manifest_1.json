@@ -1,0 +1,14 @@
+{
+  "experiment": "short_public_documents_v1_20261117",
+  "documents": [
+    {
+      "document_id": "short_002_geer_data_collection_user_guide_us_ed_2024",
+      "title": "GEER Data Collection Tool User Guide",
+      "document_type": "education software user guide",
+      "input_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/geer_data_collection_user_guide_us_ed_2024.pdf",
+      "source_url": "https://api.covid-relief-data.ed.gov/collection/api/v1/public/docs/ESF-GEER%20User%20Guide%20Year%204.pdf",
+      "source_sha256": "880af10f3e36db9d7e8f90d6c55337763ffddda0bd4df213c2e00eca262b8601",
+      "audit_pages": []
+    }
+  ]
+}

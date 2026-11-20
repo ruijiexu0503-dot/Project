@@ -1,0 +1,24 @@
+{
+  "input_pilot": 50,
+  "r1_candidates": 41,
+  "automatic_final_accept": 38,
+  "automatic_accept_rate_over_original_pilot": 0.76,
+  "automatic_accept_rate_over_r1_candidates": 0.926829268292683,
+  "accepted_by_category": {
+    "single_node": 9,
+    "cross_page": 13,
+    "cross_document": 16
+  },
+  "balanced_export_count": 30,
+  "balanced_export_by_category": {
+    "single_node": 6,
+    "cross_page": 9,
+    "cross_document": 15
+  },
+  "old_content_pass_but_blocked": 33,
+  "old_final_accept": 0,
+  "r1_reject_or_revise": 3,
+  "gate_block_counts": {
+    "SEMANTIC_GROUNDING": 3
+  }
+}

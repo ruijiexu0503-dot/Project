@@ -1,0 +1,52 @@
+{
+  "previous": {
+    "pilot_drafts": 50,
+    "content_pass_mapping_pending": 9,
+    "pilot_only_blocked_content_pass": 24,
+    "revise": 17,
+    "final_accept": 0,
+    "cross_document_necessity_pass": 12,
+    "cross_document_total": 25
+  },
+  "r1": {
+    "automatic_final_accept": 38,
+    "accept_rate_over_original_pilot": 0.76,
+    "independent_model_review_candidates": 41,
+    "independent_model_review_pass": 38,
+    "independent_model_review_fail": 3,
+    "accepted_by_category": {
+      "single_node": 9,
+      "cross_page": 13,
+      "cross_document": 16
+    },
+    "balanced_export": {
+      "total": 30,
+      "single_node": 6,
+      "cross_page": 9,
+      "cross_document": 15
+    },
+    "cross_document_necessity_pass": 16,
+    "cross_document_original_total": 25,
+    "rejected_for_resampling": 9
+  },
+  "reclassified_old_blockers": {
+    "content_pass_mapping_pending_to_final_accept": 9,
+    "pilot_only_blocked_content_pass_to_final_accept": 24
+  },
+  "remaining_semantic_failures": [
+    "nodefirst_v2_r1::009",
+    "nodefirst_v2_r1::017",
+    "nodefirst_v2_r1::022"
+  ],
+  "rejected_cross_document_parent_ids": [
+    "nodefirst_v2_pilot::033",
+    "nodefirst_v2_pilot::035",
+    "nodefirst_v2_pilot::037",
+    "nodefirst_v2_pilot::040",
+    "nodefirst_v2_pilot::042",
+    "nodefirst_v2_pilot::046",
+    "nodefirst_v2_pilot::047",
+    "nodefirst_v2_pilot::048",
+    "nodefirst_v2_pilot::049"
+  ]
+}

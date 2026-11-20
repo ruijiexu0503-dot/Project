@@ -1,0 +1,32 @@
+{
+  "created_at": "2026-11-13T22:26:47.189126+00:00",
+  "dataset_id": "node_vqa_reuse_v1_20261113",
+  "source_roots": {
+    "raw": "/home/ka_anthropomatik/ka_dv3352/Project/EvidenceNet/output/relation_first_corpus_shadow_v7_cpu",
+    "prepared": "/home/ka_anthropomatik/ka_dv3352/Project/EvidenceNet/output/hybrid_49page_stress_prepared_20261007",
+    "nodes": "/home/ka_anthropomatik/ka_dv3352/Project/EvidenceNet/output/hybrid_node_v2_61078/embedding_geometry",
+    "legacy_edges": "/home/ka_anthropomatik/ka_dv3352/Project/EvidenceNet/output/own_corpus_edges_v1_20261011"
+  },
+  "counts": {
+    "documents": 25,
+    "pages": 49,
+    "atoms": 761,
+    "visual_bundles": 72,
+    "nodes": 550,
+    "atom_types": {
+      "furniture": 102,
+      "text": 554,
+      "heading": 74,
+      "caption": 28,
+      "table": 3
+    },
+    "issues": 1
+  },
+  "qa": {
+    "questions": 0,
+    "answers": 0,
+    "evidence": 0
+  },
+  "source_file_manifest": "data_files_manifest.jsonl",
+  "copy_policy": "reference immutable existing assets; no baseline or old output overwritten"
+}

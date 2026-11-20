@@ -1,0 +1,20 @@
+{"draft_id": "nodefirst_v2_r1::001", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::002", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::003", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::004", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::011", "r3_status": "CANDIDATE_RETAINED"}
+{"draft_id": "nodefirst_v2_r1::012", "r3_status": "CANDIDATE_RETAINED"}
+{"draft_id": "nodefirst_v2_r1::013", "r3_status": "CANDIDATE_RETAINED"}
+{"draft_id": "nodefirst_v2_r1::014", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::015", "r3_status": "EXCLUDE_RESAMPLE", "reason": "NO_EVIDENCE_GROUNDED_CROSS_PAGE_BRIDGE"}
+{"draft_id": "nodefirst_v2_r1::016", "r3_status": "EXCLUDE_RESAMPLE", "reason": "NO_EXPLICIT_PRINCIPLE_TO_EVALUATION_LINK"}
+{"draft_id": "nodefirst_v2_r1::026", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::027", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::028", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::029", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::030", "r3_status": "CANDIDATE_RETAINED"}
+{"draft_id": "nodefirst_v2_r1::032", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::034", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::036", "r3_status": "CANDIDATE_REPAIRED"}
+{"draft_id": "nodefirst_v2_r1::041", "r3_status": "EXCLUDE_RESAMPLE", "reason": "CROSS_DOMAIN_CAUSAL_CONCEPT_CONFLATION"}
+{"draft_id": "nodefirst_v2_r1::045", "r3_status": "CANDIDATE_RETAINED"}

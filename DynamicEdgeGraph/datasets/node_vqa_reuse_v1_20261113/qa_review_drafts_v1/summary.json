@@ -1,0 +1,16 @@
+{
+  "status": "legacy_review_candidates_only",
+  "draft_count": 23,
+  "document_count": 25,
+  "skipped": [
+    {
+      "doc_id": "nasa_cosmic_temperatures_image_only_pdf",
+      "reason": "no_preserved_text_node; visual-only QA requires image review"
+    },
+    {
+      "doc_id": "nasa_cosmic_temperatures_jpeg",
+      "reason": "no_preserved_text_node; visual-only QA requires image review"
+    }
+  ],
+  "note": "Candidate answers are source-node text and require human rewrite/approval before gold use."
+}

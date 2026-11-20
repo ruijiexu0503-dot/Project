@@ -1,0 +1,18 @@
+{
+  "join_key": "complete draft_id",
+  "pr4_input_count": 20,
+  "status_counts": {
+    "GOLD_ELIGIBLE_AUTOMATIC": 17,
+    "EXCLUDED_RESAMPLE": 3
+  },
+  "blocking_reason_counts": {},
+  "gold_eligible_count": 17,
+  "gold_eligible_by_category": {
+    "single_node": 4,
+    "cross_page": 4,
+    "cross_document": 9
+  },
+  "manifest_or_global_errors": [],
+  "manual_approval_required": false,
+  "automatic_gold_export_allowed": true
+}

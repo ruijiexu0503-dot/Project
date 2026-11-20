@@ -1,0 +1,26 @@
+{
+  "draft_count": 50,
+  "unique_ids": 50,
+  "category_counts": {
+    "single_node": 10,
+    "cross_page": 15,
+    "cross_document": 25
+  },
+  "cross_document_subtypes": {
+    "two_documents": 17,
+    "three_plus_documents": 8
+  },
+  "all_references_resolved": true,
+  "mapping_counts": {
+    "PENDING_MAPPING": 10,
+    "PILOT_ONLY_ID_PRESENT_SOURCE_PDF_UNVERIFIED": 89
+  },
+  "gold_export_count": 0,
+  "sha256": {
+    "qa_drafts.jsonl": "b975c93eca267701083fcf6041aca1d25d50dedb4045b56cbfad3f64d8df5eae",
+    "sampled_seeds.jsonl": "c824c13ccc0a3d74e8ad7586231445dfa4798a26dcf109b485e60f929abd692a",
+    "evidence_group_candidates.jsonl": "f174181ca8a9c53dfb2ae92a9faa459369fa0fcd66cd3b7863944cc475d35b1f",
+    "mapping_audit.jsonl": "bc27fb553d859e3858ad492145b1541f9448531c4740bb710038ac2a8defd0b8",
+    "unresolved_evidence_mapping.jsonl": "49f40392f238d517ec20ce225215e3e5bcf8701907195e4739afca9b0923c679"
+  }
+}

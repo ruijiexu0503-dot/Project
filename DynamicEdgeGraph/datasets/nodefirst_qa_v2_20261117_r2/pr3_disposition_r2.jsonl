@@ -1,0 +1,38 @@
+{"draft_id": "nodefirst_v2_r1::001", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::002", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::003", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::004", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::005", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::006", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::007", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::008", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::010", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::011", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::012", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::013", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::014", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::015", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::016", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::018", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::019", "r2_status": "REMOVE_RESAMPLE", "reason": null}
+{"draft_id": "nodefirst_v2_r1::020", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::021", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::023", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::024", "r2_status": "REMOVE_RESAMPLE", "reason": "unsupported_provenance_causal_relation"}
+{"draft_id": "nodefirst_v2_r1::025", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::026", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::027", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::028", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::029", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::030", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::031", "r2_status": "REMOVE_RESAMPLE", "reason": null}
+{"draft_id": "nodefirst_v2_r1::032", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::034", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::036", "r2_status": "CANDIDATE_KEEP"}
+{"draft_id": "nodefirst_v2_r1::038", "r2_status": "REMOVE_RESAMPLE", "reason": null}
+{"draft_id": "nodefirst_v2_r1::039", "r2_status": "REMOVE_RESAMPLE", "reason": "no_real_relation_and_ocr_pollution"}
+{"draft_id": "nodefirst_v2_r1::041", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::043", "r2_status": "REMOVE_RESAMPLE", "reason": null}
+{"draft_id": "nodefirst_v2_r1::044", "r2_status": "REMOVE_RESAMPLE", "reason": null}
+{"draft_id": "nodefirst_v2_r1::045", "r2_status": "CANDIDATE_REVISED"}
+{"draft_id": "nodefirst_v2_r1::050", "r2_status": "REMOVE_RESAMPLE", "reason": "unsupported_information_theory_chain"}

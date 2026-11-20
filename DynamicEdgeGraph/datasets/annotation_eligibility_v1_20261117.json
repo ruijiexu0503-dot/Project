@@ -1,0 +1,2065 @@
+{
+  "version": "annotation_eligibility_v1_20261117",
+  "real_documents": [
+    {
+      "document_id": "real_001_batch_01_NASA-Spinoff-2023",
+      "manifest_index": 0,
+      "pdf_pages": 51,
+      "page_dirs": 51,
+      "successful_page_summaries": 51,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_002_batch_02_Spinoff.2022",
+      "manifest_index": 1,
+      "pdf_pages": 47,
+      "page_dirs": 47,
+      "successful_page_summaries": 47,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_003_batch_03_NASA_Spinoff_2021",
+      "manifest_index": 2,
+      "pdf_pages": 46,
+      "page_dirs": 46,
+      "successful_page_summaries": 46,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_004_batch_04_Spinoff2020",
+      "manifest_index": 3,
+      "pdf_pages": 194,
+      "page_dirs": 194,
+      "successful_page_summaries": 194,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_005_batch_05_Spinoff2019",
+      "manifest_index": 4,
+      "pdf_pages": 186,
+      "page_dirs": 186,
+      "successful_page_summaries": 186,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_006_batch_06_Spinoff2018",
+      "manifest_index": 5,
+      "pdf_pages": 182,
+      "page_dirs": 182,
+      "successful_page_summaries": 182,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_007_batch_07_Spinoff2017",
+      "manifest_index": 6,
+      "pdf_pages": 238,
+      "page_dirs": 238,
+      "successful_page_summaries": 238,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_008_batch_08_Spinoff2016",
+      "manifest_index": 7,
+      "pdf_pages": 242,
+      "page_dirs": 242,
+      "successful_page_summaries": 242,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_009_batch_09_Spinoff2015",
+      "manifest_index": 8,
+      "pdf_pages": 219,
+      "page_dirs": 219,
+      "successful_page_summaries": 219,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_010_batch_10_Spinoff2013",
+      "manifest_index": 9,
+      "pdf_pages": 199,
+      "page_dirs": 199,
+      "successful_page_summaries": 199,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_011_batch_11_Spinoff2012",
+      "manifest_index": 10,
+      "pdf_pages": 204,
+      "page_dirs": 204,
+      "successful_page_summaries": 204,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_012_batch_12_Spinoff2011",
+      "manifest_index": 11,
+      "pdf_pages": 224,
+      "page_dirs": 224,
+      "successful_page_summaries": 224,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_013_batch_13_Spinoff2010",
+      "manifest_index": 12,
+      "pdf_pages": 218,
+      "page_dirs": 218,
+      "successful_page_summaries": 218,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_015_batch_15_spinoff2008",
+      "manifest_index": 14,
+      "pdf_pages": 217,
+      "page_dirs": 194,
+      "successful_page_summaries": 193,
+      "failure_pages": 0,
+      "annotation_status": "EXCLUDE_OR_PARK_INCOMPLETE_PARSE",
+      "benchmark_status": "BLOCKED_INCOMPLETE_PARSE"
+    },
+    {
+      "document_id": "real_016_batch_16_basic_version_07",
+      "manifest_index": 15,
+      "pdf_pages": 172,
+      "page_dirs": 172,
+      "successful_page_summaries": 172,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_017_batch_17_accessible",
+      "manifest_index": 16,
+      "pdf_pages": 145,
+      "page_dirs": 145,
+      "successful_page_summaries": 145,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_018_batch_18_accessible",
+      "manifest_index": 17,
+      "pdf_pages": 159,
+      "page_dirs": 159,
+      "successful_page_summaries": 159,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    },
+    {
+      "document_id": "real_020_batch_20_spin03",
+      "manifest_index": 19,
+      "pdf_pages": 144,
+      "page_dirs": 144,
+      "successful_page_summaries": 144,
+      "failure_pages": 0,
+      "annotation_status": "ELIGIBLE_FOR_REVIEW_PENDING_NODE_MAPPING",
+      "benchmark_status": "NOT_GOLD_PENDING_CANONICAL_NODE_MAPPING"
+    }
+  ],
+  "legacy_corpus_status": "PILOT_ONLY_BLOCKED",
+  "qa_eligibility": [
+    {
+      "draft_id": "manual_qa_review_v1::001",
+      "document_id": "real_001_batch_01_NASA-Spinoff-2023",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::002",
+      "document_id": "real_001_batch_01_NASA-Spinoff-2023",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::003",
+      "document_id": "real_002_batch_02_Spinoff.2022",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::004",
+      "document_id": "real_002_batch_02_Spinoff.2022",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::005",
+      "document_id": "real_003_batch_03_NASA_Spinoff_2021",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::006",
+      "document_id": "real_003_batch_03_NASA_Spinoff_2021",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::007",
+      "document_id": "real_004_batch_04_Spinoff2020",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::008",
+      "document_id": "real_004_batch_04_Spinoff2020",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::009",
+      "document_id": "real_005_batch_05_Spinoff2019",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::010",
+      "document_id": "real_005_batch_05_Spinoff2019",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::011",
+      "document_id": "real_006_batch_06_Spinoff2018",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::012",
+      "document_id": "real_006_batch_06_Spinoff2018",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::013",
+      "document_id": "real_007_batch_07_Spinoff2017",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::014",
+      "document_id": "real_007_batch_07_Spinoff2017",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::015",
+      "document_id": "real_008_batch_08_Spinoff2016",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::016",
+      "document_id": "real_008_batch_08_Spinoff2016",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::017",
+      "document_id": "real_009_batch_09_Spinoff2015",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::018",
+      "document_id": "real_009_batch_09_Spinoff2015",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::019",
+      "document_id": "real_010_batch_10_Spinoff2013",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::020",
+      "document_id": "real_010_batch_10_Spinoff2013",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::021",
+      "document_id": "real_011_batch_11_Spinoff2012",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::022",
+      "document_id": "real_011_batch_11_Spinoff2012",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::023",
+      "document_id": "real_012_batch_12_Spinoff2011",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::024",
+      "document_id": "real_012_batch_12_Spinoff2011",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::025",
+      "document_id": "real_013_batch_13_Spinoff2010",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::026",
+      "document_id": "real_013_batch_13_Spinoff2010",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::027",
+      "document_id": "real_001_batch_01_NASA-Spinoff-2023",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::028",
+      "document_id": "real_001_batch_01_NASA-Spinoff-2023",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::029",
+      "document_id": "real_002_batch_02_Spinoff.2022",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::030",
+      "document_id": "real_002_batch_02_Spinoff.2022",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::031",
+      "document_id": "real_003_batch_03_NASA_Spinoff_2021",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::032",
+      "document_id": "real_003_batch_03_NASA_Spinoff_2021",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::033",
+      "document_id": "real_004_batch_04_Spinoff2020",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::034",
+      "document_id": "real_004_batch_04_Spinoff2020",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::035",
+      "document_id": "real_005_batch_05_Spinoff2019",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::036",
+      "document_id": "real_005_batch_05_Spinoff2019",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::037",
+      "document_id": "real_006_batch_06_Spinoff2018",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::038",
+      "document_id": "real_006_batch_06_Spinoff2018",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::039",
+      "document_id": "real_007_batch_07_Spinoff2017",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::040",
+      "document_id": "real_007_batch_07_Spinoff2017",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::041",
+      "document_id": "real_008_batch_08_Spinoff2016",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::042",
+      "document_id": "real_008_batch_08_Spinoff2016",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::043",
+      "document_id": "real_009_batch_09_Spinoff2015",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::044",
+      "document_id": "real_009_batch_09_Spinoff2015",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::045",
+      "document_id": "real_010_batch_10_Spinoff2013",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::046",
+      "document_id": "real_010_batch_10_Spinoff2013",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::047",
+      "document_id": "real_011_batch_11_Spinoff2012",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::048",
+      "document_id": "real_011_batch_11_Spinoff2012",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::049",
+      "document_id": "real_012_batch_12_Spinoff2011",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::050",
+      "document_id": "real_012_batch_12_Spinoff2011",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::051",
+      "document_id": "real_013_batch_13_Spinoff2010",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::052",
+      "document_id": "real_013_batch_13_Spinoff2010",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::053",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::054",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::055",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::056",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::057",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::058",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::059",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::060",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::061",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::062",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::063",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "manual_qa_review_v1::064",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "REVIEW_REQUIRED",
+      "reason": "source pages complete but canonical evidence-node mapping and human approval remain pending"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::001",
+      "document_id": "CERNCourier2022NovDec-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::002",
+      "document_id": "CERNCourier2025JanFeb-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::003",
+      "document_id": "CERNCourier2026MayJun-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::004",
+      "document_id": "CLADmag_2025_H2",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::005",
+      "document_id": "CyberPhysicalModelingChapter4",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::006",
+      "document_id": "DLRmagazine_176_EN",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::007",
+      "document_id": "ESS203_day_01",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::008",
+      "document_id": "IDU-41f597b3-c201-4fa7-8cac-466610c36a27",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::009",
+      "document_id": "Luminous Garden Agnes Northrop and the Women of Tiffany Studios",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::010",
+      "document_id": "ML1_11_Reinforcement_Learning_1",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::011",
+      "document_id": "arxiv_1508_02357",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::012",
+      "document_id": "arxiv_1510_04615",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::013",
+      "document_id": "arxiv_1511_05955",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::014",
+      "document_id": "climate_change_with_ml",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::015",
+      "document_id": "detr",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::016",
+      "document_id": "entropy",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::017",
+      "document_id": "gNtSaU-1511.05999v3",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::018",
+      "document_id": "gw150914_detection",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::019",
+      "document_id": "gw150914_gr_test",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::020",
+      "document_id": "gw150914_properties",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::021",
+      "document_id": "hallmarks_of_aging",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::022",
+      "document_id": "nist_ai_rmf_1_0",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "legacy_qa_review_v1::023",
+      "document_id": "nvidia_2026_annual_report",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_001_batch_01_NASA-Spinoff-2023::1",
+      "document_id": "real_001_batch_01_NASA-Spinoff-2023",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_001_batch_01_NASA-Spinoff-2023::2",
+      "document_id": "real_001_batch_01_NASA-Spinoff-2023",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_002_batch_02_Spinoff.2022::1",
+      "document_id": "real_002_batch_02_Spinoff.2022",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_002_batch_02_Spinoff.2022::2",
+      "document_id": "real_002_batch_02_Spinoff.2022",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_003_batch_03_NASA_Spinoff_2021::1",
+      "document_id": "real_003_batch_03_NASA_Spinoff_2021",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_003_batch_03_NASA_Spinoff_2021::2",
+      "document_id": "real_003_batch_03_NASA_Spinoff_2021",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_004_batch_04_Spinoff2020::1",
+      "document_id": "real_004_batch_04_Spinoff2020",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_004_batch_04_Spinoff2020::2",
+      "document_id": "real_004_batch_04_Spinoff2020",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_005_batch_05_Spinoff2019::1",
+      "document_id": "real_005_batch_05_Spinoff2019",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_005_batch_05_Spinoff2019::2",
+      "document_id": "real_005_batch_05_Spinoff2019",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_006_batch_06_Spinoff2018::1",
+      "document_id": "real_006_batch_06_Spinoff2018",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_006_batch_06_Spinoff2018::2",
+      "document_id": "real_006_batch_06_Spinoff2018",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_007_batch_07_Spinoff2017::1",
+      "document_id": "real_007_batch_07_Spinoff2017",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_007_batch_07_Spinoff2017::2",
+      "document_id": "real_007_batch_07_Spinoff2017",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_008_batch_08_Spinoff2016::1",
+      "document_id": "real_008_batch_08_Spinoff2016",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_008_batch_08_Spinoff2016::2",
+      "document_id": "real_008_batch_08_Spinoff2016",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_009_batch_09_Spinoff2015::1",
+      "document_id": "real_009_batch_09_Spinoff2015",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_009_batch_09_Spinoff2015::2",
+      "document_id": "real_009_batch_09_Spinoff2015",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_010_batch_10_Spinoff2013::1",
+      "document_id": "real_010_batch_10_Spinoff2013",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_010_batch_10_Spinoff2013::2",
+      "document_id": "real_010_batch_10_Spinoff2013",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_011_batch_11_Spinoff2012::1",
+      "document_id": "real_011_batch_11_Spinoff2012",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_011_batch_11_Spinoff2012::2",
+      "document_id": "real_011_batch_11_Spinoff2012",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_012_batch_12_Spinoff2011::1",
+      "document_id": "real_012_batch_12_Spinoff2011",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_012_batch_12_Spinoff2011::2",
+      "document_id": "real_012_batch_12_Spinoff2011",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_013_batch_13_Spinoff2010::1",
+      "document_id": "real_013_batch_13_Spinoff2010",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_013_batch_13_Spinoff2010::2",
+      "document_id": "real_013_batch_13_Spinoff2010",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_015_batch_15_spinoff2008::1",
+      "document_id": "real_015_batch_15_spinoff2008",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "source document parse is incomplete"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_015_batch_15_spinoff2008::2",
+      "document_id": "real_015_batch_15_spinoff2008",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "source document parse is incomplete"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_016_batch_16_basic_version_07::1",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_016_batch_16_basic_version_07::2",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_020_batch_20_spin03::1",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_new_expansion::real_020_batch_20_spin03::2",
+      "document_id": "real_020_batch_20_spin03",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CERNCourier2022NovDec-digitaledition::1",
+      "document_id": "CERNCourier2022NovDec-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CERNCourier2022NovDec-digitaledition::2",
+      "document_id": "CERNCourier2022NovDec-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CERNCourier2025JanFeb-digitaledition::1",
+      "document_id": "CERNCourier2025JanFeb-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CERNCourier2025JanFeb-digitaledition::2",
+      "document_id": "CERNCourier2025JanFeb-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CERNCourier2026MayJun-digitaledition::1",
+      "document_id": "CERNCourier2026MayJun-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CERNCourier2026MayJun-digitaledition::2",
+      "document_id": "CERNCourier2026MayJun-digitaledition",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CLADmag_2025_H2::1",
+      "document_id": "CLADmag_2025_H2",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::CLADmag_2025_H2::2",
+      "document_id": "CLADmag_2025_H2",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::DLRmagazine_176_EN::1",
+      "document_id": "DLRmagazine_176_EN",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::DLRmagazine_176_EN::2",
+      "document_id": "DLRmagazine_176_EN",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::IDU-41f597b3-c201-4fa7-8cac-466610c36a27::1",
+      "document_id": "IDU-41f597b3-c201-4fa7-8cac-466610c36a27",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::IDU-41f597b3-c201-4fa7-8cac-466610c36a27::2",
+      "document_id": "IDU-41f597b3-c201-4fa7-8cac-466610c36a27",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::Luminous Garden Agnes Northrop and the Women of Tiffany Studios::1",
+      "document_id": "Luminous Garden Agnes Northrop and the Women of Tiffany Studios",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::arxiv_1508_02357::1",
+      "document_id": "arxiv_1508_02357",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::arxiv_1508_02357::2",
+      "document_id": "arxiv_1508_02357",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::arxiv_1510_04615::1",
+      "document_id": "arxiv_1510_04615",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::arxiv_1510_04615::2",
+      "document_id": "arxiv_1510_04615",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::arxiv_1511_05955::1",
+      "document_id": "arxiv_1511_05955",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::arxiv_1511_05955::2",
+      "document_id": "arxiv_1511_05955",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::climate_change_with_ml::1",
+      "document_id": "climate_change_with_ml",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::detr::1",
+      "document_id": "detr",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::detr::2",
+      "document_id": "detr",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::entropy::1",
+      "document_id": "entropy",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::entropy::2",
+      "document_id": "entropy",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gNtSaU-1511.05999v3::1",
+      "document_id": "gNtSaU-1511.05999v3",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gNtSaU-1511.05999v3::2",
+      "document_id": "gNtSaU-1511.05999v3",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gw150914_detection::1",
+      "document_id": "gw150914_detection",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gw150914_detection::2",
+      "document_id": "gw150914_detection",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gw150914_gr_test::1",
+      "document_id": "gw150914_gr_test",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gw150914_gr_test::2",
+      "document_id": "gw150914_gr_test",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gw150914_properties::1",
+      "document_id": "gw150914_properties",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::gw150914_properties::2",
+      "document_id": "gw150914_properties",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::hallmarks_of_aging::1",
+      "document_id": "hallmarks_of_aging",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::hallmarks_of_aging::2",
+      "document_id": "hallmarks_of_aging",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::nist_ai_rmf_1_0::1",
+      "document_id": "nist_ai_rmf_1_0",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::nist_ai_rmf_1_0::2",
+      "document_id": "nist_ai_rmf_1_0",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "auto_legacy_expansion::nvidia_2026_annual_report::1",
+      "document_id": "nvidia_2026_annual_report",
+      "corpus": "node_vqa_reuse_v1_20261113",
+      "eligibility_status": "PILOT_ONLY_BLOCKED",
+      "reason": "legacy nodes are HYBRID_SHADOW_CANDIDATE; original PDFs/canonical-node verification absent"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::001",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::002",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::003",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::004",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::005",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::006",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::007",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::008",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::009",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::010",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::011",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::012",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::013",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::014",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::015",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::016",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::017",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::018",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::019",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::020",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::021",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::022",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::023",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::024",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::025",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::026",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::027",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::028",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::029",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::030",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::031",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::032",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::033",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::034",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::035",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::036",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::037",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::038",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::039",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::040",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::041",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::042",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::043",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::044",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::045",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::046",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::047",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::048",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::049",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::050",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::051",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::052",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::053",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::054",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::055",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::056",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::057",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::058",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::059",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::060",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::061",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::062",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::063",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::064",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::065",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::066",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::067",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::068",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::069",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::070",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::071",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::072",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::073",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::074",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::075",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::076",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::077",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::078",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::079",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::080",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::081",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::082",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::083",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::084",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::085",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::086",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::087",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::088",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::089",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::090",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::091",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::092",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::093",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::094",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::095",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::096",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::097",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::098",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::099",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::100",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::101",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::102",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::103",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::104",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::105",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::106",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::107",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::108",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::109",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::110",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::111",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    },
+    {
+      "draft_id": "dense_magazine_v1::real_016_batch_16_basic_version_07::112",
+      "document_id": "real_016_batch_16_basic_version_07",
+      "corpus": "real_documents_v1_20261113",
+      "eligibility_status": "EXCLUDE_OR_PARK",
+      "reason": "templated auto expansion requires regeneration into standalone retrievable QA"
+    }
+  ],
+  "rule": "Use only REVIEW_REQUIRED items for human QA review; none are formal gold until canonical node mapping is verified."
+}

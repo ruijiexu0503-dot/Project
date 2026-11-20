@@ -1,0 +1,10 @@
+[
+  {
+    "doc_id": "nasa_cosmic_temperatures_image_only_pdf",
+    "reason": "no_preserved_text_node; visual-only QA requires image review"
+  },
+  {
+    "doc_id": "nasa_cosmic_temperatures_jpeg",
+    "reason": "no_preserved_text_node; visual-only QA requires image review"
+  }
+]

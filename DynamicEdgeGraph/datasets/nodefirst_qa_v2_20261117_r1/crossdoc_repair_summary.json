@@ -1,0 +1,27 @@
+{
+  "cross_document_original": 25,
+  "original_necessity_pass": 12,
+  "repairable_shortcut_or_relation_failures": 4,
+  "rejected_current_evidence_groups": 9,
+  "candidate_after_repair": 16,
+  "candidate_pass_rate_before_independent_r1_review": 0.64,
+  "direct_shortcut_repairs": [
+    "nodefirst_v2_pilot::026",
+    "nodefirst_v2_pilot::028",
+    "nodefirst_v2_pilot::032"
+  ],
+  "relation_axis_repair": [
+    "nodefirst_v2_pilot::038"
+  ],
+  "strictly_rejected": [
+    "nodefirst_v2_pilot::033",
+    "nodefirst_v2_pilot::035",
+    "nodefirst_v2_pilot::037",
+    "nodefirst_v2_pilot::040",
+    "nodefirst_v2_pilot::042",
+    "nodefirst_v2_pilot::046",
+    "nodefirst_v2_pilot::047",
+    "nodefirst_v2_pilot::048",
+    "nodefirst_v2_pilot::049"
+  ]
+}

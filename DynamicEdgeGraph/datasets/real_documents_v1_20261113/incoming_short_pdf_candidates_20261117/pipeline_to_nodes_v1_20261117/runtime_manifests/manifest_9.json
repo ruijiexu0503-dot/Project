@@ -1,0 +1,14 @@
+{
+  "experiment": "short_public_documents_v1_20261117",
+  "documents": [
+    {
+      "document_id": "short_010_writing_strategic_plan_noaa",
+      "title": "Writing Your Strategic Plan",
+      "document_type": "organizational planning guide",
+      "input_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/writing_strategic_plan_noaa.pdf",
+      "source_url": "https://coast.noaa.gov/data/digitalcoast/pdf/writing-strategic-plan.pdf",
+      "source_sha256": "68dddb51bd1c6ba4f349ea9b5d1f124f5887f23481dcf211c373246debcdedf6",
+      "audit_pages": []
+    }
+  ]
+}

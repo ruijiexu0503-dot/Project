@@ -1,0 +1,28 @@
+{
+  "gate_design": {
+    "canonical_mapping": "ID existence/uniqueness, document/page relation, and membership in frozen node source.",
+    "source_integrity": "Traceable source/page files, valid bbox/content, frozen content agreement, and severe OCR checks.",
+    "semantic_grounding": "Not evaluated by this script; must come from independent model review plus deterministic QA checks."
+  },
+  "legacy_nodes": {
+    "total": 550,
+    "mapping_status": {
+      "MAPPED_VERIFIED_AUTOMATIC": 550
+    },
+    "source_status": {
+      "SOURCE_INTEGRITY_PASS": 545,
+      "SOURCE_INTEGRITY_BLOCKED": 5
+    }
+  },
+  "pilot_evidence": {
+    "total": 99,
+    "mapping_status": {
+      "MAPPED_VERIFIED_AUTOMATIC": 99
+    },
+    "source_status": {
+      "SOURCE_INTEGRITY_PASS": 99
+    },
+    "mapping_blocked_drafts": [],
+    "source_blocked_drafts": []
+  }
+}
