@@ -1,0 +1,18 @@
+{
+  "task": "real_066_batch_61_NIH_MedlinePlusMagazineSpring2022-508-pkg/page_0035",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 12,
+  "applied_continuations": [],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "30f6d2856698d0c7d0b21f523b60ebaaab25e40835051c33b29a8b535d5019ba",
+    "source_image": "71339851000dc3b5da4849459cd5d80fb2e7574fe8f75af9be3e73bdae89f0ae"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

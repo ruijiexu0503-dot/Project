@@ -1,0 +1,18 @@
+{
+  "task": "short_011_participatory_mapping_ocean_uses_noaa/page_0007",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 5,
+  "visual_nodes": 0,
+  "caption_assignments": {},
+  "text_fragments": 7,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "942dd363e1186d9db86a153dafad19ca6faec40cf5ac9c4736209ea392929b80",
+    "source_image": "c4dcad256d40d84290563139d6a703e34eb2f03d5b97a3a075eb197e0192370d"
+  },
+  "production_modified": false
+}

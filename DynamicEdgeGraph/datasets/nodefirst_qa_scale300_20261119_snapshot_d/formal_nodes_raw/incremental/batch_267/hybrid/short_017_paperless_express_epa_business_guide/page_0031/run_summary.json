@@ -1,0 +1,18 @@
+{
+  "task": "short_017_paperless_express_epa_business_guide/page_0031",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 11,
+  "applied_continuations": [],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "0c1dc607c220b05468f8ed1cab633078cbf7355b34e5309e31eb1d1b30a27781",
+    "source_image": "4e0c4d7d56d8e2fc6d8a0973d1224dcbecfefd4d88a5fb029ef244db1b35d303"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

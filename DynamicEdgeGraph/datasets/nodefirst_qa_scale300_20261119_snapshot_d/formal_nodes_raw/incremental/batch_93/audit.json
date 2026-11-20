@@ -1,0 +1,68 @@
+{
+  "valid": true,
+  "pages": [
+    {
+      "task": "real_072_The-Climate-Action-Monitor-2025/page_0070",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 4
+    },
+    {
+      "task": "real_072_The-Climate-Action-Monitor-2025/page_0071",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 5
+    },
+    {
+      "task": "real_072_The-Climate-Action-Monitor-2025/page_0072",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 5
+    },
+    {
+      "task": "real_072_The-Climate-Action-Monitor-2025/page_0073",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 6
+    }
+  ],
+  "batch": 93,
+  "code_sha256": {
+    "run_embedding_geometry_node_baseline.py": "7083cc7053035398837d33669ff29da79c94b416826b2350456cb5828ee65074",
+    "run_hybrid_node_pilot.py": "5ecfc232e7bf06d2d1dabbb350f04b60bcce98375391f0e4857205b4d1e4ad9f",
+    "dolphin_text.py": "81726e9710d6fc4eb50aa9a0823a8fde17a9b5d52c08bd34a12f23719b83d1ae"
+  },
+  "node_policy": "hybrid-boundary-v2-embedding_geometry"
+}

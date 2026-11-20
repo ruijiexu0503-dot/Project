@@ -1,0 +1,17 @@
+{
+  "run_id": "pilot_node_representation_v1",
+  "dataset_id": "vldocir_pilot_20261009",
+  "dataset_revision": "40a1818110c20e9279bbb4a3b6283ceac2d631ba",
+  "node_id_namespace": "vldocir_no_edge_v1_20261011:hybrid",
+  "baseline_dir": "EvidenceNet/output/baselines/vldocir_no_edge_v1_20261011",
+  "nodes_glob": "nodes/batch_*/hybrid/*/page_*/evidence_nodes.jsonl",
+  "prepared_glob": "prepared/*/page_*/input_representation.json",
+  "encoder_id": "Qwen3-Embedding-0.6B",
+  "encoder_path": "EvidenceNet/models/Qwen3-Embedding-0.6B",
+  "pooling": "last_token",
+  "max_length": 512,
+  "context_token_budget": 64,
+  "batch_size": 8,
+  "dtype": "float32",
+  "output_root": "DynamicEdgeGraph/stage2_edge_construction/outputs"
+}

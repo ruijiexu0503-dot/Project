@@ -1,0 +1,22 @@
+{
+  "task": "short_014_getty_magazine_winter_2024/page_0016",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 20,
+  "visual_nodes": 3,
+  "caption_assignments": {
+    "V0001": "D0002",
+    "V0007": "D0008",
+    "V0011": "D0010"
+  },
+  "text_fragments": 24,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "8efe4afca487f98c7f1dbcbdcf94a359f9a077fd69a4b683b0f356ecf76c8450",
+    "source_image": "3e7d8d3f13dca3e8fc5eee16669f2bb7f7d0947b799d83d7c8f79c2ef54da2cc"
+  },
+  "production_modified": false
+}

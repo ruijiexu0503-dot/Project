@@ -1,0 +1,54 @@
+{
+  "snapshot_id": "snapshot_B_short_job135007_20261117",
+  "parent_snapshot_id": "snapshot_A_20261117_runtime",
+  "upstream_array_job_id": "135007",
+  "expected_array_tasks": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "eligible_short_documents": [
+    "short_001_booster_seat_planning_guide_cdc_2024",
+    "short_002_geer_data_collection_user_guide_us_ed_2024",
+    "short_003_governing_with_ai_oecd_2024",
+    "short_004_healthy_brain_planning_guide_cdc_2024",
+    "short_005_ncah_portal_user_guide_13_usda_2025",
+    "short_006_tcfd_reporting_guide_2024_25_uk_treasury",
+    "short_007_usgs_woods_hole_coastal_annual_report_2024",
+    "short_008_library_of_congress_magazine_mar_apr_2024",
+    "short_009_preparing_strategic_plan_noaa",
+    "short_010_writing_strategic_plan_noaa",
+    "short_011_participatory_mapping_ocean_uses_noaa",
+    "short_012_library_of_congress_magazine_jul_aug_2024",
+    "short_013_library_of_congress_magazine_nov_dec_2024",
+    "short_014_getty_magazine_winter_2024",
+    "short_015_economics_of_climate_adaptation_arxiv_2024",
+    "short_016_biodiversity_data_standards_arxiv_2024"
+  ],
+  "eligible_short_document_count": 16,
+  "unscheduled_accepted_documents": [
+    "paperless_express_epa_business_guide.pdf"
+  ],
+  "new_canonical_node_count": 2791,
+  "canonical_node_count": 30019,
+  "new_node_count_by_modality": {
+    "PARA": 2184,
+    "TEXT": 415,
+    "CAPTION": 120,
+    "TABLE": 72
+  },
+  "node_pool_sha256": "41adf26d1f3f7a111d1932a001992623a80d3c93b1eed875980a9328e02bf399"
+}

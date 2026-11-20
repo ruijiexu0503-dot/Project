@@ -1,0 +1,23 @@
+{
+  "run_id": "pilot_e0_stage1_v1",
+  "dataset_id": "vldocir_pilot_20261009",
+  "dataset_revision": "40a1818110c20e9279bbb4a3b6283ceac2d631ba",
+  "node_id_namespace": "vldocir_no_edge_v1_20261011:hybrid",
+  "baseline_dir": "EvidenceNet/output/baselines/vldocir_no_edge_v1_20261011",
+  "nodes_glob": "nodes/batch_*/hybrid/*/page_*/evidence_nodes.jsonl",
+  "embedding_path": "DynamicEdgeGraph/stage1_candidate_pruning/outputs/vldocir-pilot-stage1-v1/models/qwen3_0_6b_dense/view_vectors.npy",
+  "embedding_ids_path": "DynamicEdgeGraph/stage2_edge_construction/outputs/pilot_e0_stage1_v1/embedding_ids.jsonl",
+  "encoder_id": "Qwen3-Embedding-0.6B:pilot-stage1-v1",
+  "input_vector_version": "pilot_multimodal_representation_v1",
+  "candidate_mode": "pilot_stage1_top100_candidate",
+  "candidate_union_path": "DynamicEdgeGraph/stage1_candidate_pruning/outputs/vldocir-pilot-stage1-v1/candidates_top100/analysis/candidate_unions/top100.jsonl",
+  "route_candidates_root": "DynamicEdgeGraph/stage1_candidate_pruning/outputs/vldocir-pilot-stage1-v1/candidates_top100/route_candidates/top100",
+  "page_window": 1,
+  "max_pairs": 5000,
+  "seed": 17,
+  "input_l2_normalize": false,
+  "output_l2_normalize": false,
+  "dtype": "float32",
+  "methods": ["diff", "mid", "middiff", "concat"],
+  "output_root": "DynamicEdgeGraph/stage2_edge_construction/outputs"
+}

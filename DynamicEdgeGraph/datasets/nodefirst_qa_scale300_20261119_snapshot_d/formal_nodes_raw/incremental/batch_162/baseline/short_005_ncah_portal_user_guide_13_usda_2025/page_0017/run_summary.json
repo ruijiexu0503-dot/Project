@@ -1,0 +1,18 @@
+{
+  "task": "short_005_ncah_portal_user_guide_13_usda_2025/page_0017",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 4,
+  "visual_nodes": 2,
+  "caption_assignments": {},
+  "text_fragments": 6,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "fded4636f95c6f026b1df763192622fd8e66ee10b13f0b857bc5eb58f76ce810",
+    "source_image": "9ce8775448234fe5bcf70a695aa0e49661ff67ed3524ab7e33b92de633d602ef"
+  },
+  "production_modified": false
+}

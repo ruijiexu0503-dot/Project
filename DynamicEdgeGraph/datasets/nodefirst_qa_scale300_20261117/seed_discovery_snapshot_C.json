@@ -1,0 +1,67 @@
+{
+  "snapshot_id": "snapshot_C_all_complete_20261118",
+  "eligible_quality_nodes": 26477,
+  "seed_count": 2820,
+  "targets": {
+    "single_node": 120,
+    "cross_page": 700,
+    "cross_document_two_doc": 1300,
+    "cross_document_three_plus_doc": 700
+  },
+  "by_category": {
+    "single_node": 120,
+    "cross_page": 700,
+    "cross_document_two_doc": 1300,
+    "cross_document_three_plus_doc": 700
+  },
+  "shortfall": {},
+  "evidence_by_family": {
+    "legacy_other": 248,
+    "climate": 233,
+    "noaa_planning": 516,
+    "library_of_congress": 521,
+    "governance_and_standards": 65,
+    "gravitational_wave": 207,
+    "nasa_spinoff": 3609,
+    "cdc_planning": 314,
+    "getty": 142,
+    "usgs": 115,
+    "usda_portal": 110,
+    "education_reporting": 140
+  },
+  "evidence_by_modality": {
+    "COMPOSITE": 67,
+    "TEXT": 731,
+    "TABLE": 167,
+    "CAPTION": 667,
+    "PARA": 4588
+  },
+  "top_documents": {
+    "real_007_batch_07_Spinoff2017": 180,
+    "real_016_batch_16_basic_version_07": 180,
+    "short_010_writing_strategic_plan_noaa": 180,
+    "real_012_batch_12_Spinoff2011": 180,
+    "real_009_batch_09_Spinoff2015": 180,
+    "real_020_batch_20_spin03": 180,
+    "short_012_library_of_congress_magazine_jul_aug_2024": 180,
+    "real_010_batch_10_Spinoff2013": 180,
+    "real_006_batch_06_Spinoff2018": 180,
+    "real_018_batch_18_accessible": 180,
+    "real_005_batch_05_Spinoff2019": 180,
+    "real_008_batch_08_Spinoff2016": 180,
+    "real_011_batch_11_Spinoff2012": 180,
+    "real_017_batch_17_accessible": 180,
+    "short_001_booster_seat_planning_guide_cdc_2024": 180,
+    "real_013_batch_13_Spinoff2010": 180,
+    "real_004_batch_04_Spinoff2020": 180,
+    "real_015_batch_15_spinoff2008": 180,
+    "short_013_library_of_congress_magazine_nov_dec_2024": 179,
+    "real_019_batch_19_access": 179,
+    "short_009_preparing_strategic_plan_noaa": 168,
+    "short_006_tcfd_reporting_guide_2024_25_uk_treasury": 166,
+    "short_008_library_of_congress_magazine_mar_apr_2024": 139,
+    "short_014_getty_magazine_winter_2024": 135,
+    "real_001_batch_01_NASA-Spinoff-2023": 133
+  },
+  "distinct_document_groups": 936
+}

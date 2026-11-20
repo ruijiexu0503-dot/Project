@@ -1,0 +1,20 @@
+{
+  "dataset_version": "nodefirst_qa_codex_direct_20261119_batch01",
+  "records": 100,
+  "by_category": {
+    "single_node": 20,
+    "cross_page": 30,
+    "cross_document": 50
+  },
+  "cross_document_subtype": {
+    "two_doc": 35,
+    "three_plus_doc": 15
+  },
+  "source_records_reused_and_directly_reviewed": 83,
+  "new_records_written_from_canonical_evidence": 17,
+  "revised_existing_records": 11,
+  "deterministic_validation_failures": 0,
+  "exact_question_duplicates": 0,
+  "scheduler_jobs_submitted": 0,
+  "original_files_overwritten": false
+}

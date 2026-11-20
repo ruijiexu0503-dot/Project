@@ -67,9 +67,11 @@ def prompt(task, pairs, roles):
     if BOUNDARY_V3:
         from evidence_boundary_v3 import prompt as boundary_prompt
         return boundary_prompt(task, pairs, roles)
-    schema = {"pairs": [{"pair_id": "PAIR_001", "decision": "CONTINUATION|SEPARATE",
+    example_pair_id = pairs[0]["pair_id"] if pairs else "NO_PAIRS_IN_THIS_CHUNK"
+    example_atom_id = roles[0]["atom_id"] if roles else "NO_ROLES_IN_THIS_CHUNK"
+    schema = {"pairs": [{"pair_id": example_pair_id, "decision": "CONTINUATION|SEPARATE",
                          "reason": "short source-based reason"}],
-              "roles": [{"atom_id": "D001", "decision": "DECK|BODY|UNRESOLVED",
+              "roles": [{"atom_id": example_atom_id, "decision": "DECK|BODY|UNRESOLVED",
                          "reason": "short source-based reason"}]}
     guard_instruction = ("A guard_reason requires SEPARATE. Never join a finished sentence or a colon-led list. "
                          "Closing math delimiters do not cancel sentence-ending punctuation. " if PROMPT_REVISION else "")
@@ -85,7 +87,7 @@ def prompt(task, pairs, roles):
             "\nROLE CANDIDATES:\n" + json.dumps(roles, ensure_ascii=False, indent=2))
 
 
-def prepare(out: Path, embedding_model: Path, tasks):
+def prepare(out: Path, embedding_model: Path, tasks, device: str = "cuda"):
     import numpy as np
     for task in tasks:
         source = SOURCE / task; rep = read(source / "input_representation.json")
@@ -96,6 +98,7 @@ def prepare(out: Path, embedding_model: Path, tasks):
             if (old.get("input_representation_sha256") == sha(source / "input_representation.json")
                     and old.get("page_image_sha256") == sha(source / "original.png")
                     and old.get("embedding_model") == str(embedding_model.resolve())
+                    and old.get("embedding_device", "cuda") == device
                     and old.get("policy_version") == POLICY_VERSION
                     and (target / "prompt.txt").read_text() == prompt(task, old["pairs"], old["roles"])):
                 print(task, "candidates_cached", flush=True)
@@ -106,7 +109,7 @@ def prepare(out: Path, embedding_model: Path, tasks):
         pairs = []
         suffixes = [text_of(a).strip()[-350:] for a in body[:-1]]
         prefixes = [text_of(a).strip()[:350] for a in body[1:]]
-        vectors = embed(suffixes+prefixes, embedding_model) if suffixes and not GEOMETRY_ONLY else []
+        vectors = embed(suffixes+prefixes, embedding_model, device=device) if suffixes and not GEOMETRY_ONLY else []
         with Image.open(source / "original.png") as image: size = image.size
         for i, (left, right) in enumerate(zip(body, body[1:])):
             left_text = text_of(left).strip(); right_text = text_of(right).strip()
@@ -122,6 +125,7 @@ def prepare(out: Path, embedding_model: Path, tasks):
         roles = role_candidates(atoms, body)
         record = {"task": task, "input_representation_sha256": sha(source/"input_representation.json"),
                   "page_image_sha256": sha(source/"original.png"), "embedding_model": str(embedding_model.resolve()),
+                  "embedding_device": device,
                   "policy_version": POLICY_VERSION,
                   "candidate_rule": "all adjacent non-structural text atoms in parser order; short text immediately after heading for role review",
                   "pairs": pairs, "roles": roles, "production_modified": False}
@@ -179,7 +183,7 @@ def validate_chunk_prompts(target, candidate, decision):
     return True
 
 
-def decide(out: Path, model: Path, tasks):
+def decide(out: Path, model: Path, tasks, device: str = "cuda"):
     pending = []
     for task in tasks:
         path = out/task/"decisions.json"
@@ -188,17 +192,19 @@ def decide(out: Path, model: Path, tasks):
         cached = read(path)
         if (cached.get("prompt_sha256") != sha(out/task/"prompt.txt")
                 or cached.get("candidate_sha256") != sha(out/task/"candidates.json")
-                or cached.get("model") != str(model.resolve())):
+                or cached.get("model") != str(model.resolve())
+                or cached.get("inference_device", "cuda") != device):
             pending.append(task)
     if not pending: return
     llm = create_llm({"provider": "transformers", "model": str(model.resolve()),
-                      "dtype": "bfloat16", "device_map": "auto", "require_cuda": True,
+                      "dtype": "bfloat16", "device_map": "cpu" if device == "cpu" else "auto",
+                      "require_cuda": device != "cpu",
                       "enable_thinking": False, "max_new_tokens": 2500})
     for task in pending:
         target = out/task; candidate = read(target/"candidates.json")
         hashes = {"prompt_sha256": sha(target/"prompt.txt"),
                   "candidate_sha256": sha(target/"candidates.json"),
-                  "model": str(model.resolve())}
+                  "model": str(model.resolve()), "inference_device": device}
         combined = {"pairs": [], "roles": []}; errors = []; chunk_prompts = []
         chunks = decision_chunks(candidate)
         for chunk_index, chunk in enumerate(chunks, 1):

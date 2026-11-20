@@ -1,0 +1,18 @@
+{
+  "dataset": "anonymous-8421/VL-DocIR",
+  "revision": "4cc60a535dc889636e6026feb2c872ff33710aaf",
+  "raw_asset_manifest": {
+    "revision": "4cc60a535dc889636e6026feb2c872ff33710aaf",
+    "documents": 94,
+    "raw_root": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/training_data/vldocir_full_sample_v1_20261112_r1/raw",
+    "page_path_resolution": "repository basename map; normalized symlinks raw/pages/<document_id>.tar",
+    "all_assets_downloaded": true
+  },
+  "input_hashes": {
+    "DynamicEdgeGraph/training_data/vldocir_full_sample_v1_20261112_r1/train_questions.jsonl": "a789287f43cf57357f62fb70afc2183f42abaac41a9fcad3928e90150a37d53f",
+    "DynamicEdgeGraph/training_data/vldocir_full_sample_v1_20261112_r1/dev_questions.jsonl": "94aa26e14a25f620cefde3224a3d9d987cab81316c36892705cc487601729217",
+    "DynamicEdgeGraph/training_data/vldocir_full_sample_v1_20261112_r1/test_questions.jsonl": "237f6048d262c84269780685e351c4f7c9e05142ba05082ac2f3a2d682856834",
+    "DynamicEdgeGraph/training_data/vldocir_full_sample_v1_20261112_r1/raw/documents.jsonl": "a2a791a2d5c75182d248f615d5396ec053332fb1bd3a6a937e6a12fcaef295c9",
+    "DynamicEdgeGraph/training_data/vldocir_full_sample_v1_20261112_r1/raw/document_pages.jsonl": "e73f1ebb206a1352b2d7cb541ac398e0d0556af54a6a5b394688cc220c088d32"
+  }
+}

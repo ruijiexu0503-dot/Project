@@ -1,0 +1,9 @@
+{
+  "run_id": "pilot_e0", "dataset_id": "vldocir_pilot_20261009", "dataset_revision": "40a1818110c20e9279bbb4a3b6283ceac2d631ba",
+  "node_id_namespace": "vldocir_no_edge_v1_20261011:hybrid", "baseline_dir": "EvidenceNet/output/baselines/vldocir_no_edge_v1_20261011",
+  "nodes_glob": "nodes/batch_*/hybrid/*/page_*/evidence_nodes.jsonl", "embedding_path": "DynamicEdgeGraph/stage2_edge_construction/outputs/pilot_node_representation_v1/node_embeddings.npy", "embedding_ids_path": "DynamicEdgeGraph/stage2_edge_construction/outputs/pilot_node_representation_v1/embedding_ids.jsonl",
+  "encoder_id": "Qwen3-Embedding-0.6B:pilot-node-routing-v1", "input_vector_version": "pilot_node_representation_v1",
+  "candidate_mode": "pilot_local_document_window", "page_window": 1, "max_pairs": 5000, "seed": 17,
+  "input_l2_normalize": false, "output_l2_normalize": false, "dtype": "float32",
+  "methods": ["diff", "mid", "middiff", "concat"], "output_root": "DynamicEdgeGraph/stage2_edge_construction/outputs"
+}

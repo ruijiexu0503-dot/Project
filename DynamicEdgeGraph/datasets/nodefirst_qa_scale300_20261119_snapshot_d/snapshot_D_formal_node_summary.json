@@ -1,0 +1,21 @@
+{
+  "snapshot_id": "snapshot_D_formal_nodes_20261119",
+  "documents": 44,
+  "pages": 1287,
+  "canonical_nodes": 12346,
+  "batches": 323,
+  "all_batch_audits_valid": true,
+  "nodes_by_type": {
+    "TEXT": 10501,
+    "COMPOSITE": 482,
+    "IMAGE": 1231,
+    "TABLE": 101,
+    "CAPTION": 31
+  },
+  "nodes_by_corpus": {
+    "formal_nodes_incremental_1070_pages": 10155,
+    "formal_nodes_prior_217_pages": 2191
+  },
+  "canonical_node_ids_sha256": "dd614f6f5927422cf7f10322a996e558d11094460292e905ce458b6fda0af021",
+  "source_mapping_gate": "PASS"
+}

@@ -1,0 +1,10 @@
+{
+  "source_seed_count": 7900,
+  "selected": 6140,
+  "by_category": {
+    "single_node": 240,
+    "cross_page": 1800,
+    "cross_document_two_doc": 2700,
+    "cross_document_three_plus_doc": 1400
+  }
+}

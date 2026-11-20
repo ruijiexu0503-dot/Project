@@ -1,0 +1,18 @@
+{
+  "task": "short_004_healthy_brain_planning_guide_cdc_2024/page_0001",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 7,
+  "visual_nodes": 2,
+  "caption_assignments": {},
+  "text_fragments": 11,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "114f78170bb5f3d0d3f5b1457b405744b61a5e58b3a2007bac197502b53ba28f",
+    "source_image": "89959ba4e0b392f2792e90a56091347bdbee75c1b8e6a916642087de4284da63"
+  },
+  "production_modified": false
+}

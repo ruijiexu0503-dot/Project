@@ -1,0 +1,15 @@
+{
+  "audit_actor": "PRIMARY_ASSISTANT_DIRECT_SEMANTIC_AUDIT",
+  "gpu_or_external_reviewer_used": false,
+  "reviewed": 46,
+  "verdicts": {
+    "KEEP": 44,
+    "REMOVE_OR_PARK": 2
+  },
+  "current_round_query_answer_groups": 46,
+  "current_round_self_audit_keep": 44,
+  "prior_r3_gold": 17,
+  "cumulative_r3_plus_current_groups": 63,
+  "cumulative_r3_plus_self_audit_keep": 61,
+  "status": "SELF_AUDITED_NOT_YET_FINAL_GOLD_EXPORT"
+}

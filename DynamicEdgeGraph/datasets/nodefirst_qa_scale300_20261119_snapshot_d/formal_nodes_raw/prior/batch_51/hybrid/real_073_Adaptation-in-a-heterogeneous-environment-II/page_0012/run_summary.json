@@ -1,0 +1,23 @@
+{
+  "task": "real_073_Adaptation-in-a-heterogeneous-environment-II/page_0012",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 13,
+  "applied_continuations": [
+    [
+      "D0014",
+      "D0015"
+    ]
+  ],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "b5f96a8b5a5a1518f5b21031d0462067d753c6e93016587ca89724c45e899397",
+    "source_image": "ca674f7112963bd5bf869746586c77676340b76e2863628ef3e2fbcf89cc7d90"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

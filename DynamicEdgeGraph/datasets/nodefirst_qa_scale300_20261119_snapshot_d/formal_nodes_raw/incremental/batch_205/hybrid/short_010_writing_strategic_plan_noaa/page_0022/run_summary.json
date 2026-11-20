@@ -1,0 +1,18 @@
+{
+  "task": "short_010_writing_strategic_plan_noaa/page_0022",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 7,
+  "applied_continuations": [],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "0d9bb1c800ac3e55e4c606a4eb88d62196b907f562e011633889b36d807521ba",
+    "source_image": "7582e34a7b80cbc47bc5b0518ab2d8ace638d6593eb3cbce3c4900fa05386ead"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

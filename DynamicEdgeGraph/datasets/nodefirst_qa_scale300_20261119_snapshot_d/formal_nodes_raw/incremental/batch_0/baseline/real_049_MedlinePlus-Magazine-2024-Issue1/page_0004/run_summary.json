@@ -1,0 +1,18 @@
+{
+  "task": "real_049_MedlinePlus-Magazine-2024-Issue1/page_0004",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 17,
+  "visual_nodes": 3,
+  "caption_assignments": {},
+  "text_fragments": 18,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "e9faaa10c8f9b49abe4eefe1cc3cff81953d4b0beb741d05d28c91be07ae1d79",
+    "source_image": "18d3832ea4eb61004c783f0447a1609e7cc5edfae4906f1e013b0f707c30a880"
+  },
+  "production_modified": false
+}

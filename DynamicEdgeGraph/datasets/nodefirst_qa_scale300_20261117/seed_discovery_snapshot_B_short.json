@@ -1,0 +1,25 @@
+{
+  "snapshot_id": "snapshot_B_short_job135007_20261117",
+  "quality_node_count": 26081,
+  "new_quality_node_count": 2158,
+  "seed_count": 640,
+  "by_category": {
+    "single_node": 80,
+    "cross_page": 180,
+    "cross_document_two_doc": 220,
+    "cross_document_three_plus_doc": 160
+  },
+  "target_shortfall": {},
+  "evidence_by_corpus": {
+    "short_documents_snapshot_B": 999,
+    "real_documents_snapshot_A": 347,
+    "legacy_frozen_nodes": 14
+  },
+  "evidence_by_modality": {
+    "PARA": 1128,
+    "TEXT": 124,
+    "CAPTION": 89,
+    "TABLE": 17,
+    "COMPOSITE": 2
+  }
+}

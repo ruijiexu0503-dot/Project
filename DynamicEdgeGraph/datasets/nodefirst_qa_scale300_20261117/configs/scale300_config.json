@@ -1,0 +1,36 @@
+{
+  "version": "nodefirst_qa_scale300_20261117",
+  "snapshot": "snapshot_A_20261117_runtime",
+  "batch_targets": {
+    "total": 100,
+    "single_node": 20,
+    "cross_page": 30,
+    "cross_document_two_doc": 35,
+    "cross_document_three_plus_doc": 15
+  },
+  "cumulative_target": 300,
+  "generator_model": "external/models/Qwen3.5-35B-A3B",
+  "independent_reviewer_model": "external/models/Qwen3.6-35B-A3B",
+  "seed_attempt_budget_batch_001": {
+    "single_node": 60,
+    "cross_page": 140,
+    "cross_document_two_doc": 220,
+    "cross_document_three_plus_doc": 220
+  },
+  "quality_gates": {
+    "claim_level_entailment": true,
+    "exact_source_spans": true,
+    "node_deletion_necessity": true,
+    "single_node_shortcut_search": true,
+    "canonical_mapping": true,
+    "source_integrity": true,
+    "independent_model_review": true,
+    "manual_approval_required": false
+  },
+  "soft_coverage": {
+    "max_document_share": 0.10,
+    "max_document_pair_share_cross_document": 0.10,
+    "max_gravitational_wave_topic_share": 0.20,
+    "non_text_evidence_target_min": 0.15
+  }
+}

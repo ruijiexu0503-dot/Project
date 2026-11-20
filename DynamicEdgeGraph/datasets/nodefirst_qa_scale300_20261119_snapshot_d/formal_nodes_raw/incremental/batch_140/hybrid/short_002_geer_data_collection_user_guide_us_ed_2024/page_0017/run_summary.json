@@ -1,0 +1,20 @@
+{
+  "task": "short_002_geer_data_collection_user_guide_us_ed_2024/page_0017",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 7,
+  "applied_continuations": [],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {
+    "V0008": "D0009"
+  },
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "5936119d9d23939a0e6864172953cc8a698ce839051f6c22194b4884ce4c74ec",
+    "source_image": "8607e6c07d311822fbfc2de12ceccaa85360d0e7ec1ce38fe6fe95c8db9b9ee6"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

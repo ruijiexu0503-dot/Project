@@ -1,0 +1,20 @@
+{
+  "task": "short_012_library_of_congress_magazine_jul_aug_2024/page_0030",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 12,
+  "visual_nodes": 1,
+  "caption_assignments": {
+    "V0011": "D0012"
+  },
+  "text_fragments": 15,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "fcf9f8b73a3716013456188be6edd94c8cb9e737fc7ab3be9f2feb266dc20e6e",
+    "source_image": "857b5acdc922ba2c74c2609b46d22dd8b06be971f27970214469e5396d9567fd"
+  },
+  "production_modified": false
+}

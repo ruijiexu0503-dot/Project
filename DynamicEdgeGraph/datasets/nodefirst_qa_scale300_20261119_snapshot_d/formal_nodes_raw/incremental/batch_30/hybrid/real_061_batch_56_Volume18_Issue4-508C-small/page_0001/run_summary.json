@@ -1,0 +1,18 @@
+{
+  "task": "real_061_batch_56_Volume18_Issue4-508C-small/page_0001",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 12,
+  "applied_continuations": [],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "3e0f807cdbe3dbf052d77efb6f8576f54c34ead9f878a6587758a0cc37e80143",
+    "source_image": "8aeadf575bd712838a2cd7482c3cd588ec0e840807736edb414cdad2867c3d0c"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

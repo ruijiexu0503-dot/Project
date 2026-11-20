@@ -1,0 +1,28 @@
+{
+  "source": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_codex_direct_20261119/qa_gold_codex_direct_cumulative_200.jsonl",
+  "source_sha256": "635eb2ba983f48b122448bffab800ac7075e9d4328bd3616954c240edb2dd19b",
+  "policy": "largest document-connected component is train; all remaining components are test",
+  "train_queries": 181,
+  "test_queries": 19,
+  "train_documents": 43,
+  "test_documents": 13,
+  "document_overlap": [],
+  "component_query_sizes": [
+    181,
+    7,
+    5,
+    3,
+    3,
+    1
+  ],
+  "train_categories": {
+    "single_node": 40,
+    "cross_page": 51,
+    "cross_document": 90
+  },
+  "test_categories": {
+    "cross_document": 10,
+    "cross_page": 9
+  },
+  "validation": "reserved for new unseen PDFs; not available at split time"
+}

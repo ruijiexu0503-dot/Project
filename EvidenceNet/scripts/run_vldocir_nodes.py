@@ -22,6 +22,8 @@ def main():
     parser.add_argument('--batch', type=int)
     parser.add_argument('--article-output', type=Path)
     parser.add_argument('--article-device', choices=['cpu', 'cuda'], default='cpu')
+    parser.add_argument('--device', choices=['cpu', 'cuda'], default='cuda',
+                        help='Device for describe, embedding candidates, and decide stages')
     parser.add_argument('--single-document', action='append', default=[])
     parser.add_argument('--include-document', action='append', default=[])
     args = parser.parse_args()
@@ -35,7 +37,8 @@ def main():
             for batch in range(len(manifest['batches'])):
                 for stage in ('describe', 'candidates', 'decide', 'assemble'):
                     subprocess.run([sys.executable, str(Path(__file__).resolve()), stage,
-                        '--source', str(args.source), '--output', str(args.output), '--batch', str(batch)], check=True)
+                        '--source', str(args.source), '--output', str(args.output), '--batch', str(batch),
+                        '--device', args.device], check=True)
         from run_hybrid_article_clustering import parser as article_parser, run as run_articles
         command = ['run', '--source', str(args.source), '--nodes', str(args.output),
                    '--output', str(args.article_output or args.output / 'articles'), '--device', args.article_device]
@@ -47,6 +50,10 @@ def main():
         return
     if args.batch is None:
         parser.error('Node batch stages require --batch')
+    if args.device == 'cpu':
+        import os
+        import torch
+        torch.set_num_threads(int(os.environ.get('OMP_NUM_THREADS', '32')))
     tasks = base.read(args.source / 'manifest.json')['batches'][args.batch]
     baseline = args.output / f'batch_{args.batch}' / 'baseline'
     result = args.output / f'batch_{args.batch}' / 'hybrid'
@@ -58,12 +65,12 @@ def main():
     embedding = ROOT / 'EvidenceNet/models/Qwen3-Embedding-0.6B'
     qwen = ROOT / 'external/models/Qwen3.5-35B-A3B'
     if args.stage == 'describe':
-        base.describe(baseline, qwen, tasks)
+        base.describe(baseline, qwen, tasks, device=args.device)
     elif args.stage == 'candidates':
-        base.assemble(baseline, embedding, tasks)
-        hybrid.prepare(result, embedding, tasks)
+        base.assemble(baseline, embedding, tasks, device=args.device)
+        hybrid.prepare(result, embedding, tasks, device=args.device)
     elif args.stage == 'decide':
-        hybrid.decide(result, qwen, tasks)
+        hybrid.decide(result, qwen, tasks, device=args.device)
         if not all(base.read(result / task / 'decisions.json')['valid'] for task in tasks):
             raise RuntimeError('Invalid Qwen decisions; do not accept fallback as hybrid results')
     else:

@@ -1,0 +1,10 @@
+{
+  "prior_candidates": 61,
+  "by_category": {
+    "single_node": 38,
+    "cross_page": 10,
+    "cross_document_two_doc": 12,
+    "cross_document_three_plus_doc": 1
+  },
+  "all_source_mapping_pass": true
+}

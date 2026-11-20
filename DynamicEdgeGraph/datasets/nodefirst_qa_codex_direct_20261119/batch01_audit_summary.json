@@ -1,0 +1,102 @@
+{
+  "audit_version": "codex_direct_batch01_second_pass_20261119",
+  "audit_mode": "direct_codex_semantic_review_plus_deterministic_checks",
+  "records": 100,
+  "passed": 100,
+  "failed": 0,
+  "categories": {
+    "single_node": 20,
+    "cross_page": 30,
+    "cross_document": 50
+  },
+  "cross_document_subtypes": {
+    "two_doc": 35,
+    "three_plus_doc": 15
+  },
+  "evidence_references": 196,
+  "unique_nodes": 176,
+  "snapshot_d_references": 156,
+  "frozen_legacy_references": 40,
+  "source_json_exists": 196,
+  "page_image_exists": 196,
+  "exact_claim_spans": 362,
+  "node_types": {
+    "COMPOSITE": 11,
+    "TABLE": 7,
+    "TEXT": 117,
+    "PARA": 14,
+    "IMAGE": 47
+  },
+  "max_node_reuse": 4,
+  "top_documents": [
+    [
+      "short_011_participatory_mapping_ocean_uses_noaa",
+      9
+    ],
+    [
+      "real_064_batch_59_Volume_18_Issue_1-508C",
+      9
+    ],
+    [
+      "real_074_Stories-from-the-field_issue-2_2019",
+      9
+    ],
+    [
+      "real_073_Adaptation-in-a-heterogeneous-environment-II",
+      8
+    ],
+    [
+      "real_066_batch_61_NIH_MedlinePlusMagazineSpring2022-508-pkg",
+      7
+    ],
+    [
+      "short_009_preparing_strategic_plan_noaa",
+      7
+    ],
+    [
+      "real_052_batch_47_2024-Issue10.508C_.110724",
+      7
+    ],
+    [
+      "real_067_batch_62_NIH_MedlinePlus_MagazineWinter2022",
+      7
+    ],
+    [
+      "real_069_batch_64_NIHMLPSummer2021",
+      6
+    ],
+    [
+      "real_065_batch_60_Volume_17_Issue_2",
+      6
+    ],
+    [
+      "short_013_library_of_congress_magazine_nov_dec_2024",
+      6
+    ],
+    [
+      "real_071_batch_66_NIHMLPWinter2021",
+      5
+    ],
+    [
+      "real_063_batch_58_Volume18Issue2-508",
+      5
+    ],
+    [
+      "real_060_batch_55_2024-Issue2.508C_.031224",
+      5
+    ],
+    [
+      "detr",
+      5
+    ]
+  ],
+  "answer_words": {
+    "min": 2,
+    "median": 34.0,
+    "max": 68
+  },
+  "exact_question_duplicates": 0,
+  "near_duplicate_pairs_jaccard_ge_0_65": 0,
+  "scheduler_jobs_submitted": 0,
+  "data_sha256": "96d17d6b9ad39f6d3f29cb036a892443ef87bc20b4f7618118bdaa23cfee7889"
+}

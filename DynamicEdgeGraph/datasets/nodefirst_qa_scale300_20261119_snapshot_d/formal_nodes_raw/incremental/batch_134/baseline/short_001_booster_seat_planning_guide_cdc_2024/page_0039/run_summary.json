@@ -1,0 +1,18 @@
+{
+  "task": "short_001_booster_seat_planning_guide_cdc_2024/page_0039",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 1,
+  "visual_nodes": 0,
+  "caption_assignments": {},
+  "text_fragments": 4,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "935846fa89d21baed3ff986e2c56de99771897a0b0b097a8ac511d2bf202301f",
+    "source_image": "e1e9d6b046adec02a38fd89f22ed98f092ec1c12bf56c635ffd8cd09fa942d36"
+  },
+  "production_modified": false
+}

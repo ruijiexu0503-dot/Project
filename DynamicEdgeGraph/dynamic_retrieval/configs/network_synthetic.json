@@ -1,0 +1,15 @@
+{
+  "network_version": "network_v2_build_20261117",
+  "view_mode": "split_views",
+  "input_dim": 8,
+  "context_dim": 6,
+  "dim": 16,
+  "hidden": 32,
+  "dropout": 0.1,
+  "output_k": 5,
+  "edge_feature_dim": 12,
+  "enable_a_head": false,
+  "enable_e_head": false,
+  "training_enabled": false,
+  "synthetic_only": true
+}

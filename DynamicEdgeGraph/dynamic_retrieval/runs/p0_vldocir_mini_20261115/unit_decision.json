@@ -1,0 +1,8 @@
+{
+  "primary_unit": "page",
+  "name": "page_level_weak_supervision",
+  "reason": "VL-DocIR qrels are page evidence for retrieval; exact HTML element mapping is retained for visibility/audit, but is not sufficient to label every node on a relevant page as a strong positive.",
+  "output_k_unit": "page",
+  "graph_search_unit": "node",
+  "node_label_policy": "mapped evidence only; all other nodes remain unknown/masked"
+}

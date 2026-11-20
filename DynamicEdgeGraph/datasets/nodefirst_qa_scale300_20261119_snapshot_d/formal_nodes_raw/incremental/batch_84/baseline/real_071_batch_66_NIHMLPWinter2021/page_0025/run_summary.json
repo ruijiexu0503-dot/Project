@@ -1,0 +1,18 @@
+{
+  "task": "real_071_batch_66_NIHMLPWinter2021/page_0025",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 12,
+  "visual_nodes": 1,
+  "caption_assignments": {},
+  "text_fragments": 19,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "d7a6a44d4188ffac05702c64397968cc24732b4f61b4758330dcb2f3f9db16b9",
+    "source_image": "e621f9026cff045a34139a4848f73836eabdbc13cb637cee77c51d147f1422ab"
+  },
+  "production_modified": false
+}

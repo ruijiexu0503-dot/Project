@@ -1,0 +1,68 @@
+{
+  "valid": true,
+  "pages": [
+    {
+      "task": "short_009_preparing_strategic_plan_noaa/page_0010",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 4
+    },
+    {
+      "task": "short_009_preparing_strategic_plan_noaa/page_0011",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 6
+    },
+    {
+      "task": "short_009_preparing_strategic_plan_noaa/page_0012",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 10
+    },
+    {
+      "task": "short_009_preparing_strategic_plan_noaa/page_0013",
+      "checks": {
+        "atoms_once": true,
+        "fragments_once": true,
+        "tables_in_evidence": true,
+        "structural_excluded": true,
+        "visuals_once": true,
+        "native_once": true
+      },
+      "valid": true,
+      "tables": 0,
+      "nodes": 12
+    }
+  ],
+  "batch": 194,
+  "code_sha256": {
+    "run_embedding_geometry_node_baseline.py": "7083cc7053035398837d33669ff29da79c94b416826b2350456cb5828ee65074",
+    "run_hybrid_node_pilot.py": "f2655d90ed8eed25e82b0a5e7c85db6ca3c5b67bb0e1089fd2d116a3fb373d9b",
+    "dolphin_text.py": "81726e9710d6fc4eb50aa9a0823a8fde17a9b5d52c08bd34a12f23719b83d1ae"
+  },
+  "node_policy": "hybrid-boundary-v2-embedding_geometry"
+}

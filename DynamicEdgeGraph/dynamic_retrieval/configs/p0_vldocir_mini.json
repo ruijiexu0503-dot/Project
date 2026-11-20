@@ -1,0 +1,8 @@
+{
+  "dataset": "anonymous-8421/VL-DocIR",
+  "revision": "4cc60a535dc889636e6026feb2c872ff33710aaf",
+  "seed": 17,
+  "mini_queries": {"train": 128, "dev": 32, "test": 64},
+  "primary_unit": "page_level_weak_supervision",
+  "dynamic_retrieval_namespace": "dynamic-v1"
+}

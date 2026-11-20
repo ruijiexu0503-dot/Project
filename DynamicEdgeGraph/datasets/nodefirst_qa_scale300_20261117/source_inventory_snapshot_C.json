@@ -1,0 +1,634 @@
+{
+  "snapshot_id": "snapshot_C_all_complete_20261118",
+  "main_manifest_documents": 75,
+  "complete_main_documents": 19,
+  "complete_main_document_ids": [
+    "real_001_batch_01_NASA-Spinoff-2023",
+    "real_002_batch_02_Spinoff.2022",
+    "real_003_batch_03_NASA_Spinoff_2021",
+    "real_004_batch_04_Spinoff2020",
+    "real_005_batch_05_Spinoff2019",
+    "real_006_batch_06_Spinoff2018",
+    "real_007_batch_07_Spinoff2017",
+    "real_008_batch_08_Spinoff2016",
+    "real_009_batch_09_Spinoff2015",
+    "real_010_batch_10_Spinoff2013",
+    "real_011_batch_11_Spinoff2012",
+    "real_012_batch_12_Spinoff2011",
+    "real_013_batch_13_Spinoff2010",
+    "real_015_batch_15_spinoff2008",
+    "real_016_batch_16_basic_version_07",
+    "real_017_batch_17_accessible",
+    "real_018_batch_18_accessible",
+    "real_019_batch_19_access",
+    "real_020_batch_20_spin03"
+  ],
+  "short_accepted_documents": 17,
+  "complete_short_documents": 16,
+  "complete_short_document_ids": [
+    "short_001_booster_seat_planning_guide_cdc_2024",
+    "short_002_geer_data_collection_user_guide_us_ed_2024",
+    "short_003_governing_with_ai_oecd_2024",
+    "short_004_healthy_brain_planning_guide_cdc_2024",
+    "short_005_ncah_portal_user_guide_13_usda_2025",
+    "short_006_tcfd_reporting_guide_2024_25_uk_treasury",
+    "short_007_usgs_woods_hole_coastal_annual_report_2024",
+    "short_008_library_of_congress_magazine_mar_apr_2024",
+    "short_009_preparing_strategic_plan_noaa",
+    "short_010_writing_strategic_plan_noaa",
+    "short_011_participatory_mapping_ocean_uses_noaa",
+    "short_012_library_of_congress_magazine_jul_aug_2024",
+    "short_013_library_of_congress_magazine_nov_dec_2024",
+    "short_014_getty_magazine_winter_2024",
+    "short_015_economics_of_climate_adaptation_arxiv_2024",
+    "short_016_biodiversity_data_standards_arxiv_2024"
+  ],
+  "legacy_frozen_documents": 25,
+  "canonical_node_count": 31838,
+  "node_count_by_corpus": {
+    "real_documents_snapshot_C": 28586,
+    "short_documents_snapshot_C": 2789,
+    "short_documents_snapshot_B": 2,
+    "legacy_frozen_nodes": 461
+  },
+  "node_count_by_modality": {
+    "PARA": 26066,
+    "TEXT": 3509,
+    "CAPTION": 2149,
+    "TABLE": 90,
+    "COMPOSITE": 24
+  },
+  "node_pool_sha256": "259e726407d0f439e9dc22230a1b0e2cb7b87200ee6e8f04dcddfdc60b006b97",
+  "unavailable_documents": [
+    {
+      "document_id": "real_014_batch_14_spinoff2009",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_14_spinoff2009.pdf",
+      "source_sha256": "5d8d87910d27ba7e6b3b79e45e04b465433a0eb9b4655779fe795c1d32b7905d"
+    },
+    {
+      "document_id": "real_021_batch_21_spin02",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_21_spin02.pdf",
+      "source_sha256": "71fe7e5d3c65d2d8c595cf70a3c98839bf897b5dfa562bcd7f8c54e3737743b9"
+    },
+    {
+      "document_id": "real_022_batch_22_spin01",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_22_spin01.pdf",
+      "source_sha256": "cc458ef53d7f058efa20e448b96784a196fdc55f5ec3ef20c88e712863fb4095"
+    },
+    {
+      "document_id": "real_023_batch_23_spin00",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_23_spin00.pdf",
+      "source_sha256": "2b08c4bbeb45d4ccdcab0f0545221af23235542c920a6415fd6ea19b5672dd36"
+    },
+    {
+      "document_id": "real_024_batch_24_spin99",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_24_spin99.pdf",
+      "source_sha256": "3346c5d322954915305b143c273aa4bd9fccfb4470dd5a30a70fc0d7b857f021"
+    },
+    {
+      "document_id": "real_025_batch_25_spin98",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_25_spin98.pdf",
+      "source_sha256": "eeecef57df574144ea618227c3b3612176f1122c45de9e2ce8a83d51bacede7a"
+    },
+    {
+      "document_id": "real_026_batch_26_spin97",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_26_spin97.pdf",
+      "source_sha256": "0d9c77893a94bcab9badc43f6754d96e7691cf2f903a0db6a0235f8119c19079"
+    },
+    {
+      "document_id": "real_027_batch_27_spin96",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_27_spin96.pdf",
+      "source_sha256": "ffaee7cb0b4836229a0d46eb210328f40a2551d82fd8a57bc153f16e547950bd"
+    },
+    {
+      "document_id": "real_028_batch_28_1995",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_28_1995.pdf",
+      "source_sha256": "27dbe5117d0d015b5c91557a3c1d1e98f5709c507c55497d2a316ce5e39e1c08"
+    },
+    {
+      "document_id": "real_029_batch_29_1994",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_29_1994.pdf",
+      "source_sha256": "72d21ee9fdc72ae623b3b8ef29f040771e2267af03b66d0a7fdc4a2232fd4d75"
+    },
+    {
+      "document_id": "real_030_batch_30_1993",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_30_1993.pdf",
+      "source_sha256": "aa2dc65928b5f39c496e2a737b0b5c8e7b2a87cd21c33719f23f1d21a7d17cda"
+    },
+    {
+      "document_id": "real_031_batch_31_1992",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_31_1992.pdf",
+      "source_sha256": "85e1a710cdf55e1c0dafde630fac9867406ae72956be3d4b57fc34aa3faec0f3"
+    },
+    {
+      "document_id": "real_032_batch_32_1991",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_32_1991.pdf",
+      "source_sha256": "5d76bf694d023c6043f66534531f22aeee0db27bf503e7a03a5529a8b6941dc4"
+    },
+    {
+      "document_id": "real_033_batch_33_1990",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_33_1990.pdf",
+      "source_sha256": "8bb21dae71d78325d84e3b300bff45d0f2815e16c4aaa4401c9df55ce23a070c"
+    },
+    {
+      "document_id": "real_034_batch_34_1989",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_34_1989.pdf",
+      "source_sha256": "52eb7560ba2d7d1102b2c3c912a5bc215dc2072d280d1747e5914daa5bd9c1c6"
+    },
+    {
+      "document_id": "real_035_batch_35_1988",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_35_1988.pdf",
+      "source_sha256": "613a013c1da6429fa927fa8a170137b98294f035b871e0de2fc253e7399c2ed5"
+    },
+    {
+      "document_id": "real_036_batch_36_1987",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_36_1987.pdf",
+      "source_sha256": "9599293e3eab2da6532f1d8dd9bd6e3d544c908f47f3444d022bd72ee8873431"
+    },
+    {
+      "document_id": "real_037_batch_37_1986",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_37_1986.pdf",
+      "source_sha256": "e2bdaa0f8906a403ed0b112ea80a54235f60e7896adb4ff8df64b6b848308a02"
+    },
+    {
+      "document_id": "real_038_batch_38_1985",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_38_1985.pdf",
+      "source_sha256": "6eb06f9bab7e061fb36451346449401b654c9a9b0923747951123de0323c7cff"
+    },
+    {
+      "document_id": "real_039_batch_39_1984",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_39_1984.pdf",
+      "source_sha256": "0b067daa175e5f6b2cd1a5175e155edb0b7c9634b0d4cbe6e927b8efe64069ae"
+    },
+    {
+      "document_id": "real_040_batch_40_1983",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_40_1983.pdf",
+      "source_sha256": "8287c7be9ed3c6ae8476a1dcc939c96e0f83944e7be75e611d575749be9ad4a7"
+    },
+    {
+      "document_id": "real_041_batch_41_1982",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_41_1982.pdf",
+      "source_sha256": "450c92a4b93cc889869c9ddf188a3080221342d9b22a2f2adbc6014a59fc1248"
+    },
+    {
+      "document_id": "real_042_batch_42_1981",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_42_1981.pdf",
+      "source_sha256": "6ca88260312992802cd9d8630eae9c3f97f9f0c3a4963d869de3f930ebb3503d"
+    },
+    {
+      "document_id": "real_043_batch_43_1980",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_43_1980.pdf",
+      "source_sha256": "c229cb9e938c97101de68880b4912b4f0dc958eebe097bd69dabf4898394c9b6"
+    },
+    {
+      "document_id": "real_044_batch_44_1979",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_44_1979.pdf",
+      "source_sha256": "5388c8d4458475bbf6b94baab93ab3fdb7a45eec70abf1d4826060b555601dc0"
+    },
+    {
+      "document_id": "real_045_batch_45_1978",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_45_1978.pdf",
+      "source_sha256": "0ca08cd42853812e5d253ebfe564bceda46ddc2157063650aa8c6939e54c0212"
+    },
+    {
+      "document_id": "real_046_NASA-Spinoff-2024",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa_spinoff/NASA-Spinoff-2024.pdf",
+      "source_sha256": "58a85e5184e355bc2c9e644cedeaaffe0d7c61d2c6b5ca674054934380e4a84d"
+    },
+    {
+      "document_id": "real_047_NASA-Spinoff-2025",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa_spinoff/NASA-Spinoff-2025.pdf",
+      "source_sha256": "cd2ef7fd97811fecdf92371427c249d2a7ee2b72291e9bc48ab29e84924b9d67"
+    },
+    {
+      "document_id": "real_048_NASA-Spinoff-2026",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa_spinoff/NASA-Spinoff-2026.pdf",
+      "source_sha256": "a5a045511bd5079320f4613e4fc41bc3c8be2c2e86464bccb1c031ad1bb8f74c"
+    },
+    {
+      "document_id": "real_049_MedlinePlus-Magazine-2024-Issue1",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/MedlinePlus-Magazine-2024-Issue1.pdf",
+      "source_sha256": "87956cc2ffec126683a0a6b1869ba4d792a1157355f0a0197e1ede84c61e08d4"
+    },
+    {
+      "document_id": "real_050_MedlinePlus-Magazine-2024-Issue11",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/MedlinePlus-Magazine-2024-Issue11.pdf",
+      "source_sha256": "dc3fcdf23e2bf815558fe76824d96e2ff81a9dfdb5eb0bbc8b207dbfba07a4ff"
+    },
+    {
+      "document_id": "real_051_batch_46_MedLinePlusIssue12-508",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_46_MedLinePlusIssue12-508.pdf",
+      "source_sha256": "c186cd4a742c0ceccd73a9f2beaf6a5e9a74c1f9fe36e3db386fa18ea091d078"
+    },
+    {
+      "document_id": "real_052_batch_47_2024-Issue10.508C_.110724",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_47_2024-Issue10.508C_.110724.pdf",
+      "source_sha256": "d77aae3398267e5a2f934ae7d0491d3aaed98123df6143a4d0ad2475c9e32cdb"
+    },
+    {
+      "document_id": "real_053_batch_48_2024-Issue9.508C_.092424",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_48_2024-Issue9.508C_.092424.pdf",
+      "source_sha256": "ac8d752f2e063667c4d79108285fa10e0aea2ff688c2dad545d0cf751420f8f4"
+    },
+    {
+      "document_id": "real_054_batch_49_2024-Issue8.508C_.090424",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_49_2024-Issue8.508C_.090424.pdf",
+      "source_sha256": "8304473e2a7107e09026b55c9459773a6a00d9a6fb449e23a0a0a6c255fac5fd"
+    },
+    {
+      "document_id": "real_055_batch_50_2024-Issue7.FINAL_.508C_.080124",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_50_2024-Issue7.FINAL_.508C_.080124.pdf",
+      "source_sha256": "39e41d1e9bbb43b8a0085ade01bbe6365975494e0c675254933050abfcc7f567"
+    },
+    {
+      "document_id": "real_056_batch_51_2024-Issue6.NEW_.508C_.070924",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_51_2024-Issue6.NEW_.508C_.070924.pdf",
+      "source_sha256": "aa39ac59a51a37d15e6a24a1ac2bfe0258505a1e7ee64ce0a6121de1e00638c9"
+    },
+    {
+      "document_id": "real_057_batch_52_2024-Issue5.508C_.060424-sm_",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_52_2024-Issue5.508C_.060424-sm_.pdf",
+      "source_sha256": "4db297eb037d051bd55fb568639b41c0e6a258a9ebc6e43647e731e63d7bda8c"
+    },
+    {
+      "document_id": "real_058_batch_53_2024-Issue4.508C_.042424",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_53_2024-Issue4.508C_.042424.pdf",
+      "source_sha256": "6b1c521b9aa49d7c762933797fac578faf718eda7e26916977c1922626ec3a66"
+    },
+    {
+      "document_id": "real_059_batch_54_2024-Issue3.508C_.031924",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_54_2024-Issue3.508C_.031924.pdf",
+      "source_sha256": "923a3059f702a88a85876bba775d0006bd244f6ab5250f450652961c1b185189"
+    },
+    {
+      "document_id": "real_060_batch_55_2024-Issue2.508C_.031224",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_55_2024-Issue2.508C_.031224.pdf",
+      "source_sha256": "6dbb2c6fe5d2c730970e1da2475e637a05a47d0f1e1890ef9cd7758a8274c97f"
+    },
+    {
+      "document_id": "real_061_batch_56_Volume18_Issue4-508C-small",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_56_Volume18_Issue4-508C-small.pdf",
+      "source_sha256": "15ea38694a81917a6874b885169d530f1ed4a33562d63d8e1ce7231f69ecc971"
+    },
+    {
+      "document_id": "real_062_batch_57_Volume18_Issue3-508.103023",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_57_Volume18_Issue3-508.103023.pdf",
+      "source_sha256": "c08d1f614b664fc4e839696b069ac2f6d6e39427bb35247e64bd2e1cf1ae3a4d"
+    },
+    {
+      "document_id": "real_063_batch_58_Volume18Issue2-508",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_58_Volume18Issue2-508.pdf",
+      "source_sha256": "95b261648d75e67226eb9cc4a42b143b40887828220fba166bc42ad3810a8965"
+    },
+    {
+      "document_id": "real_064_batch_59_Volume_18_Issue_1-508C",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_59_Volume_18_Issue_1-508C.pdf",
+      "source_sha256": "6ca0891376a9decaa59e2b27aa5acfca4e83999d6840ab24518a22b9ff88b279"
+    },
+    {
+      "document_id": "real_065_batch_60_Volume_17_Issue_2",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_60_Volume_17_Issue_2.pdf",
+      "source_sha256": "30fc132f5ab83fede9aca0ee5495505f036b6fa91b750080605a7c08b5b45af2"
+    },
+    {
+      "document_id": "real_066_batch_61_NIH_MedlinePlusMagazineSpring2022-508-pkg",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_61_NIH_MedlinePlusMagazineSpring2022-508-pkg.pdf",
+      "source_sha256": "4176aeeb86d5e28ad8e4f22cd99810c29e11ef21ddbd192d5483c00287b47ed5"
+    },
+    {
+      "document_id": "real_067_batch_62_NIH_MedlinePlus_MagazineWinter2022",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_62_NIH_MedlinePlus_MagazineWinter2022.pdf",
+      "source_sha256": "ea75175437dca49a91eab8371342bd489dcfea9c071895059d6fe67a0ec4d9aa"
+    },
+    {
+      "document_id": "real_068_batch_63_NIHMLPFall2021",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_63_NIHMLPFall2021.pdf",
+      "source_sha256": "22e3da11bcaddd5cba222e4d47c745fb8dc27c59654caf62a25e36077956e68c"
+    },
+    {
+      "document_id": "real_069_batch_64_NIHMLPSummer2021",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_64_NIHMLPSummer2021.pdf",
+      "source_sha256": "a6e2fdf9011978aadf0eba9963d6bc815ebdb4bf043e95a5dbb9d92f41fbd9a0"
+    },
+    {
+      "document_id": "real_070_batch_65_NIHMLPSpring2021",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_65_NIHMLPSpring2021.pdf",
+      "source_sha256": "991bed273fae3b4f2743a364e7499f3d9b36f0dbff0ab60de9746b435e4fcc38"
+    },
+    {
+      "document_id": "real_071_batch_66_NIHMLPWinter2021",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nih/batch_66_NIHMLPWinter2021.pdf",
+      "source_sha256": "29418d4049f7eaff53090193278601083a64bbd5ba7e164ffb41eb4c8cd9fc3c"
+    },
+    {
+      "document_id": "real_072_The-Climate-Action-Monitor-2025",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/oecd/The-Climate-Action-Monitor-2025.pdf",
+      "source_sha256": "e1349be4c2d4db6aaf8e8999dcc23f25eb33fdf53338847e59f3106a7fa9602e"
+    },
+    {
+      "document_id": "real_073_Adaptation-in-a-heterogeneous-environment-II",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/papers/Adaptation-in-a-heterogeneous-environment-II.pdf",
+      "source_sha256": "443751d8b641a15b8a29843dc865c780bce48c750bf760a024912f8c3dd74350"
+    },
+    {
+      "document_id": "real_074_Stories-from-the-field_issue-2_2019",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/who/Stories-from-the-field_issue-2_2019.pdf",
+      "source_sha256": "1ecbc1d128b2e6902e2c32d043c99d1c9962fdb5d5e53242e7ec507540f768c6"
+    },
+    {
+      "document_id": "real_075_Stories-from-the-field_issue-7_2021",
+      "manifest_group": "main_75",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/who/Stories-from-the-field_issue-7_2021.pdf",
+      "source_sha256": "6da1ea0aa78a216efff14068ea305c8e64ccc2b5cdb68fa02831f31cacb44221"
+    },
+    {
+      "document_id": "short_017_paperless_express_epa_business_guide",
+      "manifest_group": "short_accepted_17",
+      "declared_pages": null,
+      "checkpoint_page_records": 0,
+      "complete_pages": 0,
+      "eligibility": "NOT_PARSED_NO_CHECKPOINT",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/paperless_express_epa_business_guide.pdf",
+      "source_sha256": "2be201d64bc7b87eec46b80e3b3d4f0cb0f06f17068d6efa922a1ba1c9d11732"
+    }
+  ]
+}

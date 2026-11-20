@@ -1,0 +1,71 @@
+{
+  "snapshot_id": "snapshot_D_formal_nodes_20261119",
+  "eligible_quality_nodes": 8479,
+  "seed_count": 7900,
+  "targets": {
+    "single_node": 600,
+    "cross_page": 2000,
+    "cross_document_two_doc": 3500,
+    "cross_document_three_plus_doc": 1800
+  },
+  "by_category": {
+    "single_node": 600,
+    "cross_page": 2000,
+    "cross_document_two_doc": 3500,
+    "cross_document_three_plus_doc": 1800
+  },
+  "shortfall": {},
+  "evidence_by_family": {
+    "nih_medlineplus_magazines": 10476,
+    "climate_finance_adaptation": 755,
+    "noaa_strategic_ocean_planning": 620,
+    "library_of_congress": 753,
+    "governance_and_data_standards": 335,
+    "cdc_health_planning": 1020,
+    "education_reporting": 172,
+    "ecological_adaptation_research": 571,
+    "epa_paperless_business": 196,
+    "conservation_field_stories": 836,
+    "getty_arts": 191,
+    "usgs_coastal_science": 239,
+    "usda_portal": 192,
+    "climate_policy_monitor": 644
+  },
+  "evidence_by_modality": {
+    "COMPOSITE": 428,
+    "TABLE": 256,
+    "IMAGE": 6693,
+    "TEXT": 9612,
+    "CAPTION": 11
+  },
+  "top_documents": {
+    "real_063_batch_58_Volume18Issue2-508": 600,
+    "real_064_batch_59_Volume_18_Issue_1-508C": 579,
+    "real_067_batch_62_NIH_MedlinePlus_MagazineWinter2022": 570,
+    "real_068_batch_63_NIHMLPFall2021": 543,
+    "real_066_batch_61_NIH_MedlinePlusMagazineSpring2022-508-pkg": 539,
+    "real_065_batch_60_Volume_17_Issue_2": 509,
+    "real_071_batch_66_NIHMLPWinter2021": 506,
+    "real_070_batch_65_NIHMLPSpring2021": 501,
+    "real_069_batch_64_NIHMLPSummer2021": 494,
+    "short_004_healthy_brain_planning_guide_cdc_2024": 458,
+    "real_049_MedlinePlus-Magazine-2024-Issue1": 455,
+    "real_062_batch_57_Volume18_Issue3-508.103023": 443,
+    "real_072_The-Climate-Action-Monitor-2025": 415,
+    "short_006_tcfd_reporting_guide_2024_25_uk_treasury": 407,
+    "real_061_batch_56_Volume18_Issue4-508C-small": 392,
+    "real_059_batch_54_2024-Issue3.508C_.031924": 388,
+    "real_060_batch_55_2024-Issue2.508C_.031224": 386,
+    "real_050_MedlinePlus-Magazine-2024-Issue11": 385,
+    "real_053_batch_48_2024-Issue9.508C_.092424": 364,
+    "real_052_batch_47_2024-Issue10.508C_.110724": 363,
+    "real_054_batch_49_2024-Issue8.508C_.090424": 363,
+    "real_051_batch_46_MedLinePlusIssue12-508": 362,
+    "real_056_batch_51_2024-Issue6.NEW_.508C_.070924": 360,
+    "real_075_Stories-from-the-field_issue-7_2021": 352,
+    "real_074_Stories-from-the-field_issue-2_2019": 339
+  },
+  "distinct_document_groups": 1907,
+  "formal_node_source": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_scale300_20261119_snapshot_d/snapshot_D_formal_canonical_nodes.jsonl",
+  "nasa_documents_included": 0
+}

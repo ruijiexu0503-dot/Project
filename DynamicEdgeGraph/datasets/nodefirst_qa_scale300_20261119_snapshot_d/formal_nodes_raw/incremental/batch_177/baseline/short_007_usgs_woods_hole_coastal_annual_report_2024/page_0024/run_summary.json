@@ -1,0 +1,18 @@
+{
+  "task": "short_007_usgs_woods_hole_coastal_annual_report_2024/page_0024",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 6,
+  "visual_nodes": 1,
+  "caption_assignments": {},
+  "text_fragments": 9,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "743ac65dbf951692261a07c751ea0242b0de26736ed8bff717e69d4ecf9850dc",
+    "source_image": "f4c6ef427f5ecfde460d95ea64b62a6273ba05133881ba350bf58b33883c6351"
+  },
+  "production_modified": false
+}

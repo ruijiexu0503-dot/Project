@@ -1,0 +1,20 @@
+{
+  "task": "real_072_The-Climate-Action-Monitor-2025/page_0054",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 5,
+  "visual_nodes": 1,
+  "caption_assignments": {
+    "V0005": "D0004"
+  },
+  "text_fragments": 7,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "e5507be29ed4110812d719830377f640d22056c0e34336db7b0a6c117ee480b0",
+    "source_image": "3e4c9dd16624b39d556c359d7e704b06855afbeac3e68c705b0e1006584e3b7d"
+  },
+  "production_modified": false
+}

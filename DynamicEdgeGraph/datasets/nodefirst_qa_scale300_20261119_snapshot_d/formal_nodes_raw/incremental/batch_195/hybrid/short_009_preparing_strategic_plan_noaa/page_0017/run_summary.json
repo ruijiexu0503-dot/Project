@@ -1,0 +1,20 @@
+{
+  "task": "short_009_preparing_strategic_plan_noaa/page_0017",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 4,
+  "applied_continuations": [],
+  "moved_to_structural": [
+    "D0003"
+  ],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "9890be2bcb99bf12850647cb51bfc1c4d67e2ae08d12014fd8bce7a5c9fd1687",
+    "source_image": "1cb5a1109e300811cdbfa204b11ad8f5d972200e378c6338c7540ed848c480ca"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

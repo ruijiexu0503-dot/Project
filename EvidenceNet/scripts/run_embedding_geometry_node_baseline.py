@@ -64,7 +64,7 @@ def make_crops(out: Path, tasks):
     return result
 
 
-def describe(out: Path, model: Path, tasks):
+def describe(out: Path, model: Path, tasks, device: str = "cuda"):
     crops = make_crops(out, tasks); path = out / "visual_descriptions.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.touch(exist_ok=True)
@@ -74,22 +74,25 @@ def describe(out: Path, model: Path, tasks):
             row = json.loads(line); existing[(row["task"], row["visual_id"])] = row
     pending = [(task, vid, crop) for task, vid, crop in crops
                if (task, vid) not in existing or existing[(task, vid)]["crop_sha256"] != sha(crop)
-               or existing[(task, vid)].get("model") != str(model.resolve())]
+               or existing[(task, vid)].get("model") != str(model.resolve())
+               or existing[(task, vid)].get("inference_device", "cuda") != device]
     if not pending: return
     llm = create_llm({"provider": "transformers", "model": str(model.resolve()),
-                      "dtype": "bfloat16", "device_map": "auto", "require_cuda": True,
+                      "dtype": "bfloat16", "device_map": "cpu" if device == "cpu" else "auto",
+                      "require_cuda": device != "cpu",
                       "enable_thinking": False})
     for task, vid, crop in pending:
         response = llm.generate_raw_with_images(SYSTEM, PROMPT, [str(crop)], 180)
         row = {"task": task, "visual_id": vid, "crop": str(crop), "crop_sha256": sha(crop),
                "description": response.raw.strip(), "model": str(model.resolve()),
+               "inference_device": device,
                "prompt": PROMPT, "system": SYSTEM, "timestamp": response.timestamp}
         if not row["description"]: raise ValueError(f"Empty crop description: {task}/{vid}")
         with path.open("a") as f: f.write(json.dumps(row, ensure_ascii=False) + "\n")
         print("described", task, vid, row["description"][:100].replace("\n", " "), flush=True)
 
 
-def assemble(out: Path, embedding_model: Path, tasks):
+def assemble(out: Path, embedding_model: Path, tasks, device: str = "cuda"):
     import numpy as np
     descriptions = {}
     for line in (out / "visual_descriptions.jsonl").read_text().splitlines():
@@ -106,7 +109,7 @@ def assemble(out: Path, embedding_model: Path, tasks):
                        descriptions[(task, v["visual_bundle_id"])]["description"] for v in visuals]
         atom_texts = [text_of(a) for a in body + captions]
         vectors = (np.zeros((len(query_texts + atom_texts), 1)) if GEOMETRY_ONLY
-                   else embed(query_texts + atom_texts, embedding_model))
+                   else embed(query_texts + atom_texts, embedding_model, device=device))
         nv = len(visuals); nb = len(body)
         atom_vectors = {a["atom_id"]: vectors[nv+i] for i, a in enumerate(body+captions)}
         with Image.open(source / "original.png") as page: size = page.size

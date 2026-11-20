@@ -1,0 +1,20 @@
+{
+  "task": "short_006_tcfd_reporting_guide_2024_25_uk_treasury/page_0009",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 11,
+  "applied_continuations": [],
+  "moved_to_structural": [
+    "D0002"
+  ],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "7e73f46c16430bde760a3dcc9d4208b136c55603e2c1b198e89b5ba8045f73bf",
+    "source_image": "450572b4c42261d9d887e8c82f2924fc93208de4605c7e7a040e7fffd46e61d9"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

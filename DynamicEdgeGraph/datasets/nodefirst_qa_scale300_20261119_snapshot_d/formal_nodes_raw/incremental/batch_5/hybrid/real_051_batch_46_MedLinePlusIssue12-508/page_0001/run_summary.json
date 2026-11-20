@@ -1,0 +1,18 @@
+{
+  "task": "real_051_batch_46_MedLinePlusIssue12-508/page_0001",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 8,
+  "applied_continuations": [],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "8eb33a23bd974cbb157443ab395c594c0307e96a56c4c2bddd289cbab3a784bf",
+    "source_image": "1e0a8c3dc91e408f07ed04995def4ec806b36ce6e91fd2ae759703461431cf32"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

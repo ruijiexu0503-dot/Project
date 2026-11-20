@@ -1,0 +1,18 @@
+{
+  "task": "short_016_biodiversity_data_standards_arxiv_2024/page_0042",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 5,
+  "visual_nodes": 0,
+  "caption_assignments": {},
+  "text_fragments": 6,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "6e6824222a466d0f541525280338205067a4072f74bedc5708531ee11fd276a0",
+    "source_image": "ace69b61ccfba77297ea02b303b4768998b16604ecd42237f7dce40fff37a984"
+  },
+  "production_modified": false
+}

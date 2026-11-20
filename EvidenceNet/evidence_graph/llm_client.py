@@ -55,18 +55,43 @@ def extract_json(text: str) -> Any:
         starts = [x for x in starts if x[0] >= 0]
         if not starts: raise
         start, opener, closer = min(starts)
-        depth = 0; quoted = False; escaped = False
-        for i in range(start, len(text)):
-            char = text[i]
-            if quoted:
-                if escaped: escaped = False
-                elif char == "\\": escaped = True
-                elif char == '"': quoted = False
-            elif char == '"': quoted = True
-            elif char == opener: depth += 1
-            elif char == closer:
-                depth -= 1
-                if depth == 0: return _loads_json(text[start:i+1])
+
+        def complete_value(candidate_start, candidate_opener, candidate_closer):
+            depth = 0; quoted = False; escaped = False
+            for i in range(candidate_start, len(text)):
+                char = text[i]
+                if quoted:
+                    if escaped: escaped = False
+                    elif char == "\\": escaped = True
+                    elif char == '"': quoted = False
+                elif char == '"': quoted = True
+                elif char == candidate_opener: depth += 1
+                elif char == candidate_closer:
+                    depth -= 1
+                    if depth == 0:
+                        return _loads_json(text[candidate_start:i+1]), i + 1
+            return None
+
+        first = complete_value(start, opener, closer)
+        if first is not None:
+            return first[0]
+        # Some local models emit an abandoned opening object before a final
+        # fenced answer. Recover only a later syntactically complete value;
+        # callers still enforce their exact output schema and ID coverage.
+        candidates = []
+        for candidate_opener, candidate_closer in (("{", "}"), ("[", "]")):
+            for candidate_start, char in enumerate(text):
+                if char != candidate_opener or candidate_start <= start:
+                    continue
+                try:
+                    completed = complete_value(candidate_start, candidate_opener, candidate_closer)
+                except (json.JSONDecodeError, ValueError):
+                    continue
+                if completed is not None:
+                    value, candidate_end = completed
+                    candidates.append((candidate_end - candidate_start, candidate_start, value))
+        if candidates:
+            return max(candidates, key=lambda item: (item[0], item[1]))[2]
         raise ValueError("No complete JSON value in model output")
 
 

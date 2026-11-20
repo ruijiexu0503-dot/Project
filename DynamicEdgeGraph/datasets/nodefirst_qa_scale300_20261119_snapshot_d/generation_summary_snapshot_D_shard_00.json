@@ -1,0 +1,7 @@
+{
+  "shard": 0,
+  "shards": 16,
+  "attempts": 384,
+  "valid_drafts": 10,
+  "failed_or_skipped": 374
+}

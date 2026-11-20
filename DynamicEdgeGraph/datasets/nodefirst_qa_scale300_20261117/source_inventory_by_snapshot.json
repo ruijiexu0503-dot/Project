@@ -1,0 +1,50 @@
+{
+  "snapshot_id": "snapshot_A_20261117_runtime",
+  "created_from_runtime_check": true,
+  "eligible_real_documents": [
+    "real_001_batch_01_NASA-Spinoff-2023",
+    "real_002_batch_02_Spinoff.2022",
+    "real_003_batch_03_NASA_Spinoff_2021",
+    "real_004_batch_04_Spinoff2020",
+    "real_005_batch_05_Spinoff2019",
+    "real_006_batch_06_Spinoff2018",
+    "real_007_batch_07_Spinoff2017",
+    "real_008_batch_08_Spinoff2016",
+    "real_009_batch_09_Spinoff2015",
+    "real_010_batch_10_Spinoff2013",
+    "real_011_batch_11_Spinoff2012",
+    "real_012_batch_12_Spinoff2011",
+    "real_013_batch_13_Spinoff2010",
+    "real_016_batch_16_basic_version_07",
+    "real_017_batch_17_accessible",
+    "real_018_batch_18_accessible",
+    "real_019_batch_19_access",
+    "real_020_batch_20_spin03"
+  ],
+  "excluded_real_documents": [
+    {
+      "document_id": "real_015_batch_15_spinoff2008",
+      "declared_pages": 217,
+      "checkpoint_page_records": 194,
+      "complete_pages": 193,
+      "eligibility": "EXCLUDE_INCOMPLETE_PARSE",
+      "source_pdf": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/nasa/batch_15_spinoff2008.pdf",
+      "source_sha256": "8d2494ba91c4bdee37dce9915bb7f48b401ad1a29188fb301defa4da5fbf62ae"
+    }
+  ],
+  "legacy_document_count": 25,
+  "canonical_node_count": 27228,
+  "node_count_by_corpus": {
+    "real_documents_snapshot_A": 26767,
+    "legacy_frozen_nodes": 461
+  },
+  "node_count_by_modality": {
+    "PARA": 22439,
+    "TEXT": 2879,
+    "CAPTION": 1874,
+    "TABLE": 12,
+    "COMPOSITE": 24
+  },
+  "document_count_total": 41,
+  "node_pool_sha256": "4ee5c2afdef58c8416a1d92e1ff5df3cc42454476e0a98370adf52f23a41f80a"
+}

@@ -1,0 +1,25 @@
+{
+  "experiment": "validation_newdocs_20261119",
+  "title": "Unseen non-NASA documents reserved for retrieval validation",
+  "description": "No QA labels are used during parsing or node generation.",
+  "documents": [
+    {
+      "document_id": "val_001_focus_anywhere_multipage_2024",
+      "title": "Focus Anywhere for Fine-grained Multi-page Document Understanding",
+      "document_type": "open_access_research_paper",
+      "input_pdf": "/hkfs/home/project/hk-project-p0025545/dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/focus_anywhere_multipage_document_understanding_arxiv_2024.pdf",
+      "source_url": "https://arxiv.org/pdf/2405.14295",
+      "source_sha256": "760afe9587576f4a8415cd4b36682c96c2d8742e2bd3f8ecc0173a921391296d",
+      "audit_pages": []
+    },
+    {
+      "document_id": "val_002_computational_literacy_stem_2024",
+      "title": "Building Computational Literacy Through STEM Education",
+      "document_type": "federal_stem_education_guide",
+      "input_pdf": "/hkfs/home/project/hk-project-p0025545/dv3352/Project/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/computational_literacy_stem_guide_2024.pdf",
+      "source_url": "https://www.energy.gov/sites/default/files/2024-03/Building-Computational-Literacy-Through-STEM-Ed-Guide-for-Federal-Agencies-FINAL-PUBLIC.pdf",
+      "source_sha256": "39f18b0e7cf56a6417ec459cbbefd34785304992858e7233aac845099484bd04",
+      "audit_pages": []
+    }
+  ]
+}

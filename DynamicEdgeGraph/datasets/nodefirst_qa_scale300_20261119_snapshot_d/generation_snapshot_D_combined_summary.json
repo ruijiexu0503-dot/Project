@@ -1,0 +1,15 @@
+{
+  "shards": 16,
+  "generated_candidates": 239,
+  "deterministic_pass": 238,
+  "deterministic_reject": 1,
+  "pass_by_category": {
+    "single_node": 114,
+    "cross_page": 95,
+    "cross_document_two_doc": 25,
+    "cross_document_three_plus_doc": 4
+  },
+  "reject_reasons": {
+    "EXACT_NORMALIZED_QUESTION_DUPLICATE": 1
+  }
+}

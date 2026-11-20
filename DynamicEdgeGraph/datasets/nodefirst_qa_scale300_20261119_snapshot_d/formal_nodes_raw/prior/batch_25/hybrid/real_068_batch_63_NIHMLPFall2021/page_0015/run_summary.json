@@ -1,0 +1,20 @@
+{
+  "task": "real_068_batch_63_NIHMLPFall2021/page_0015",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 22,
+  "applied_continuations": [],
+  "moved_to_structural": [
+    "D0011"
+  ],
+  "blocked_continuations": [],
+  "caption_assignments": {},
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "9201c2eacf149f58f43970b52264b46f389ecef00a315fb424f733ea5496c183",
+    "source_image": "f183657c6d3f7c5a674e3e1675650f9650322136e0ee47dc7535bd29a51801df"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

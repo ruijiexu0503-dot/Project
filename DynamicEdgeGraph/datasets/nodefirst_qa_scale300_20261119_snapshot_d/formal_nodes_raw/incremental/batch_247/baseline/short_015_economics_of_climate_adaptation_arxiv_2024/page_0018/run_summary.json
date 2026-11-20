@@ -1,0 +1,18 @@
+{
+  "task": "short_015_economics_of_climate_adaptation_arxiv_2024/page_0018",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 14,
+  "visual_nodes": 0,
+  "caption_assignments": {},
+  "text_fragments": 15,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "d9f44b17aa01be941dd3fa4b094cf61903f7e4eaf5652bbfbb4f6c3c21c95d78",
+    "source_image": "8a15190d152f7e61e36710f5b370fb43444c7e3c22d84cc926cca0291ece6410"
+  },
+  "production_modified": false
+}

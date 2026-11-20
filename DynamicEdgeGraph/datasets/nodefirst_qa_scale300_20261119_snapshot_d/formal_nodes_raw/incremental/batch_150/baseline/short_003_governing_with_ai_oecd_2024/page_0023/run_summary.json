@@ -1,0 +1,20 @@
+{
+  "task": "short_003_governing_with_ai_oecd_2024/page_0023",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 5,
+  "visual_nodes": 1,
+  "caption_assignments": {
+    "V0006": "D0005"
+  },
+  "text_fragments": 7,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "63ae0097ff2d32ffe2a31a3f14213a1203d8a5e7b349367d6927d0123d2dee2a",
+    "source_image": "01ebcd79d5e25d22448f1d136eb3174c871fba70567db3cf765fe85eea39c166"
+  },
+  "production_modified": false
+}

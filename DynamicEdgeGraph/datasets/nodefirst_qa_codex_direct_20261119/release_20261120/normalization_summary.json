@@ -1,0 +1,10 @@
+{
+  "canonical_pool_count": 44273,
+  "issue_records": 0,
+  "records": 200,
+  "source": "/hfs2/data/project/hk-project-p0025545/ka_dv3352/Project/DynamicEdgeGraph/datasets/nodefirst_qa_codex_direct_20261119/qa_gold_codex_direct_cumulative_200.jsonl",
+  "source_overwritten": false,
+  "status_counts": {
+    "FINAL_ACCEPT_AUTOMATIC": 200
+  }
+}

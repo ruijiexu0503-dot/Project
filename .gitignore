@@ -34,6 +34,7 @@ external/
 # Generated output and logs
 **/output/
 **/output_*/
+**/outputs/
 **/logs/
 **/logs_*/
 *.log
@@ -52,6 +53,20 @@ temp/
 *.tar.gz
 *.tgz
 *.7z
+/release_bundles/
+
+# Large Node-first corpus assets stay local or in external release bundles.
+# Git tracks canonical-node pools, Gold QA, audits, and manifests instead.
+/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pdfs/
+/DynamicEdgeGraph/datasets/real_documents_v1_20261113/incoming_short_pdf_candidates_20261117/pdfs/
+/DynamicEdgeGraph/datasets/real_documents_v1_20261113/pipeline_to_nodes_v1_20261114/
+/DynamicEdgeGraph/datasets/real_documents_v1_20261113/**/work/
+/DynamicEdgeGraph/datasets/real_documents_v1_20261113/**/prepared_*/**/original.png
+/DynamicEdgeGraph/datasets/real_documents_v1_20261113/**/prepared_*/**/input_representation.json
+/DynamicEdgeGraph/datasets/nodefirst_qa_scale300_20261119_snapshot_d/sampled_seeds_snapshot_C.jsonl
+/DynamicEdgeGraph/datasets/nodefirst_qa_scale300_20261119_snapshot_d/sampled_seeds_snapshot_D.jsonl
+/DynamicEdgeGraph/datasets/nodefirst_qa_scale300_20261119_snapshot_d/sampled_seeds_snapshot_D_generation_v2.jsonl
+/DynamicEdgeGraph/training_data/
 
 # Editors and OS files
 .vscode/

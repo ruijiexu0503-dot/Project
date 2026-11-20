@@ -1,0 +1,27 @@
+{
+  "eligible_quality_nodes": 15335,
+  "seed_count": 640,
+  "by_category": {
+    "single_node": 60,
+    "cross_page": 140,
+    "cross_document_two_doc": 220,
+    "cross_document_three_plus_doc": 220
+  },
+  "cross_doc_routes": {
+    "bm25_like_new_new": 80,
+    "bm25_like_new_legacy": 100,
+    "bm25_like_legacy_legacy": 40,
+    "bm25_like_three_distinct_documents": 220
+  },
+  "evidence_corpus": {
+    "legacy_frozen_nodes": 203,
+    "real_documents_snapshot_A": 1237
+  },
+  "evidence_modality": {
+    "COMPOSITE": 28,
+    "TABLE": 6,
+    "CAPTION": 227,
+    "PARA": 950,
+    "TEXT": 229
+  }
+}

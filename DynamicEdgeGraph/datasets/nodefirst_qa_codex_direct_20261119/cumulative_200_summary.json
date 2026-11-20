@@ -1,0 +1,112 @@
+{
+  "version": "codex_direct_cumulative_200_20261119",
+  "records": 200,
+  "categories": {
+    "single_node": 40,
+    "cross_page": 60,
+    "cross_document": 100
+  },
+  "cross_document_subtypes": {
+    "two_doc": 70,
+    "three_plus_doc": 30
+  },
+  "evidence_references": 391,
+  "unique_nodes": 290,
+  "max_node_reuse": 6,
+  "unique_documents": 56,
+  "node_types": {
+    "COMPOSITE": 50,
+    "TABLE": 24,
+    "TEXT": 188,
+    "PARA": 81,
+    "IMAGE": 47,
+    "CAPTION": 1
+  },
+  "top_documents": [
+    [
+      "short_011_participatory_mapping_ocean_uses_noaa",
+      19
+    ],
+    [
+      "short_013_library_of_congress_magazine_nov_dec_2024",
+      17
+    ],
+    [
+      "short_006_tcfd_reporting_guide_2024_25_uk_treasury",
+      15
+    ],
+    [
+      "real_074_Stories-from-the-field_issue-2_2019",
+      15
+    ],
+    [
+      "short_007_usgs_woods_hole_coastal_annual_report_2024",
+      14
+    ],
+    [
+      "short_002_geer_data_collection_user_guide_us_ed_2024",
+      14
+    ],
+    [
+      "real_064_batch_59_Volume_18_Issue_1-508C",
+      13
+    ],
+    [
+      "short_015_economics_of_climate_adaptation_arxiv_2024",
+      13
+    ],
+    [
+      "short_012_library_of_congress_magazine_jul_aug_2024",
+      12
+    ],
+    [
+      "real_067_batch_62_NIH_MedlinePlus_MagazineWinter2022",
+      12
+    ],
+    [
+      "short_009_preparing_strategic_plan_noaa",
+      11
+    ],
+    [
+      "real_065_batch_60_Volume_17_Issue_2",
+      10
+    ],
+    [
+      "real_071_batch_66_NIHMLPWinter2021",
+      10
+    ],
+    [
+      "real_073_Adaptation-in-a-heterogeneous-environment-II",
+      10
+    ],
+    [
+      "real_066_batch_61_NIH_MedlinePlusMagazineSpring2022-508-pkg",
+      9
+    ],
+    [
+      "real_061_batch_56_Volume18_Issue4-508C-small",
+      9
+    ],
+    [
+      "real_052_batch_47_2024-Issue10.508C_.110724",
+      9
+    ],
+    [
+      "short_005_ncah_portal_user_guide_13_usda_2025",
+      9
+    ],
+    [
+      "short_008_library_of_congress_magazine_mar_apr_2024",
+      9
+    ],
+    [
+      "real_069_batch_64_NIHMLPSummer2021",
+      8
+    ]
+  ],
+  "batch01_pass": 100,
+  "batch02_pass": 100,
+  "scheduler_jobs_submitted": 0,
+  "final_accept_automatic": 200,
+  "sha256": "635eb2ba983f48b122448bffab800ac7075e9d4328bd3616954c240edb2dd19b"
+}

@@ -1,0 +1,18 @@
+{
+  "task": "real_075_Stories-from-the-field_issue-7_2021/page_0026",
+  "status": "complete",
+  "valid_coverage": true,
+  "evidence_nodes": 7,
+  "visual_nodes": 0,
+  "caption_assignments": {},
+  "text_fragments": 11,
+  "scoring_mode": "embedding_geometry",
+  "node_policy": "bounded-v2",
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "70d8e381ac99e3fcddab3833ccd9715ded99a502a5d539e04da60922919050b4",
+    "source_image": "5d7ca546aa957d313218df5952b2181c5777a715acf9ba911fe6f1ddb2670b6b"
+  },
+  "production_modified": false
+}

@@ -1,0 +1,25 @@
+{
+  "task": "real_065_batch_60_Volume_17_Issue_2/page_0036",
+  "status": "complete",
+  "valid_coverage": true,
+  "decision_valid": true,
+  "evidence_nodes": 13,
+  "applied_continuations": [
+    [
+      "D0011",
+      "D0012"
+    ]
+  ],
+  "moved_to_structural": [],
+  "blocked_continuations": [],
+  "caption_assignments": {
+    "V0013": "D0014"
+  },
+  "native_component_loss": 0,
+  "input_hashes": {
+    "input_representation": "785c8a7f7ebb5069d9da3416af3ada40eca04904d33747a1e77bc74f0ba8b246",
+    "source_image": "49e0a1263ab7b78fae274633869b317d234c02f377586892e2fb2681110ee080"
+  },
+  "semantic_text_policy": "dolphin_softwrap_semantic_v2",
+  "production_modified": false
+}

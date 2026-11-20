@@ -1,0 +1,18 @@
+{
+  "revised_dataset_count": 34,
+  "changed_drafts": 12,
+  "unchanged_drafts": 22,
+  "canonical_node_page_image_corrections": 2,
+  "integrative_candidate_count": 12,
+  "integrative_by_category": {
+    "cross_page": 6,
+    "cross_document": 6
+  },
+  "cross_document_subtypes": {
+    "two_doc": 5,
+    "three_plus_doc": 1
+  },
+  "deterministic_source_mapping_pass": 46,
+  "independent_model_review_status": "PENDING",
+  "gold_export_status": "NOT_EXPORTED"
+}

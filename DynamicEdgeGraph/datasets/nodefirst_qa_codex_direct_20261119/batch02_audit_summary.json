@@ -1,0 +1,91 @@
+{
+  "audit_version": "codex_direct_batch02_second_pass_20261119",
+  "audit_mode": "direct_semantic_curation_plus_deterministic_checks",
+  "records": 100,
+  "passed": 100,
+  "failed": 0,
+  "batch_failures": [],
+  "categories": {
+    "single_node": 20,
+    "cross_page": 30,
+    "cross_document": 50
+  },
+  "cross_document_subtypes": {
+    "two_doc": 35,
+    "three_plus_doc": 15
+  },
+  "evidence_references": 195,
+  "unique_nodes": 120,
+  "max_node_reuse": 6,
+  "snapshot_d_references": 125,
+  "frozen_legacy_references": 70,
+  "source_json_exists": 195,
+  "page_image_exists": 195,
+  "exact_claim_spans": 370,
+  "exact_question_duplicates_across_batches": 0,
+  "near_duplicate_pairs_across_batches_jaccard_ge_0_65": [],
+  "top_documents": [
+    [
+      "short_006_tcfd_reporting_guide_2024_25_uk_treasury",
+      13
+    ],
+    [
+      "short_002_geer_data_collection_user_guide_us_ed_2024",
+      13
+    ],
+    [
+      "short_007_usgs_woods_hole_coastal_annual_report_2024",
+      12
+    ],
+    [
+      "short_015_economics_of_climate_adaptation_arxiv_2024",
+      12
+    ],
+    [
+      "short_013_library_of_congress_magazine_nov_dec_2024",
+      11
+    ],
+    [
+      "short_011_participatory_mapping_ocean_uses_noaa",
+      10
+    ],
+    [
+      "short_012_library_of_congress_magazine_jul_aug_2024",
+      8
+    ],
+    [
+      "real_061_batch_56_Volume18_Issue4-508C-small",
+      6
+    ],
+    [
+      "real_074_Stories-from-the-field_issue-2_2019",
+      6
+    ],
+    [
+      "short_014_getty_magazine_winter_2024",
+      5
+    ],
+    [
+      "short_016_biodiversity_data_standards_arxiv_2024",
+      5
+    ],
+    [
+      "real_058_batch_53_2024-Issue4.508C_.042424",
+      5
+    ],
+    [
+      "real_067_batch_62_NIH_MedlinePlus_MagazineWinter2022",
+      5
+    ],
+    [
+      "real_071_batch_66_NIHMLPWinter2021",
+      5
+    ],
+    [
+      "short_005_ncah_portal_user_guide_13_usda_2025",
+      5
+    ]
+  ],
+  "scheduler_jobs_submitted": 0,
+  "data_sha256": "bcc01e5352bca8dd0e9693ff199ff10f876a3b61b95463c45dda221783e6358d"
+}

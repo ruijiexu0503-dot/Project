@@ -72,17 +72,21 @@ def describe(out: Path, model: Path):
         print(case["case_id"], row["description"].replace("\n", " ")[:180], flush=True)
 
 
-def embed(texts: list[str], model_path: Path):
+def embed(texts: list[str], model_path: Path, device: str = "cuda"):
     import torch
     from transformers import AutoModel, AutoTokenizer
+    if device not in {"cpu", "cuda"}:
+        raise ValueError(f"unsupported embedding device: {device}")
+    if device == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA embedding requested but no GPU is visible")
     tokenizer = AutoTokenizer.from_pretrained(model_path, local_files_only=True,
                                                trust_remote_code=True, padding_side="left")
     model = AutoModel.from_pretrained(model_path, local_files_only=True,
-                                      trust_remote_code=True, torch_dtype=torch.bfloat16).cuda().eval()
+                                      trust_remote_code=True, torch_dtype=torch.bfloat16).to(device).eval()
     vectors = []
     for start in range(0, len(texts), 8):
         batch = tokenizer(texts[start:start+8], padding=True, truncation=True,
-                          max_length=512, return_tensors="pt").to("cuda")
+                          max_length=512, return_tensors="pt").to(device)
         with torch.inference_mode():
             hidden = model(**batch).last_hidden_state
             vec = hidden[:, -1].float()

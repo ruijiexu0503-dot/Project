@@ -1,0 +1,12 @@
+{
+  "prior_input": 61,
+  "fresh_input": 238,
+  "cumulative_review_pool": 299,
+  "duplicate_rejects": 0,
+  "by_category": {
+    "single_node": 152,
+    "cross_page": 105,
+    "cross_document_two_doc": 37,
+    "cross_document_three_plus_doc": 5
+  }
+}
