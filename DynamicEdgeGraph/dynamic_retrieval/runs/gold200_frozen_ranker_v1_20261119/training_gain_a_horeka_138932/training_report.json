@@ -1,0 +1,127 @@
+{
+  "status": "complete",
+  "train_queries": 181,
+  "test_queries": 19,
+  "train_states": 352,
+  "untrained_metrics": {
+    "dense_r1": 0.4385964912280702,
+    "model_r1": 0.05263157894736842,
+    "dense_r5": 0.9561403508771931,
+    "model_r5": 0.23684210526315788,
+    "dense_r10": 1.0,
+    "model_r10": 0.38596491228070173,
+    "n": 19
+  },
+  "trained_metrics": {
+    "dense_r1": 0.4385964912280702,
+    "model_r1": 0.35964912280701755,
+    "dense_r5": 0.9561403508771931,
+    "model_r5": 0.9561403508771931,
+    "dense_r10": 1.0,
+    "model_r10": 0.9824561403508772,
+    "n": 19
+  },
+  "metrics": {
+    "dense_r1": 0.4385964912280702,
+    "model_r1": 0.35964912280701755,
+    "dense_r5": 0.9561403508771931,
+    "model_r5": 0.9561403508771931,
+    "dense_r10": 1.0,
+    "model_r10": 0.9824561403508772,
+    "n": 19
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 2.033389682040169,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 2,
+      "loss": 0.35210376179975356,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 3,
+      "loss": 0.1807752246210467,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 4,
+      "loss": 0.12027911750934095,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 5,
+      "loss": 0.07915893613314169,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 6,
+      "loss": 0.07501811640341961,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 7,
+      "loss": 0.07195443886012756,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 8,
+      "loss": 0.07722943845379665,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 9,
+      "loss": 0.06432280338421306,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 10,
+      "loss": 0.04516976992101427,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 11,
+      "loss": 0.04940985956492192,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    },
+    {
+      "epoch": 12,
+      "loss": 0.038545520707761,
+      "a_head_enabled": true,
+      "gain_weight": 0.2,
+      "gain_labels_seen": 553
+    }
+  ],
+  "elapsed_seconds": 28.278263330459595,
+  "encoder": "EvidenceNet/models/Qwen3-Embedding-0.6B",
+  "encoder_frozen": true,
+  "test_evaluated_once_before_training": true,
+  "test_evaluated_once_after_training": true,
+  "a_head_enabled": true,
+  "gain_weight": 0.2,
+  "gain_label_policy": "gold_completion_v1; non-gold candidates unknown"
+}

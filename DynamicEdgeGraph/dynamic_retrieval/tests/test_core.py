@@ -8,8 +8,9 @@ import torch
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "src"))
 from checkpoint import load_checkpoint, save_checkpoint
-from losses import multi_positive_ranking_loss
+from losses import masked_auxiliary_cross_entropy, multi_positive_ranking_loss
 from model import DynamicEdgeConfig, DynamicEdgeRanker
+from train_gold_frozen_ranker import gain_labels_for_state
 
 
 def synthetic_batch():
@@ -129,6 +130,43 @@ class NetworkTests(unittest.TestCase):
         batch["selected_fraction"][0, 0] = 0.8
         with self.assertRaisesRegex(ValueError, "selected_count"):
             self.model(**batch)
+
+    def test_enabled_a_head_contributes_masked_aux_loss(self):
+        model = DynamicEdgeRanker(
+            config=DynamicEdgeConfig(
+                input_dim=8,
+                context_dim=6,
+                dim=16,
+                hidden=32,
+                dropout=0.0,
+                enable_a_head=True,
+            )
+        )
+        batch = synthetic_batch()
+        out = model(**batch)
+        self.assertEqual(out["a_logits"].shape, (2, 3, 3))
+        labels = torch.tensor([[1, 2, 0], [0, 0, 0]])
+        mask = torch.tensor([[True, True, False], [False, False, False]])
+        rank_loss, _ = multi_positive_ranking_loss(
+            out["scores"],
+            torch.tensor([[True, False, False], [False, False, False]]),
+            torch.tensor([[False, True, False], [False, False, False]]),
+            candidate_mask=batch["candidate_mask"],
+        )
+        gain_loss, gain_info = masked_auxiliary_cross_entropy(out["a_logits"], labels, mask)
+        total = rank_loss + 0.2 * gain_loss
+        total.backward()
+        self.assertTrue(torch.isfinite(total))
+        self.assertEqual(gain_info["valid_labels"], 2)
+
+    def test_gain_labels_only_mark_gold_completion_states(self):
+        gold = ["A", "B", "C"]
+        labels, mask = gain_labels_for_state(gold, ["C", "noise", "B"], ["A"])
+        self.assertTrue(torch.equal(labels, torch.tensor([1, 0, 1])))
+        self.assertTrue(torch.equal(mask, torch.tensor([True, False, True])))
+        complete_labels, complete_mask = gain_labels_for_state(gold, ["C", "A", "noise"], ["A", "B"])
+        self.assertTrue(torch.equal(complete_labels, torch.tensor([2, 0, 0])))
+        self.assertTrue(torch.equal(complete_mask, torch.tensor([True, False, False])))
 
     def test_gradient_update_and_checkpoint_replay(self):
         batch = synthetic_batch()

@@ -15,6 +15,8 @@ Implemented network pieces:
 - complete no-edge and context ablations;
 - per-positive ranking loss with state-then-query aggregation;
 - disabled-by-default A/E interfaces and strict versioned checkpoints.
+- opt-in A-head gain training on Gold completion states; non-Gold candidates
+  remain unknown rather than being assigned a false “no gain” label.
 
 The network stage does not run a real fit. Search/controller work, r3 dry-run,
 and real-data readiness remain separate stages. See `NETWORK_BUILD_REPORT.md`.
@@ -28,6 +30,19 @@ python -m unittest discover -s dynamic_retrieval/tests -p 'test_*.py' -v
 
 The synthetic configuration is `configs/network_synthetic.json`. No command in
 this build-only stage downloads a model, requests a GPU, or submits a job.
+
+The Gold-200 pilot can train the existing A head with the `gold_completion_v1`
+policy. It labels a remaining Gold node as:
+
+- `1` when it adds support but the selected set is still incomplete;
+- `2` when adding it completes the current Gold set.
+
+Dense non-Gold candidates are marked unknown and excluded from A-head cross
+entropy. The launch template enables this auxiliary target with:
+
+```bash
+sbatch DynamicEdgeGraph/dynamic_retrieval/horeka_train_gold200.sbatch
+```
 
 The older `runs/p0_vldocir_mini_20261115` remains an isolated page-level data
 branch. Its IDs, vectors, and labels are not inputs to this network verification.
