@@ -50,7 +50,7 @@ def main():
             h=r["sha256"]
             if h in hashes:r["status"]="duplicate_pdf";r["duplicate_of"]=hashes[h]
             else:hashes[h]=r["document_id"]
-    Path(args.output).write_text("".join(json.dumps(r,ensure_ascii=False)+"\\n" for r in results))
+    Path(args.output).write_text("".join(json.dumps(r,ensure_ascii=False)+"\n" for r in results))
     from collections import Counter
     print("Audited",len(results),"records:",dict(Counter(x["status"] for x in results)))
     print("Saved:",args.output)
