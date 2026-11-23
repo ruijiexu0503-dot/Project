@@ -1,47 +1,32 @@
-# Real PDF Corpus v2 — candidate registry
+# Real PDF Corpus v2 — 80 source candidates
 
-**Status:** candidate selection only; not a finalized, downloaded corpus.
+**Status: SOURCE DISCOVERY ONLY. NOT 80 verified PDFs.**
 
-- Target: ~80 independent PDF documents and ~3,000 pages, subject to download and page-count audit.
-- Hard exclusion: **NASA Spinoff (all years)**. No NASA Spinoff records are permitted in v2.
-- VL-DocIR/HTML is out of scope.
-- Keep v1 manifest unchanged for provenance; do not copy excluded PDF binaries into v2.
-- Existing v1 documents are candidates, not automatically accepted. Current seed: 8 candidates (7 v1 and 1 new).
-- Do not treat an official source URL as proof that the PDF is currently downloadable.
-- Preserve original v1 IDs in legacy_document_id; assign distinct v2 IDs; no canonical node IDs should be reused without remapping.
+This corpus explicitly excludes all NASA Spinoff and all VL-DocIR HTML assets. The 80 entries in `source_manifest_candidates.jsonl` are research leads, not accepted files. A source may be a direct PDF URL (`url_type=direct_pdf`) or a publication/collection landing page (`url_type=publication_page`). Landing pages **must be resolved to one specific PDF each** before acceptance; collection pages are not yet individual documents. Some direct PDF URLs may also fail or change. All entries currently have `verification_status=unverified_candidate`.
 
-## Planned composition (80 documents)
+## Actual candidate composition
 
-| Type | Target |
-| --- | ---: |
-| Scientific research papers | 14 |
-| Engineering manuals and technical reports | 12 |
-| Financial annual reports | 8 |
-| Statistical and policy reports | 12 |
-| Maps, geography and environmental reports | 8 |
-| Historical scanned archives | 6 |
-| Product catalogues and specification sheets | 8 |
-| Medical and public-health reports | 8 |
-| Other complex-layout documents | 4 |
+- Scientific papers: 24
+- Scientific assessments: 8
+- Health reports: 8
+- Statistical/policy reports: 8
+- Technical standards: 8
+- Financial reports: 8
+- Engineering manuals/datasheets: 8
+- Geography, maps and archives: 8
 
-The quotas are goals, not fabricated records. Select multiple independent publishers, balance page counts, and ensure cross-document topic clusters with complementary evidence.
+This is an initial *source discovery* distribution, not a final document-type balance. Reduce papers and replace any invalid or redundant sources during curation.
 
-## Acceptance gates
+## Acceptance requirements
 
-1. Source URL resolves to a real PDF, not HTML or a redirect to an error page.
-2. PDF opens successfully, record actual page_count, bytes and SHA256.
-3. Detect exact duplicates by SHA256 and near-duplicates by title/content.
-4. Audit layout types (text, tables, figures, diagrams, formulas, maps, scans).
-5. Review topical diversity and limit any single publisher/series concentration.
-6. Freeze a separately named accepted manifest only after verification; then run parsing and assign canonical node IDs.
+1. Resolve a unique **direct PDF** URL for each candidate.
+2. Download and verify PDF magic header, readability, page count, file size, SHA256 and final URL.
+3. Reject duplicates/near-duplicates and inaccessible sources; record rejection reason.
+4. Audit text, figures, tables, formulas, diagrams, maps and scanned pages.
+5. Balance topics, publishers and page counts; target approximately 80 PDFs and 2,500–4,000 pages, but quality over count.
+6. Preserve old v1 manifest as provenance, without copying excluded binaries. Assign stable v2 IDs only after acceptance and do not reuse canonical node IDs.
+7. Freeze an accepted manifest separately before Colab parsing. Do not run parsing on this unverified candidate list.
 
-## Fields
+## URL semantics
 
-- `selection_status`: `candidate_from_v1` or `candidate_new`; not an acceptance claim.
-- `download_status`: starts `not_verified_in_v2`.
-- `expected_sha256` / `expected_bytes`: historical v1 observations, not current downloads.
-- `sha256` / `page_count`: null until v2 binary audit.
-
-## Colab note
-
-Pull the updated feature branch into the persisted Drive repository before using this registry. Download PDF binaries to Drive or /content, not GitHub; keep manifests in Git.
+`source_url`: discovered lead; `source_pdf_url` only populated for direct-PDF-looking links; `source_page_url` for landing pages. None have been binary-verified. `page_count` and `sha256` remain null pending actual download.
